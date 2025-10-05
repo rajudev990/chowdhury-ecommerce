@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-
+use App\Models\Category;
+use App\Models\CustomerContact;
 use App\Models\Setting;
 use Laravel\Socialite\Facades\Socialite;
 use App\Models\User;
@@ -12,13 +13,37 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Symfony\Contracts\Service\Attribute\Required;
 
 class WebsiteController extends Controller
 {
     public function index()
     {
         $setting = Setting::first();
-        return view('frontend.index', compact('setting'));
+        $categories = Category::where('status',1)->get();
+        return view('frontend.index', compact('setting','categories'));
+    }
+    public function products()
+    {
+        $setting = Setting::first();
+        return view('frontend.products', compact('setting'));
+    }
+    public function reviews()
+    {
+        $setting = Setting::first();
+        return view('frontend.reviews', compact('setting'));
+    }
+    public function contacts()
+    {
+        $setting = Setting::first();
+        return view('frontend.contacts', compact('setting'));
+    }
+
+    public function contactStore(Request $request)
+    {
+        $data = $request->all();
+        CustomerContact::create($data);
+        return redirect()->back()->with('success','Thank you for contacting us!');
     }
 
 

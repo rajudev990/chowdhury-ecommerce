@@ -33,17 +33,21 @@ Route::get('/cmd',function(){
 
 
 Route::get('/',[WebsiteController::class,'index'])->name('index');
+Route::get('/products',[WebsiteController::class,'products'])->name('products');
+Route::get('/reviews',[WebsiteController::class,'reviews'])->name('reviews');
+Route::get('/contacts',[WebsiteController::class,'contacts'])->name('contacts');
+Route::post('/contacts-store',[WebsiteController::class,'contactStore'])->name('contact.store');
 
 
-Auth::routes(['verify' => true]);
+Auth::routes(); // ✅ Removed ['verify' => true]
 
+Route::middleware(['auth', 'no.admin'])->group(function () {
 
+    // Route::get('/home', function () {
+    //     return view('home');
+    // })->name('home');
 
-
-Route::middleware(['auth', 'no.admin', 'verified'])->group(function () {
-    Route::get('/home', function () {
-        return view('home');
-    })->name('home');
+    Route::get('/dashboard',[HomeController::class,'index'])->name('dashboard');
 
     Route::get('settings', [HomeController::class, 'settings'])->name('user.settings');
     Route::get('profile', [HomeController::class, 'profile'])->name('user.profile');
@@ -52,6 +56,7 @@ Route::middleware(['auth', 'no.admin', 'verified'])->group(function () {
     Route::get('password/edit', [HomeController::class, 'passwordEdit'])->name('user.password.edit');
     Route::post('/password-update', [HomeController::class, 'updatePassword'])->name('user.password.update');
 });
+
 
 
 
@@ -119,4 +124,4 @@ Route::prefix('admin')
     });
 
 
-// php artisan migrate:refresh --path=database/migrations/2025_05_12_061213_create_dps_members_table.php
+// php artisan migrate:refresh --path=database/migrations/22025_10_05_153148_create_categories_table.php

@@ -1,3 +1,7 @@
+@php 
+$setting = \App\Models\Setting::first();
+$categories = \App\Models\Category::all();
+@endphp
 <!DOCTYPE html>
 <html lang="en">
 
@@ -5,6 +9,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title')</title>
+    <link rel="icon" type="image/png" href="{{ $setting->favicon ? Storage::url($setting->favicon) : asset('/assets/img/null.png') }}">
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
@@ -26,7 +31,7 @@
     @include('layouts.footer')
 
 
-    <a href="https://wa.me/8801729-345196" target="_blank" class="whatsapp-float text-decoration-none">
+    <a href="https://wa.me/{{ $setting->phone_one }}" target="_blank" class="whatsapp-float text-decoration-none">
         <i class="fab fa-whatsapp"></i>
     </a>
 

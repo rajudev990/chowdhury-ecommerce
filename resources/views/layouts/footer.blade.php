@@ -3,31 +3,34 @@
     <div class="container">
         <div class="row text-center text-md-start">
             <div class="col-md-4 mb-3">
-                <h5>Blackseed Honey</h5>
-                <p>Pure, Organic, Natural Honey from the finest flowers.</p>
+                 @if($setting->footer_logo)
+                <img src="{{ Storage::url($setting->footer_logo) }}" alt="{{ $setting->title }}">
+                @else
+                Logo
+                @endif
+                <p>{{ $setting->address }}</p>
             </div>
             <div class="col-md-4 mb-3">
                 <h5>Quick Links</h5>
                 <ul class="list-unstyled">
-                    <li><a href="#categories">Categories</a></li>
-                    <li><a href="#new-products">New Products</a></li>
-                    <li><a href="#popular-products">Popular Products</a></li>
-                    <li><a href="#reviews">Reviews</a></li>
+                    <li><a href="{{ route('products') }}">All Products</a></li>
+                    <li><a href="{{ route('reviews') }}">Reviews</a></li>
+                    <li><a href="{{ route('contacts') }}">Contacts</a></li>
                 </ul>
             </div>
             <div class="col-md-4 mb-3">
                 <h5>Contact Us</h5>
-                <p>Email: info@blackseedhoney.com</p>
-                <p>Phone: +880 123 456 789</p>
+                <p>Email: {{ $setting->email_one }}</p>
+                <p>Phone: {{ $setting->phone_one }}</p>
                 <div>
-                    <a href="#"><img src="https://img.icons8.com/color/48/000000/facebook.png" width="24"></a>
-                    <a href="#"><img src="https://img.icons8.com/color/48/000000/twitter.png" width="24"></a>
-                    <a href="#"><img src="https://img.icons8.com/color/48/000000/instagram-new.png" width="24"></a>
+                    <a href="{{ $setting->faceboook }}"><img src="https://img.icons8.com/color/48/000000/facebook.png" width="24"></a>
+                    <a href="{{ $setting->twitter }}"><img src="https://img.icons8.com/color/48/000000/twitter.png" width="24"></a>
+                    <a href="{{ $setting->instagram }}"><img src="https://img.icons8.com/color/48/000000/instagram-new.png" width="24"></a>
                 </div>
             </div>
         </div>
         <hr class="bg-secondary">
-        <p class="text-center mb-0">&copy; 2025 Blackseed Flower Honey. All rights reserved.</p>
+        <p class="text-center mb-0">{{ $setting->copyright }}</p>
     </div>
 </footer>
 
