@@ -1,163 +1,59 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('layouts.app')
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Admin Login</title>
+@section('title', 'Home')
 
-    <!-- Google Font: Source Sans Pro -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="{{ asset('admin/') }}/plugins/fontawesome-free/css/all.min.css">
-    <!-- icheck bootstrap -->
-    <link rel="stylesheet" href="{{ asset('admin/') }}/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
-    <!-- Theme style -->
-    <link rel="stylesheet" href="{{ asset('admin/') }}/dist/css/adminlte.min.css">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+@section('content')
+<section class="login-section py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-5 col-md-8">
+                <div class="login-card p-5 shadow-sm rounded-4 bg-white">
+                    <h2 class="login-title text-center mb-4">Create Your Account</h2>
 
-        body {
-            height: 100vh;
-            background: #0e0e0e;
-            overflow: hidden;
-            position: relative;
-        }
+                    <form action="{{ route('register') }}" method="post">
+                        @csrf
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Full Name</label>
+                            <input type="text" class="form-control" id="name" placeholder="John Doe" required>
+                        </div>
 
-        /* Rain drops */
-        .rain {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            top: 0;
-            left: 0;
-            z-index: -1;
-        }
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email Address</label>
+                            <input type="email" class="form-control" id="email" placeholder="john@example.com"
+                                required>
+                        </div>
 
-        .drop {
-            position: absolute;
-            width: 2px;
-            background: rgba(255, 255, 255, 0.3);
-            bottom: 100%;
-            animation: fall linear infinite;
-            border-radius: 50%;
-        }
+                        <div class="mb-3 position-relative">
+                            <label for="password" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="password"
+                                placeholder="Enter your password" required>
+                            <span class="password-toggle" onclick="togglePassword()">👁️</span>
+                        </div>
 
-        @keyframes fall {
-            to {
-                transform: translateY(100vh);
-            }
-        }
+                        <div class="mb-3 position-relative">
+                            <label for="confirm-password" class="form-label">Confirm Password</label>
+                            <input type="password" class="form-control" id="confirm-password"
+                                placeholder="Confirm your password" required>
+                            <span class="password-toggle" onclick="toggleConfirmPassword()">👁️</span>
+                        </div>
 
-        .login-box{
-            margin: auto;
-        }
-     
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="terms" required>
+                            <label class="form-check-label" for="terms">I agree to the <a href="#">Terms &
+                                    Conditions</a></label>
+                        </div>
 
-    </style>
-</head>
+                        <button type="submit" class="btn btn-primary w-100 py-2">
+                            <i class="fas fa-user-plus me-2"></i> Register
+                        </button>
 
-<body class="hold-transition">
-    <div class="rain" id="rain"></div>
-    <div class="login-box pt-5">
-        
-        <!-- /.login-logo -->
-        <div class="card">
-            <div class="card-body login-card-body">
-                <div class="login-logo">
-                    <a href="{{ url('/') }}"><b>{{ config('app.name') }}</b></a>
+                        <p class="text-center mt-3">
+                            Already have an account? <a href="{{ route('login') }}">Login Now</a>
+                        </p>
+                    </form>
                 </div>
-
-                <p class="login-box-msg">Sign in to start your session</p>
-
-                <form method="POST" action="{{ route('admin.login') }}">
-                    @csrf
-                    <div class="input-group">
-                        <input type="email" name="email" class="form-control @error('email') is-invalid @enderror" placeholder="Email" autofocus>
-                        <div class="input-group-append">
-                            <div class="input-group-text">
-                                <span class="fas fa-envelope"></span>
-                            </div>
-                        </div>
-
-                    </div>
-                    @error('email')
-                    <span class="text-danger d-block">{{$message}}</span>
-                    @enderror
-
-
-                    <div class="input-group mt-3 mb-3">
-                        <input type="password" name="password" class="form-control  @error('password') is-invalid @enderror" placeholder="Password">
-                        <div class="input-group-append">
-                            <div class="input-group-text">
-                                <span class="fas fa-lock"></span>
-                            </div>
-                        </div>
-
-                    </div>
-                    @error('password')
-                    <span class="text-danger d-block">{{$message}}</span>
-                    @enderror
-
-                    <div class="row">
-                        <div class="col-8">
-                            <div class="icheck-primary">
-                                <input type="checkbox" id="remember" name="remember" {{ old('remember') ? 'checked' : '' }}>
-                                <label for="remember">
-                                    Remember Me
-                                </label>
-                            </div>
-                        </div>
-                        <!-- /.col -->
-                        <div class="col-4">
-                            <button type="submit" class="btn btn-primary btn-block">Sign In</button>
-                        </div>
-                        <!-- /.col -->
-                    </div>
-                </form>
-
             </div>
-            <!-- /.login-card-body -->
         </div>
     </div>
-    <!-- /.login-box -->
-
-    <!-- jQuery -->
-    <script src="{{ asset('admin/') }}/plugins/jquery/jquery.min.js"></script>
-    <!-- Bootstrap 4 -->
-    <script src="{{ asset('admin/') }}/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <!-- AdminLTE App -->
-    <script src="{{ asset('admin/') }}/dist/js/adminlte.min.js"></script>
-    <script>
-        // Inside your <script> block for rain effect
-        const rain = document.getElementById('rain');
-
-        function createDrop() {
-            const drop = document.createElement('div');
-            drop.classList.add('drop');
-            drop.style.left = `${Math.random() * window.innerWidth}px`;
-            drop.style.animationDuration = `${0.3 + Math.random() * 0.7}s`;
-            drop.style.opacity = 0.2 + Math.random() * 0.5;
-            drop.style.height = `${15 + Math.random() * 25}px`;
-            rain.appendChild(drop);
-
-            setTimeout(() => {
-                drop.remove();
-            }, 1500);
-        }
-
-        // Increase drop rate
-        setInterval(() => {
-            for (let i = 0; i < 4; i++) { // 4 drops at a time
-                createDrop();
-            }
-        }, 60);
-    </script>
-</body>
-
-</html>
+</section>
+@endsection

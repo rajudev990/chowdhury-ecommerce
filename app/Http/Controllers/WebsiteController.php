@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Storage;
 
 class WebsiteController extends Controller
 {
-    public function home()
+    public function index()
     {
         $setting = Setting::first();
         return view('frontend.index', compact('setting'));

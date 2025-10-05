@@ -31,11 +31,7 @@ Route::get('/cmd',function(){
 
 
 
-// Route::get('/', [WebsiteController::class, 'home'])->name('index');
-
-Route::get('/', function(){
-    return redirect()->route('admin.login.form');
-});
+Route::get('/',[WebsiteController::class,'index'])->name('index');
 
 
 Auth::routes(['verify' => true]);
