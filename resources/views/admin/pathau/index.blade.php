@@ -18,10 +18,10 @@
             <form method="POST" action="{{ route('admin.pathau.update', $data->id) }}" class="space-y-6">
                 @csrf
 
-                <div class="grid md:grid-cols-2 gap-6">
+                <div class="grid md:grid-cols-3 gap-6">
                     <div>
                         <label class="block text-gray-700 font-medium mb-1">
-                            Api Key <span class="text-red-500">*</span>
+                           Pathao API Base URL <span class="text-red-500">*</span>
                         </label>
                         <input type="text" name="api_key"
                             value="{{ old('api_key', $data->api_key) }}"
@@ -31,24 +31,51 @@
 
                     <div>
                         <label class="block text-gray-700 font-medium mb-1">
-                            Secret Key <span class="text-red-500">*</span>
+                           Store ID <span class="text-red-500">*</span>
                         </label>
-                        <input type="text" name="secret_key"
-                            value="{{ old('secret_key', $data->secret_key) }}"
+                        <input type="text" name="store_id"
+                            value="{{ old('store_id', $data->store_id) }}"
                             class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:border-cyan-500 focus:ring-0 outline-none"
                             placeholder="Enter Stred key" required>
                     </div>
 
                     <div>
                         <label class="block text-gray-700 font-medium mb-1">
-                            Status
+                            Client ID <span class="text-red-500">*</span>
                         </label>
-                        <select name="status"
-                            class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:border-cyan-500 focus:ring-0 outline-none">
-                            <option value="1" {{ old('status', $data->status) == 1 ? 'selected' : '' }}>Active</option>
-                            <option value="0" {{ old('status', $data->status) == 0 ? 'selected' : '' }}>Deactive</option>
-                        </select>
+                        <input type="text" name="client_id"
+                            value="{{ old('client_id', $data->client_id) }}"
+                            class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:border-cyan-500 focus:ring-0 outline-none"
+                            placeholder="Enter Stred key" required>
                     </div>
+                    <div>
+                        <label class="block text-gray-700 font-medium mb-1">
+                           Client Secret <span class="text-red-500">*</span>
+                        </label>
+                        <input type="text" name="secret_key"
+                            value="{{ old('secret_key', $data->secret_key) }}"
+                            class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:border-cyan-500 focus:ring-0 outline-none"
+                            placeholder="Enter Stred key" required>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 font-medium mb-1">
+                           Client Email <span class="text-red-500">*</span>
+                        </label>
+                        <input type="text" name="client_email"
+                            value="{{ old('client_email', $data->client_email) }}"
+                            class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:border-cyan-500 focus:ring-0 outline-none"
+                            placeholder="Enter Stred key" required>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 font-medium mb-1">
+                           Client Password <span class="text-red-500">*</span>
+                        </label>
+                        <input type="text" name="client_password"
+                            value="{{ old('client_password', $data->client_password) }}"
+                            class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:border-cyan-500 focus:ring-0 outline-none"
+                            placeholder="Enter Stred key" required>
+                    </div>
+
                 </div>
 
                 <div class="flex justify-end pt-4 border-t">

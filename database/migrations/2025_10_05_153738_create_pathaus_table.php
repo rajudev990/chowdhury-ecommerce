@@ -15,7 +15,10 @@ return new class extends Migration
             $table->id();
             $table->string('api_key')->nullable();
             $table->string('secret_key')->nullable();
-            $table->string('status')->default(1);
+            $table->string('store_id')->nullable();
+            $table->string('client_id')->nullable();
+            $table->string('client_email')->nullable();
+            $table->string('client_password')->nullable();
             $table->timestamps();
         });
     }

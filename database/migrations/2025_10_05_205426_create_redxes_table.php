@@ -11,8 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('facebooks', function (Blueprint $table) {
+        Schema::create('redxes', function (Blueprint $table) {
             $table->id();
+            $table->string('url')->nullable();
+            $table->string('store_id')->nullable();
+            $table->text('api_token')->nullable();
             $table->timestamps();
         });
     }
@@ -22,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('facebooks');
+        Schema::dropIfExists('redxes');
     }
 };
