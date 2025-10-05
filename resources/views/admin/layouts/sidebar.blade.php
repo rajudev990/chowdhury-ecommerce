@@ -160,17 +160,17 @@
                     <i class="fab fa-facebook w-3"></i> Facebook
                 </a>
 
-                <a href="{{ route('admin.stred_fast.edit') }}"
+                <a href="{{ route('admin.stred_fast.edit', 1) }}"
                     class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 text-sm">
                     <i class="fas fa-truck-fast w-3"></i> Steadfast
                 </a>
 
-                <a href="{{ route('admin.categories.index') }}"
+                <a href="{{ route('admin.pathau.edit' ,1) }}"
                     class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 text-sm">
                     <i class="fas fa-truck w-3"></i> Pathao
                 </a>
 
-                <a href="{{ route('admin.categories.index') }}"
+                <a href="{{ route('admin.curiore.edit',1) }}"
                     class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 text-sm">
                     <i class="fas fa-shipping-fast w-3"></i> Courier
                 </a>

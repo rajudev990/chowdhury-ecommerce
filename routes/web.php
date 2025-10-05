@@ -89,8 +89,21 @@ Route::prefix('admin')
         Route::resource('products', ProductController::class);
         Route::resource('categories', CategoryController::class);
 
+        // Website
+
+        // Stread Fast
         Route::get('stred_fast/{id}', [WebController::class, 'StreadFastIndex'])->name('stred_fast.edit');
         Route::post('stred_fast/{id}', [WebController::class, 'StreadFast'])->name('stred_fast.update');
+
+
+         // curiore
+        Route::get('curiore/{id}', [WebController::class, 'CuriorIndex'])->name('curiore.edit');
+        Route::post('curiore/{id}', [WebController::class, 'Curiore'])->name('curiore.update');
+
+
+         // Pathau
+        Route::get('pathau/{id}', [WebController::class, 'pathauIndex'])->name('pathau.edit');
+        Route::post('pathau/{id}', [WebController::class, 'pathau'])->name('pathau.update');
 
 
 

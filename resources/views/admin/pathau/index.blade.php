@@ -1,6 +1,6 @@
 @extends('admin.layouts.app')
 
-@section('title', 'Edit StreadFast')
+@section('title', 'Edit Pathau')
 
 @section('content')
 <section class="p-5 bg-gray-100 min-h-screen">
@@ -9,13 +9,13 @@
         <!-- Header -->
         <div class="bg-gradient-to-r from-cyan-600 to-cyan-500 px-6 py-4 flex justify-between items-center">
             <h2 class="text-xl font-semibold text-white">
-                Edit StreadFast
+                Edit Pathau
             </h2>
         </div>
 
         <!-- Form Body -->
         <div class="p-8">
-            <form method="POST" action="{{ route('admin.stred_fast.update', $data->id) }}" class="space-y-6">
+            <form method="POST" action="{{ route('admin.pathau.update', $data->id) }}" class="space-y-6">
                 @csrf
 
                 <div class="grid md:grid-cols-2 gap-6">

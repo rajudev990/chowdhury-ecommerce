@@ -11,11 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('stred_fasts', function (Blueprint $table) {
+        Schema::create('add_products', function (Blueprint $table) {
             $table->id();
-            $table->string('api_key')->nullable();
-            $table->string('secret_key')->nullable();
-            $table->string('status')->default(1);
             $table->timestamps();
         });
     }
@@ -25,6 +22,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('stred_fasts');
+        Schema::dropIfExists('add_products');
     }
 };
