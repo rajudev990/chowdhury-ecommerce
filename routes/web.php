@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\WebController;
+use App\Http\Controllers\Affiliate\AffiliateAuthController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\WebsiteController;
 use Illuminate\Support\Facades\Route;
@@ -36,6 +37,19 @@ Route::get('/products',[WebsiteController::class,'products'])->name('products');
 Route::get('/reviews',[WebsiteController::class,'reviews'])->name('reviews');
 Route::get('/contacts',[WebsiteController::class,'contacts'])->name('contacts');
 Route::post('/contacts-store',[WebsiteController::class,'contactStore'])->name('contact.store');
+
+
+// Registration & Login
+Route::get('affiliate/register', [AffiliateAuthController::class, 'showRegister'])->name('affiliate.register');
+Route::post('affiliate/register', [AffiliateAuthController::class, 'register'])->name('affiliate.register.submit');
+
+Route::get('affiliate/login', [AffiliateAuthController::class, 'showLogin'])->name('affiliate.login');
+Route::post('affiliate/login', [AffiliateAuthController::class, 'login'])->name('affiliate.login.submit');
+
+Route::middleware('auth:affiliate')->group(function () {
+    Route::get('affiliate/dashboard', [AffiliateAuthController::class, 'dashboard'])->name('affiliate.dashboard');
+    Route::post('affiliate/logout', [AffiliateAuthController::class, 'logout'])->name('affiliate.logout');
+});
 
 
 Auth::routes(); // ✅ Removed ['verify' => true]

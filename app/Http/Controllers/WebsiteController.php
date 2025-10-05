@@ -47,7 +47,6 @@ class WebsiteController extends Controller
     }
 
 
-   
 
     public function redirect($provider)
     {

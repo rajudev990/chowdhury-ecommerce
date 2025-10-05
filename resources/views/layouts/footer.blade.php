@@ -16,6 +16,7 @@
                     <li><a href="{{ route('products') }}">All Products</a></li>
                     <li><a href="{{ route('reviews') }}">Reviews</a></li>
                     <li><a href="{{ route('contacts') }}">Contacts</a></li>
+                    <li><a href="{{ route('affiliate.register') }}">Affiliate</a></li>
                 </ul>
             </div>
             <div class="col-md-4 mb-3">
