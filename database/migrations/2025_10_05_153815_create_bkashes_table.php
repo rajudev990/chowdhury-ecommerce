@@ -13,6 +13,11 @@ return new class extends Migration
     {
         Schema::create('bkashes', function (Blueprint $table) {
             $table->id();
+            $table->string('bkash_app_key');
+            $table->string('bkash_secret_key');
+            $table->string('bkash_username');
+            $table->string('bkash_password');
+            $table->string('status')->default('0');
             $table->timestamps();
         });
     }

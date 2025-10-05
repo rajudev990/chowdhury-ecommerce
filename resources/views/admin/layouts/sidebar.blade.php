@@ -135,29 +135,14 @@
             </button>
 
             <div class="dropdown-menu {{ $websiteActive ? 'block' : 'hidden' }} ml-4 mt-1 space-y-1">
-                <a href="{{ route('admin.products.index') }}"
+                <a href="{{ route('admin.smtp.edit',1) }}"
                     class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 text-sm">
                     <i class="fas fa-envelope w-3"></i> SMTP
                 </a>
 
-                <a href="{{ route('admin.categories.index') }}"
-                    class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 text-sm">
-                    <i class="fas fa-cog w-3"></i> Setting
-                </a>
-
-                <a href="{{ route('admin.categories.index') }}"
+                <a href="{{ route('admin.pixel.edit',1) }}"
                     class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 text-sm">
                     <i class="fas fa-bullseye w-3"></i> Pixels
-                </a>
-
-                <a href="{{ route('admin.categories.index') }}"
-                    class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 text-sm">
-                    <i class="fab fa-google w-3"></i> Google
-                </a>
-
-                <a href="{{ route('admin.categories.index') }}"
-                    class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 text-sm">
-                    <i class="fab fa-facebook w-3"></i> Facebook
                 </a>
 
                 <a href="{{ route('admin.stred_fast.edit', 1) }}"
@@ -170,17 +155,28 @@
                     <i class="fas fa-truck w-3"></i> Pathao
                 </a>
 
+                <a href="{{ route('admin.redx.edit', 1) }}"
+                    class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 text-sm">
+                    <i class="fas fa-truck"></i> REDX
+                </a>
+
                 <a href="{{ route('admin.curiore.edit',1) }}"
                     class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 text-sm">
                     <i class="fas fa-shipping-fast w-3"></i> Courier
                 </a>
+
+               <a href="{{ route('admin.marketing.edit',1) }}"
+    class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 text-sm">
+    <i class="fas fa-bullhorn w-4"></i> Marketing
+</a>
+
 
                 <a href="{{ route('admin.categories.index') }}"
                     class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 text-sm">
                     <i class="fas fa-credit-card w-3"></i> Payment
                 </a>
 
-                <a href="{{ route('admin.categories.index') }}"
+                <a href="{{ route('admin.bkash.edit',1) }}"
                     class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 text-sm">
                     <i class="fas fa-mobile-alt w-3"></i> Bkash
                 </a>
@@ -194,6 +190,14 @@
                     class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 text-sm">
                     <i class="fas fa-shield-alt w-3"></i> SSLCommerz
                 </a>
+
+                @can('view setting')
+                <a href="{{ route('admin.settings.index') }}"
+                    class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 {{ request()->is('admin/settings*') ? 'bg-gray-700 font-semibold' : '' }}">
+                    <i class="fas fa-cog w-4"></i>
+                    <span>Settings</span>
+                </a>
+                @endcan
             </div>
         </div>
 
@@ -223,14 +227,7 @@
         </div>
         @endcan
 
-        {{-- Settings --}}
-        @can('view setting')
-        <a href="{{ route('admin.settings.index') }}"
-            class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 {{ request()->is('admin/settings*') ? 'bg-gray-700 font-semibold' : '' }}">
-            <i class="fas fa-cog w-4"></i>
-            <span>Settings</span>
-        </a>
-        @endcan
+
 
     </nav>
 </aside>

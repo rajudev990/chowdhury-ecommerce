@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Facebook extends Model
+class Pixel extends Model
 {
-     protected $guarded = [];
+    protected $guarded = [];
 }

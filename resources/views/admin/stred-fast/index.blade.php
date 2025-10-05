@@ -18,8 +18,18 @@
             <form method="POST" action="{{ route('admin.stred_fast.update', $data->id) }}" class="space-y-6">
                 @csrf
 
-                <div class="grid md:grid-cols-2 gap-6">
+                <div class="grid md:grid-cols-3 gap-6">
                     <div>
+                        <label class="block text-gray-700 font-medium mb-1">
+                           API Base URL <span class="text-red-500">*</span>
+                        </label>
+                        <input type="text" name="url"
+                            value="{{ old('url', $data->url) }}"
+                            class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:border-cyan-500 focus:ring-0 outline-none"
+                            placeholder="Enter API key" required>
+                    </div>
+
+                     <div>
                         <label class="block text-gray-700 font-medium mb-1">
                             Api Key <span class="text-red-500">*</span>
                         </label>
@@ -39,16 +49,6 @@
                             placeholder="Enter Stred key" required>
                     </div>
 
-                    <div>
-                        <label class="block text-gray-700 font-medium mb-1">
-                            Status
-                        </label>
-                        <select name="status"
-                            class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:border-cyan-500 focus:ring-0 outline-none">
-                            <option value="1" {{ old('status', $data->status) == 1 ? 'selected' : '' }}>Active</option>
-                            <option value="0" {{ old('status', $data->status) == 0 ? 'selected' : '' }}>Deactive</option>
-                        </select>
-                    </div>
                 </div>
 
                 <div class="flex justify-end pt-4 border-t">
