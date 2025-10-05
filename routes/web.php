@@ -3,11 +3,16 @@
 
 use App\Http\Controllers\Admin\AdminProfileController;
 use App\Http\Controllers\Admin\Auth\LoginController;
+use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\ColorController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\SettingController;
+use App\Http\Controllers\Admin\SizeController;
 use App\Http\Controllers\Admin\SmtpController;
+use App\Http\Controllers\Admin\SubCategoryController;
+use App\Http\Controllers\Admin\SubSubCategoryController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\WebController;
 use App\Http\Controllers\Affiliate\AffiliateAuthController;
@@ -103,7 +108,24 @@ Route::prefix('admin')
         Route::resource('users', UserController::class);
 
         Route::resource('products', ProductController::class);
+        Route::get('/products/remove-image/{id}', [ProductController::class, 'removeImage'])->name('products.removeImage');
+
+        // AJAX routes
+        Route::get('ajax/subcategories/{category}', [ProductController::class, 'getSubCategories']);
+        Route::get('ajax/subsubcategories/{subcategory}', [ProductController::class, 'getSubSubCategories']);
+            
         Route::resource('categories', CategoryController::class);
+        Route::resource('subcategories', SubCategoryController::class);
+        Route::resource('subsubcategories', SubSubCategoryController::class)->parameters(['subsubcategories' => 'subSubCategory']);
+        // Ajax for dynamic subcategories
+        Route::get('ajax/subcategories/{category}', [SubSubCategoryController::class,'getSubCategories'])->name('ajax.subcategories');
+        Route::get('ajax/subsubcategories/{subcategory}', [SubSubCategoryController::class, 'getSubSubCategories']);
+
+
+        Route::resource('brands', BrandController::class);
+        Route::resource('colors', ColorController::class);
+        Route::resource('sizes', SizeController::class);
+
 
         // <<===========WEBSITE===========>>>
 

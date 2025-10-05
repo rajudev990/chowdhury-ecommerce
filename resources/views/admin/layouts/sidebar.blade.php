@@ -25,26 +25,26 @@
         {{-- Category Dropdown --}}
 
         @php
-        $productActive = request()->is('admin/products*') || request()->is('admin/categories*');
+        $categoryActive = request()->is('admin/categories*') || request()->is('admin/subcategories*') || request()->is('admin/subsubcategories*');
         @endphp
 
         <div class="dropdown">
             <button
-                class="dropdown-btn flex justify-between items-center w-full p-2 rounded hover:bg-gray-700 focus:outline-none {{ $productActive ? 'bg-gray-700 font-semibold' : '' }}">
+                class="dropdown-btn flex justify-between items-center w-full p-2 rounded hover:bg-gray-700 focus:outline-none {{ $categoryActive ? 'bg-gray-700 font-semibold' : '' }}">
                 <span class="flex items-center gap-2"><i class="fas fa-box w-4"></i> Category</span>
-                <i class="fas fa-chevron-down transition-transform {{ $productActive ? 'rotate-180' : '' }}"></i>
+                <i class="fas fa-chevron-down transition-transform {{ $categoryActive ? 'rotate-180' : '' }}"></i>
             </button>
-            <div class="dropdown-menu {{ $productActive ? 'block' : 'hidden' }} ml-4 mt-1 space-y-1">
-                <a href="{{ route('admin.products.index') }}"
-                    class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 text-sm {{ request()->is('admin/products*') ? 'bg-gray-700 font-semibold' : '' }}">
+            <div class="dropdown-menu {{ $categoryActive ? 'block' : 'hidden' }} ml-4 mt-1 space-y-1">
+                <a href="{{ route('admin.categories.index') }}"
+                    class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 text-sm {{ request()->is('admin/categories*') ? 'bg-gray-700 font-semibold' : '' }}">
                     <i class="fas fa-list w-3"></i> Category
                 </a>
-                <a href="{{ route('admin.categories.index') }}"
-                    class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 text-sm {{ request()->is('admin/categories*') ? 'bg-gray-700 font-semibold' : '' }}">
+                <a href="{{ route('admin.subcategories.index') }}"
+                    class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 text-sm {{ request()->is('admin/subcategories*') ? 'bg-gray-700 font-semibold' : '' }}">
                     <i class="fas fa-layer-group w-3"></i> Sub Category
                 </a>
-                <a href="{{ route('admin.categories.index') }}"
-                    class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 text-sm {{ request()->is('admin/categories*') ? 'bg-gray-700 font-semibold' : '' }}">
+                <a href="{{ route('admin.subsubcategories.index') }}"
+                    class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 text-sm {{ request()->is('admin/subsubcategories*') ? 'bg-gray-700 font-semibold' : '' }}">
                     <i class="fas fa-layer-group w-3"></i> Sub Sub Category
                 </a>
             </div>
@@ -52,7 +52,7 @@
 
         {{-- Products Dropdown --}}
         @php
-        $productActive = request()->is('admin/products*') || request()->is('admin/categories*');
+        $productActive = request()->is('admin/products*') || request()->is('admin/brands*') || request()->is('admin/colors*') || request()->is('admin/sizes*');
         @endphp
         <div class="dropdown">
             <button
@@ -65,20 +65,20 @@
                     class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 text-sm {{ request()->is('admin/products*') ? 'bg-gray-700 font-semibold' : '' }}">
                     <i class="fas fa-boxes w-3"></i> All Products
                 </a>
-                <a href="{{ route('admin.categories.index') }}"
-                    class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 text-sm {{ request()->is('admin/categories*') ? 'bg-gray-700 font-semibold' : '' }}">
+                <a href="{{ route('admin.products.create') }}"
+                    class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 text-sm {{ request()->is('admin/products*') ? 'bg-gray-700 font-semibold' : '' }}">
                     <i class="fas fa-plus w-3"></i> Add Product
                 </a>
-                <a href="{{ route('admin.categories.index') }}"
-                    class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 text-sm {{ request()->is('admin/categories*') ? 'bg-gray-700 font-semibold' : '' }}">
+                <a href="{{ route('admin.brands.index') }}"
+                    class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 text-sm {{ request()->is('admin/brands*') ? 'bg-gray-700 font-semibold' : '' }}">
                     <i class="fas fa-copyright w-3"></i> Brand
                 </a>
-                <a href="{{ route('admin.categories.index') }}"
-                    class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 text-sm {{ request()->is('admin/categories*') ? 'bg-gray-700 font-semibold' : '' }}">
+                <a href="{{ route('admin.colors.index') }}"
+                    class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 text-sm {{ request()->is('admin/colors*') ? 'bg-gray-700 font-semibold' : '' }}">
                     <i class="fas fa-palette w-3"></i> Color
                 </a>
-                <a href="{{ route('admin.categories.index') }}"
-                    class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 text-sm {{ request()->is('admin/categories*') ? 'bg-gray-700 font-semibold' : '' }}">
+                <a href="{{ route('admin.sizes.index') }}"
+                    class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 text-sm {{ request()->is('admin/sizes*') ? 'bg-gray-700 font-semibold' : '' }}">
                     <i class="fas fa-ruler w-3"></i> Size
                 </a>
             </div>
@@ -165,10 +165,10 @@
                     <i class="fas fa-shipping-fast w-3"></i> Courier
                 </a>
 
-               <a href="{{ route('admin.marketing.edit',1) }}"
-    class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 text-sm">
-    <i class="fas fa-bullhorn w-4"></i> Marketing
-</a>
+                <a href="{{ route('admin.marketing.edit',1) }}"
+                    class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 text-sm">
+                    <i class="fas fa-bullhorn w-4"></i> Marketing
+                </a>
 
 
                 <a href="{{ route('admin.categories.index') }}"

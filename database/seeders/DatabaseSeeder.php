@@ -3,7 +3,18 @@
 namespace Database\Seeders;
 
 use App\Models\Admin;
+use App\Models\Bkash;
+use App\Models\Couriore;
+use App\Models\Marketing;
+use App\Models\Nagad;
+use App\Models\Pathau;
+use App\Models\Payment;
+use App\Models\Pixel;
+use App\Models\Redx;
 use App\Models\Setting;
+use App\Models\Smtp;
+use App\Models\SslCommerc;
+use App\Models\StredFast;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -22,12 +33,41 @@ class DatabaseSeeder extends Seeder
             'header_logo' => ''
         ]);
 
+        Smtp::firstOrCreate([
+            'mail_mailer'=>''
+        ]);
+
+        Pixel::firstOrCreate([
+            'pixel_name'=>''
+        ]);
+
+        StredFast::firstOrCreate([
+            'url'=>''
+        ]);
+
+        Pathau::firstOrCreate([
+            'api_key'=>''
+        ]);
+        Redx::firstOrCreate([
+            'url'=>''
+        ]);
+        Couriore::firstOrCreate([
+            'api_key'=>''
+        ]);
+        Marketing::firstOrCreate([
+            'facebook_pixel_code'=>''
+        ]);
+        
+        Bkash::firstOrCreate([
+            'bkash_app_key'=>''
+        ]);
+
 
         // Create test user
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        // User::factory()->create([
+        //     'name' => 'Test User',
+        //     'email' => 'test@example.com',
+        // ]);
 
         // Create Super Admin
         $admin = Admin::firstOrCreate(

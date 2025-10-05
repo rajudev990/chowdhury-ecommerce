@@ -218,5 +218,5 @@ $setting = \App\Models\Setting::first();
         });
     </script>
 
-    @yield('scripts')
+    @yield('script')
 </body>
