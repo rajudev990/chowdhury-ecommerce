@@ -1,325 +1,192 @@
 @extends('admin.layouts.app')
 
-@section('title')
-Settings Update
-@endsection
+@section('title', 'Settings Update')
 
 @section('content')
+<section class="p-6 bg-gray-100 min-h-screen">
+    <div class="mx-auto bg-white rounded-2xl shadow-lg overflow-hidden">
 
-<section class="content pt-4">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-12 m-auto">
-                <form id="quickForm" action="{{ route('admin.settings.update', $data->id) }}" method="POST" enctype="multipart/form-data">
-                    @csrf
-                    @method('PUT')
+        <!-- Header -->
+        <div class="bg-gradient-to-r from-cyan-600 to-cyan-500 px-6 py-4 flex justify-between items-center">
+            <h2 class="text-xl font-semibold text-white">Settings Update</h2>
+        </div>
 
-                    <div class="card">
-                        <div class="card-header bg-info">
-                            <h3 class="card-title">Settings Update</h3>
+        <!-- Form -->
+        <form action="{{ route('admin.settings.update', $data->id) }}" method="POST" enctype="multipart/form-data" class="p-8 space-y-8">
+            @csrf
+            @method('PUT')
+
+            <!-- Basic Info -->
+            <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                    <label for="company_name" class="block font-medium text-gray-700">Website Name <span class="text-red-500">*</span></label>
+                    <input type="text" id="company_name" name="company_name" value="{{ $data->company_name }}"
+                        class="w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 focus:border-cyan-500 focus:ring-0 outline-none" required>
+                    @error('company_name')<span class="text-red-500 text-sm">{{ $message }}</span>@enderror
+                </div>
+
+                <div>
+                    <label for="address" class="block font-medium text-gray-700">Address <span class="text-gray-500 text-sm">(optional)</span></label>
+                    <input type="text" id="address" name="address" value="{{ $data->address }}"
+                        class="w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 focus:border-cyan-500 focus:ring-0 outline-none">
+                    @error('address')<span class="text-red-500 text-sm">{{ $message }}</span>@enderror
+                </div>
+
+                <div>
+                    <label for="phone_one" class="block font-medium text-gray-700">Phone Number (One)</label>
+                    <input type="text" id="phone_one" name="phone_one" value="{{ $data->phone_one }}"
+                        class="w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 focus:border-cyan-500 focus:ring-0 outline-none" required>
+                    @error('phone_one')<span class="text-red-500 text-sm">{{ $message }}</span>@enderror
+                </div>
+
+                <div>
+                    <label for="phone_two" class="block font-medium text-gray-700">Phone Number (Two)</label>
+                    <input type="text" id="phone_two" name="phone_two" value="{{ $data->phone_two }}"
+                        class="w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 focus:border-cyan-500 focus:ring-0 outline-none">
+                    @error('phone_two')<span class="text-red-500 text-sm">{{ $message }}</span>@enderror
+                </div>
+
+                <div>
+                    <label for="email_one" class="block font-medium text-gray-700">Email (One)</label>
+                    <input type="email" id="email_one" name="email_one" value="{{ $data->email_one }}"
+                        class="w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 focus:border-cyan-500 focus:ring-0 outline-none" required>
+                    @error('email_one')<span class="text-red-500 text-sm">{{ $message }}</span>@enderror
+                </div>
+
+                <div>
+                    <label for="email_two" class="block font-medium text-gray-700">Email (Two)</label>
+                    <input type="email" id="email_two" name="email_two" value="{{ $data->email_two }}"
+                        class="w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 focus:border-cyan-500 focus:ring-0 outline-none">
+                    @error('email_two')<span class="text-red-500 text-sm">{{ $message }}</span>@enderror
+                </div>
+            </div>
+
+            <!-- Social Links -->
+            <div>
+                <h3 class="text-lg font-semibold text-gray-800 border-b pb-2 mb-4">Social Media Links</h3>
+                <div class="grid md:grid-cols-2 gap-6">
+                    @foreach(['facebook', 'twitter', 'linkedin', 'youtube', 'instagram'] as $social)
+                        <div>
+                            <label for="{{ $social }}" class="block font-medium text-gray-700 capitalize">{{ ucfirst($social) }}</label>
+                            <input type="text" id="{{ $social }}" name="{{ $social }}" value="{{ $data->$social }}"
+                                class="w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 focus:border-cyan-500 focus:ring-0 outline-none"
+                                placeholder="Enter your {{ $social }} link">
+                            @error($social)<span class="text-red-500 text-sm">{{ $message }}</span>@enderror
                         </div>
+                    @endforeach
+                </div>
+            </div>
 
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-lg-6 form-group">
-                                    <label for="company_name">Website Name <span class="text-danger">*</span></label>
-                                    <input required value="{{$data->company_name}}" type="text" name="company_name" class="form-control @error('company_name') is-invalid @enderror" id="company_name" placeholder="কোম্পানির নাম">
-                                    @error('company_name')
-                                    <span class="text-danger">{{$message}}</span>
-                                    @enderror
-                                </div>
-                                <div class="col-lg-6 form-group">
-                                    <label for="address">Address <span class="text-black-50">(Optional)</span></label>
-                                    <input value="{{$data->address}}" type="text" name="address" class="form-control @error('address') is-invalid @enderror" id="address" placeholder="ঠিকানা">
-                                    @error('address')
-                                    <span class="text-danger">{{$message}}</span>
-                                    @enderror
-                                </div>
+            <!-- Logos -->
+            <div>
+                <h3 class="text-lg font-semibold text-gray-800 border-b pb-2 mb-4">Logos & Favicon</h3>
+                <div class="grid md:grid-cols-3 gap-6">
+                    @foreach (['header_logo' => 'Header Logo', 'footer_logo' => 'Footer Logo', 'favicon' => 'Favicon'] as $field => $label)
+                        <div>
+                            <label for="{{ $field }}" class="block font-medium text-gray-700">{{ $label }}</label>
+                            <input type="file" name="{{ $field }}" id="{{ $field }}"
+                                class="mt-1 block w-full text-sm text-gray-700 border border-gray-300 rounded-lg p-1.5 focus:border-cyan-500 focus:ring-0">
+                            @error($field)<span class="text-red-500 text-sm">{{ $message }}</span>@enderror
 
-                                <div class="col-lg-6 form-group">
-                                    <label for="phone_one">Phone Number (one)</label>
-                                    <input required value="{{$data->phone_one}}" type="text" name="phone_one" class="form-control @error('phone_one') is-invalid @enderror" id="phone_one" placeholder="+880">
-                                    @error('phone_one')
-                                    <span class="text-danger">{{$message}}</span>
-                                    @enderror
-                                </div>
-                                <div class="col-lg-6 form-group">
-                                    <label for="phone_two">Phone Number (two)</label>
-                                    <input value="{{$data->phone_two}}" type="text" name="phone_two" class="form-control @error('phone_two') is-invalid @enderror" id="phone_two" placeholder="+880">
-                                    @error('phone_two')
-                                    <span class="text-danger">{{$message}}</span>
-                                    @enderror
-                                </div>
-
-
-                                <div class="col-lg-6 form-group">
-                                    <label for="email_one">Email (one)</label>
-                                    <input required value="{{$data->email_one}}" type="text" name="email_one" class="form-control @error('email_one') is-invalid @enderror" id="email_one" placeholder="example@gmail.com">
-                                    @error('email_one')
-                                    <span class="text-danger">{{$message}}</span>
-                                    @enderror
-                                </div>
-                                <div class="col-lg-6 form-group">
-                                    <label for="email_two">Email (two)</label>
-                                    <input value="{{$data->email_two}}" type="text" name="email_two" class="form-control @error('email_two') is-invalid @enderror" id="email_two" placeholder="example@gmail.com">
-                                    @error('email_two')
-                                    <span class="text-danger">{{$message}}</span>
-                                    @enderror
-                                </div>
-
-
-                                <div class="col-lg-6 form-group">
-                                    <label for="facebook">Facebook</label>
-                                    <input value="{{$data->facebook}}" type="text" name="facebook" class="form-control @error('facebook') is-invalid @enderror" id="facebook" placeholder="আপনার ফেসবুক প্রোফাইল লিংক দিন">
-                                    @error('facebook')
-                                    <span class="text-danger">{{$message}}</span>
-                                    @enderror
-                                </div>
-                                <div class="col-lg-6 form-group">
-                                    <label for="twitter">Twitter</label>
-                                    <input value="{{$data->twitter}}" type="text" name="twitter" class="form-control @error('twitter') is-invalid @enderror" id="twitter" placeholder="আপনার টুইটার প্রোফাইল লিংক দিন">
-                                    @error('twitter')
-                                    <span class="text-danger">{{$message}}</span>
-                                    @enderror
-                                </div>
-
-                                <div class="col-lg-6 form-group">
-                                    <label for="linkedin">Linkedin</label>
-                                    <input value="{{$data->linkedin}}" type="text" name="linkedin" class="form-control @error('linkedin') is-invalid @enderror" id="linkedin" placeholder="আপনার লিঙ্কডইন প্রোফাইল লিংক দিন">
-                                    @error('linkedin')
-                                    <span class="text-danger">{{$message}}</span>
-                                    @enderror
-                                </div>
-                                <div class="col-lg-6 form-group">
-                                    <label for="youtube">Youtube</label>
-                                    <input value="{{$data->youtube}}" type="text" name="youtube" class="form-control @error('youtube') is-invalid @enderror" id="youtube" placeholder="আপনার ইউটিউব প্রোফাইল লিংক দিন">
-                                    @error('youtube')
-                                    <span class="text-danger">{{$message}}</span>
-                                    @enderror
-                                </div>
-
-                                <div class="col-lg-6 form-group">
-                                    <label for="instagram">Instagram</label>
-                                    <input value="{{$data->instagram}}" type="text" name="instagram" class="form-control @error('instagram') is-invalid @enderror" id="instagram" placeholder="আপনার ইনস্টাগ্রাম প্রোফাইল লিংক দিন">
-                                    @error('instagram')
-                                    <span class="text-danger">{{$message}}</span>
-                                    @enderror
-                                </div>
-                                <div class="col-lg-6 form-group">
-                                    <label for="copyright">Copyright</label>
-                                    <input value="{{$data->copyright}}" type="text" name="copyright" class="form-control @error('copyright') is-invalid @enderror" id="copyright" placeholder="© ২০২৫ আপনার কোম্পানির নাম">
-                                    @error('copyright')
-                                    <span class="text-danger">{{$message}}</span>
-                                    @enderror
-                                </div>
-
-                                <div class="col-lg-12 form-group">
-                                    <label for="google_maps">Google Maps</label>
-                                    <textarea name="google_maps" id="google_maps" class="form-control" rows="3" cols="3">{!!$data->google_maps!!}</textarea>
-                                    @error('google_maps')
-                                    <span class="text-danger">{{$message}}</span>
-                                    @enderror
-                                </div>
-
-                                <hr class="w-100">
-
-                                <div class="col-lg-4 form-group">
-                                    <label for="header_logo">Header Logo</label>
-                                    <input required value="{{$data->header_logo}}" type="file" name="header_logo" class="p-1 form-control @error('header_logo') is-invalid @enderror" id="header_logo">
-                                    @error('header_logo')
-                                    <span class="text-danger">{{$message}}</span>
-                                    @enderror
-                                    @if($data->header_logo)
-                                    <div class="mt-2">
-                                        <img id="preview-header_logo" src="{{ Storage::url($data->header_logo) }}"
-                                            alt="Current Profile Image" width="120" height="120" style="object-fit: cover; border-radius: 8px;">
-                                    </div>
-                                    @else
-                                    <div class="mt-2">
-                                        <img id="preview-header_logo" src=""
-                                            alt="Current Profile Image" width="120" height="120" style="object-fit: cover; border-radius: 8px;display:none;">
-                                    </div>
-                                    @endif
-                                </div>
-                                <div class="col-lg-4 form-group">
-                                    <label for="footer_logo">Footer Logo</label>
-                                    <input required value="{{$data->footer_logo}}" type="file" name="footer_logo" class="p-1 form-control @error('footer_logo') is-invalid @enderror" id="footer_logo">
-                                    @error('footer_logo')
-                                    <span class="text-danger">{{$message}}</span>
-                                    @enderror
-                                    @if($data->footer_logo)
-                                    <div class="mt-2">
-                                        <img id="preview-footer_logo" src="{{ Storage::url($data->footer_logo) }}"
-                                            alt="Current Profile Image" width="120" height="120" style="object-fit: cover; border-radius: 8px;">
-                                    </div>
-                                    @else
-                                    <div class="mt-2">
-                                        <img id="preview-footer_logo" src=""
-                                            alt="Current Profile Image" width="120" height="120" style="object-fit: cover; border-radius: 8px;display:none;">
-                                    </div>
-                                    @endif
-                                </div>
-
-                                <div class="col-lg-4 form-group">
-                                    <label for="favicon">Favicon</label>
-                                    <input required value="{{$data->favicon}}" type="file" name="favicon" class="p-1 form-control @error('favicon') is-invalid @enderror" id="favicon">
-                                    @error('favicon')
-                                    <span class="text-danger">{{$message}}</span>
-                                    @enderror
-                                    @if($data->favicon)
-                                    <div class="mt-2">
-                                        <img id="preview-favicon" src="{{ Storage::url($data->favicon) }}"
-                                            alt="Current Profile Image" width="120" height="120" style="object-fit: cover; border-radius: 8px;">
-                                    </div>
-                                    @else
-                                    <div class="mt-2">
-                                        <img id="preview-favicon" src=""
-                                            alt="Current Profile Image" width="120" height="120" style="object-fit: cover; border-radius: 8px;display:none;">
-                                    </div>
-                                    @endif
-                                </div>
-
-
-                                <hr class="w-100">
-
-
-
-                                <div class="col-lg-12 form-group">
-                                    <label for="meta_title">Meta Title</label>
-                                    <input value="{{$data->meta_title}}" type="text" name="meta_title" class="form-control @error('meta_title') is-invalid @enderror" id="meta_title" placeholder="">
-                                    @error('meta_title')
-                                    <span class="text-danger">{{$message}}</span>
-                                    @enderror
-                                </div>
-
-                                <div class="col-lg-12 form-group">
-                                    <label for="meta_description">Meta Description</label>
-                                    <textarea name="meta_description" id="meta_description" class="form-control" rows="5" cols="5">{!!$data->meta_description!!}</textarea>
-                                    @error('meta_description')
-                                    <span class="text-danger">{{$message}}</span>
-                                    @enderror
-                                </div>
-
-
-                                <div class="col-lg-12 form-group">
-                                    <label for="meta_keyword">Meta Keywords</label>
-                                    <textarea name="meta_keyword" id="meta_keyword" class="form-control" rows="5" cols="5">{!!$data->meta_keyword!!}</textarea>
-                                    @error('meta_keyword')
-                                    <span class="text-danger">{{$message}}</span>
-                                    @enderror
-                                </div>
-
-
-                                <div class="col-lg-12 form-group">
-                                    <label for="meta_image">Meta Image</label>
-                                    <input value="{{$data->meta_image}}" type="file" name="meta_image" class="p-1 form-control @error('meta_image') is-invalid @enderror" id="meta_image">
-                                    @error('meta_image')
-                                    <span class="text-danger">{{$message}}</span>
-                                    @enderror
-                                    @if($data->meta_image)
-                                    <div class="mt-2">
-                                        <img id="preview-meta_image" src="{{ Storage::url($data->meta_image) }}"
-                                            alt="Current Profile Image" width="120" height="120" style="object-fit: cover; border-radius: 8px;">
-                                    </div>
-                                    @else
-                                    <div class="mt-2">
-                                        <img id="preview-meta_image" src=""
-                                            alt="Current Profile Image" width="120" height="120" style="object-fit: cover; border-radius: 8px;display:none;">
-                                    </div>
-                                    @endif
-                                </div>
-
-
+                            <div class="mt-3">
+                                @if($data->$field)
+                                    <img id="preview-{{ $field }}" src="{{ Storage::url($data->$field) }}"
+                                         class="rounded-lg border w-24 h-24 object-cover" alt="preview">
+                                @else
+                                    <img id="preview-{{ $field }}" class="hidden rounded-lg border w-24 h-24 object-cover">
+                                @endif
                             </div>
                         </div>
+                    @endforeach
+                </div>
+            </div>
 
-                        <div class="card-footer d-flex justify-content-end">
-                            <button type="submit" class="btn btn-info"><i class="fa fa-edit"></i> Update</button>
+            <!-- Google Maps -->
+            <div>
+                <label for="google_maps" class="block font-medium text-gray-700">Google Maps</label>
+                <textarea id="google_maps" name="google_maps" rows="3"
+                    class="w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 focus:border-cyan-500 focus:ring-0 outline-none">{!! $data->google_maps !!}</textarea>
+                @error('google_maps')<span class="text-red-500 text-sm">{{ $message }}</span>@enderror
+            </div>
+
+            <!-- Meta Section -->
+            <div>
+                <h3 class="text-lg font-semibold text-gray-800 border-b pb-2 mb-4">SEO Metadata</h3>
+                <div class="space-y-6">
+                    <div>
+                        <label for="meta_title" class="block font-medium text-gray-700">Meta Title</label>
+                        <input type="text" name="meta_title" id="meta_title" value="{{ $data->meta_title }}"
+                            class="w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 focus:border-cyan-500 focus:ring-0 outline-none">
+                    </div>
+
+                    <div>
+                        <label for="meta_description" class="block font-medium text-gray-700">Meta Description</label>
+                        <textarea id="meta_description" name="meta_description" rows="4"
+                            class="w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 focus:border-cyan-500 focus:ring-0 outline-none">{!! $data->meta_description !!}</textarea>
+                    </div>
+
+                    <div>
+                        <label for="meta_keyword" class="block font-medium text-gray-700">Meta Keywords</label>
+                        <textarea id="meta_keyword" name="meta_keyword" rows="3"
+                            class="w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 focus:border-cyan-500 focus:ring-0 outline-none">{!! $data->meta_keyword !!}</textarea>
+                    </div>
+
+                    <div>
+                        <label for="meta_image" class="block font-medium text-gray-700">Meta Image</label>
+                        <input type="file" name="meta_image" id="meta_image"
+                            class="mt-1 block w-full text-sm text-gray-700 border border-gray-300 rounded-lg p-1.5 focus:border-cyan-500 focus:ring-0">
+                        @error('meta_image')<span class="text-red-500 text-sm">{{ $message }}</span>@enderror
+
+                        <div class="mt-3">
+                            @if($data->meta_image)
+                                <img id="preview-meta_image" src="{{ Storage::url($data->meta_image) }}"
+                                     class="rounded-lg border w-24 h-24 object-cover" alt="preview">
+                            @else
+                                <img id="preview-meta_image" class="hidden rounded-lg border w-24 h-24 object-cover">
+                            @endif
                         </div>
                     </div>
-                </form>
+                </div>
             </div>
-        </div>
+
+            <!-- Copyright -->
+            <div>
+                <label for="copyright" class="block font-medium text-gray-700">Copyright</label>
+                <input type="text" id="copyright" name="copyright" value="{{ $data->copyright }}"
+                    class="w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 focus:border-cyan-500 focus:ring-0 outline-none"
+                    placeholder="© 2025 Your Company">
+            </div>
+
+            <!-- Submit -->
+            <div class="flex justify-end pt-6 border-t">
+                <button type="submit"
+                    class="bg-cyan-600 hover:bg-cyan-700 text-white px-6 py-2 rounded-lg transition flex items-center gap-2">
+                    <i class="fa fa-edit"></i> Update
+                </button>
+            </div>
+        </form>
     </div>
 </section>
+@endsection
 
-{{-- Image Preview Script --}}
 @section('script')
 <script>
-    document.getElementById('header_logo').addEventListener('change', function(event) {
-        const preview = document.getElementById('preview-header_logo');
-        const file = event.target.files[0];
-
-        if (file) {
-            const reader = new FileReader();
-
-            reader.onload = function(e) {
-                preview.src = e.target.result;
-                preview.style.display = 'block';
+    // Image preview logic for all image fields
+    ['header_logo', 'footer_logo', 'favicon', 'meta_image'].forEach(id => {
+        document.getElementById(id).addEventListener('change', function (event) {
+            const preview = document.getElementById(`preview-${id}`);
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = e => {
+                    preview.src = e.target.result;
+                    preview.classList.remove('hidden');
+                };
+                reader.readAsDataURL(file);
+            } else {
+                preview.classList.add('hidden');
             }
-
-            reader.readAsDataURL(file);
-        } else {
-            preview.style.display = 'none';
-        }
+        });
     });
 </script>
-<script>
-    document.getElementById('footer_logo').addEventListener('change', function(event) {
-        const preview = document.getElementById('preview-footer_logo');
-        const file = event.target.files[0];
-
-        if (file) {
-            const reader = new FileReader();
-
-            reader.onload = function(e) {
-                preview.src = e.target.result;
-                preview.style.display = 'block';
-            }
-
-            reader.readAsDataURL(file);
-        } else {
-            preview.style.display = 'none';
-        }
-    });
-</script>
-<script>
-    document.getElementById('favicon').addEventListener('change', function(event) {
-        const preview = document.getElementById('preview-favicon');
-        const file = event.target.files[0];
-
-        if (file) {
-            const reader = new FileReader();
-
-            reader.onload = function(e) {
-                preview.src = e.target.result;
-                preview.style.display = 'block';
-            }
-
-            reader.readAsDataURL(file);
-        } else {
-            preview.style.display = 'none';
-        }
-    });
-</script>
-<script>
-    document.getElementById('meta_image').addEventListener('change', function(event) {
-        const preview = document.getElementById('preview-meta_image');
-        const file = event.target.files[0];
-
-        if (file) {
-            const reader = new FileReader();
-
-            reader.onload = function(e) {
-                preview.src = e.target.result;
-                preview.style.display = 'block';
-            }
-
-            reader.readAsDataURL(file);
-        } else {
-            preview.style.display = 'none';
-        }
-    });
-</script>
-@endsection
 @endsection

@@ -1,99 +1,105 @@
 @extends('admin.layouts.app')
 
-@section('title')
-Update Roles
-@endsection
+@section('title', 'Update Role')
 
 @section('content')
+<section class="p-5 bg-gray-100 min-h-screen">
+    <div class="mx-auto bg-white rounded-2xl shadow-lg overflow-hidden">
 
+        <!-- Header -->
+        <div class="bg-gradient-to-r from-cyan-600 to-cyan-500 px-6 py-4 flex justify-between items-center">
+            <h2 class="text-xl font-semibold text-white">Update Role</h2>
 
-<section class="content pt-4">
-    <div class="container-fluid">
-        <div class="row">
-            
+            @can('view role')
+            <a href="{{ route('admin.roles.index') }}"
+                class="bg-white/20 hover:bg-white/30 text-white px-4 py-1.5 rounded-lg transition flex items-center gap-1">
+                <i class="fa fa-angle-left"></i> Back
+            </a>
+            @endcan
+        </div>
 
-            <div class="col-md-12">
-                <div class="card card-cyan">
-                    <div class="card-header">
-                        <h3 class="card-title">Update Roles</h3>
-                        @can('view role')
-                            <a href="{{ route('admin.roles.index') }}" class="btn btn-success float-right"><i class="fa fa-angle-left"> Back</i></a>
-                        @endcan
+        <!-- Form Body -->
+        <div class="p-8">
+            <form action="{{ route('admin.roles.update', $role->id) }}" method="POST" class="space-y-6">
+                @csrf
+                @method('PUT')
+
+                <!-- Role Name -->
+                <div>
+                    <label class="block text-gray-700 font-medium mb-1">
+                        Role Name <span class="text-red-500">*</span>
+                    </label>
+                    <input type="text" name="name" value="{{ old('name', $role->name) }}"
+                        class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:border-cyan-500 focus:ring-0 outline-none"
+                        placeholder="Enter role name" required>
+                    @error('name')
+                    <span class="text-red-500 text-sm mt-1 block">{{ $message }}</span>
+                    @enderror
+                </div>
+
+                <!-- Permissions -->
+                <div>
+                    <div class="flex items-center gap-2 mb-2">
+                        <input type="checkbox" id="select-all-permissions"
+                            class="h-4 w-4 text-cyan-600 border-gray-300 rounded focus:ring-0">
+                        <label for="select-all-permissions" class="text-gray-700 font-medium">
+                            Select All Permissions <span class="text-gray-500 text-sm">(optional)</span>
+                        </label>
                     </div>
 
-                    <form id="quickForm" action="{{ route('admin.roles.update', $role->id) }}" method="POST">
-                        @csrf
-                        @method('put')
-                        <div class="card-body">
-                            <div class="row">
-                                {{-- Name Field --}}
-                                <div class="form-group col-md-12">
-                                    <label>Roles Name <span class="text-danger">*</span></label>
-                                    <input type="text" name="name" class="form-control @error('name') is-invalid @enderror" value="{{ $role->name }}" required>
-                                    @error('name')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
+                    <div class="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+                        @foreach($permissions as $permission)
+                        <label
+                            class="flex items-center space-x-2 border border-gray-200 rounded-lg px-3 py-2 hover:bg-gray-50 transition">
+                            <input type="checkbox" name="permissions[]" value="{{ $permission->name }}"
+                                id="permission_{{ $permission->id }}"
+                                class="permission-checkbox text-cyan-600 focus:ring-0 rounded"
+                                {{ in_array($permission->name, $rolePermissions) ? 'checked' : '' }}>
+                            <span class="text-gray-700 text-sm">
+                                {{ ucwords(str_replace('-', ' ', $permission->name)) }}
+                            </span>
+                        </label>
+                        @endforeach
+                    </div>
 
-                                {{-- Permissions --}}
-                                <div class="form-group col-md-12">
-                                    <label>
-                                        <input type="checkbox" id="select-all-permissions">
-                                        <strong>Permissions <span class="text-black-50">(Optional)</span></strong>
-                                    </label>
-                                    <div class="row mt-2">
-                                        @foreach($permissions as $permission)
-                                            <div class="col-md-3">
-                                                <div class="form-check">
-                                                    <input type="checkbox"
-                                                        class="form-check-input permission-checkbox"
-                                                        id="permission_{{ $permission->id }}"
-                                                        name="permissions[]"
-                                                        value="{{ $permission->name }}"
-                                                        {{ in_array($permission->name, $rolePermissions) ? 'checked' : '' }}>
-                                                        
-                                                    <label class="form-check-label" for="permission_{{ $permission->id }}">
-                                                        {{ ucwords(str_replace('-', ' ', $permission->name)) }}
-                                                    </label>
-                                                </div>
-                                            </div>
-                                        @endforeach
-                                    </div>
-                                    @error('permissions')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="card-footer d-flex justify-content-end">
-                            <button type="submit" class="btn btn-info"><i class="fa fa-edit"></i> আপডেট করুন</button>
-                        </div>
-                    </form>
+                    @error('permissions')
+                    <span class="text-red-500 text-sm mt-1 block">{{ $message }}</span>
+                    @enderror
                 </div>
-            </div>
 
+                <!-- Submit Button -->
+                <div class="flex justify-end pt-4 border-t">
+                    <button type="submit"
+                        class="bg-cyan-600 hover:bg-cyan-700 text-white px-6 py-2 rounded-lg transition flex items-center gap-2">
+                        <i class="fa fa-edit"></i> Update
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </section>
-
 @endsection
 
 @section('script')
 <script>
     // Toggle all permissions
-    $('#select-all-permissions').on('change', function () {
-        $('.permission-checkbox').prop('checked', this.checked);
+    document.getElementById('select-all-permissions').addEventListener('change', function() {
+        const checkboxes = document.querySelectorAll('.permission-checkbox');
+        checkboxes.forEach(cb => cb.checked = this.checked);
     });
 
-    // If all individual checkboxes are checked, auto-check the "Select All"
-    $('.permission-checkbox').on('change', function () {
-        $('#select-all-permissions').prop('checked', $('.permission-checkbox:checked').length === $('.permission-checkbox').length);
+    // Update "Select All" checkbox dynamically
+    const permissionCheckboxes = document.querySelectorAll('.permission-checkbox');
+    function updateSelectAll() {
+        const allChecked = Array.from(permissionCheckboxes).every(cb => cb.checked);
+        document.getElementById('select-all-permissions').checked = allChecked;
+    }
+
+    permissionCheckboxes.forEach(cb => {
+        cb.addEventListener('change', updateSelectAll);
     });
 
-    // Initialize state of "Select All" based on checked permissions
-    $(document).ready(function() {
-        $('#select-all-permissions').prop('checked', $('.permission-checkbox:checked').length === $('.permission-checkbox').length);
-    });
+    // Initialize state on page load
+    document.addEventListener('DOMContentLoaded', updateSelectAll);
 </script>
 @endsection
