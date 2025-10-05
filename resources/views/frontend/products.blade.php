@@ -1,46 +1,6 @@
 @extends('layouts.app')
-
-@section('title', 'Home')
-
+@section('title','Products')
 @section('content')
-
-
-
-<!-- Banner -->
-<section class="banner">
-    <div class="banner-content">
-        <h1>Pure Blackseed Flower Honey</h1>
-        <p>Experience the natural sweetness of organic honey</p>
-        <a href="#new-products" class="btn btn-primary">
-            <i class="fas fa-shopping-cart me-2"></i> Shop Now
-        </a>
-    </div>
-</section>
-
-<!-- Popular Categories -->
-<section id="categories">
-    <div class="container">
-        <h2 class="section-title">Popular Categories</h2>
-        <div class="row g-4">
-            @foreach ($categories as $item)
-            <div class="col-md-2 col-4">
-                <div class="category-card text-center">
-                    <img src="{{ $item->image ? Storage::url($item->image) : asset('/assets/img/null.png') }}" class="card-img-top mb-2" alt="Category">
-                    <div class="card-body p-0">
-                        <h5 class="card-title">{{ $item->name }}</h5>
-                    </div>
-                </div>
-            </div>
-            @endforeach
-
-
-
-
-
-        </div>
-    </div>
-</section>
-
 <!-- New Products -->
 <section id="new-products" class="bg-light py-5">
     <div class="container">
@@ -614,8 +574,4 @@
         </div>
     </div>
 </section>
-
-    @include('frontend.components.customer-review')
-
-
 @endsection

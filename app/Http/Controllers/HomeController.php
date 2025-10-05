@@ -28,7 +28,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        return view('user.dashboard');
     }
 
     public function settings()
@@ -38,7 +38,7 @@ class HomeController extends Controller
     public function profile()
     {
         $data = Auth::user();
-        return view('profile', compact('data'));
+        return view('user.profile', compact('data'));
     }
     public function profileEdit()
     {
@@ -49,7 +49,7 @@ class HomeController extends Controller
     public function passwordEdit()
     {
 
-        return view('password-edit');
+        return view('user.change-password');
     }
 
     public function update(Request $request)
@@ -58,8 +58,8 @@ class HomeController extends Controller
 
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'dob' => 'required|date',
-            'username' => 'required|string|max:255|unique:users,username,' . $user->id,
+            'dob' => 'nullable|date',
+            'username' => 'nullable|string|max:255|unique:users,username,' . $user->id,
             'email' => 'required|email|max:255|unique:users,email,' . $user->id,
             'phone' => [
                 'nullable',
@@ -71,8 +71,8 @@ class HomeController extends Controller
             'bio' => 'nullable|string|max:1000',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
         ], [
-            'phone.regex' => 'ফোন নাম্বারটি অবশ্যই ১১ সংখ্যার হতে হবে।',
-            'phone.unique' => 'এই ফোন নাম্বারটি ইতোমধ্যে ব্যবহৃত হয়েছে।',
+            'phone.regex' => 'The phone number must be 11 digits.',
+            'phone.unique' => 'This phone number has already been taken.',
         ]);
 
         // Handle image upload
@@ -97,7 +97,7 @@ class HomeController extends Controller
         // Update user data
         $user->update($validated);
 
-        return redirect()->back()->with('success', 'প্রোফাইল সফলভাবে আপডেট হয়েছে!');
+        return redirect()->back()->with('success', 'Profile updated successfully!');
     }
 
     public function updatePassword(Request $request)
@@ -106,9 +106,9 @@ class HomeController extends Controller
             'current_password' => ['required', 'current_password'],
             'new_password' => ['required', 'min:6', 'confirmed', 'different:current_password'],
         ], [
-            'current_password.current_password' => 'বর্তমান পাসওয়ার্ড সঠিক নয়।',
-            'new_password.confirmed' => 'নতুন পাসওয়ার্ড এবং নিশ্চিত পাসওয়ার্ড মিলে না।',
-            'new_password.different' => 'নতুন পাসওয়ার্ডটি অবশ্যই বর্তমান পাসওয়ার্ড থেকে ভিন্ন হতে হবে।',
+            'current_password.current_password' => 'The current password is incorrect.',
+            'new_password.confirmed' => 'The new password and confirmation password do not match.',
+            'new_password.different' => 'The new password must be different from the current password.',
         ]);
 
         // Update password
@@ -116,7 +116,6 @@ class HomeController extends Controller
         $user->password = Hash::make($request->new_password);
         $user->save();
 
-        return back()->with('success', 'পাসওয়ার্ড সফলভাবে পরিবর্তন করা হয়েছে।');
+        return back()->with('success', 'Password has been updated successfully.');
     }
-
 }

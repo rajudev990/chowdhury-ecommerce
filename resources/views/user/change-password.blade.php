@@ -1,4 +1,4 @@
-@extends('admin.layouts.app')
+@extends('user.layouts.app')
 @section('title', 'Password Update')
 
 @section('content')
@@ -11,9 +11,9 @@
         </div>
 
         <!-- Form -->
-        <form action="{{ route('admin.change.password.update') }}" method="POST" class="p-6 space-y-6">
+        <form action="{{ route('user.password.update') }}" method="POST" class="p-6 space-y-6">
             @csrf
-            @method('PUT')
+            @method('POST')
 
             {{-- Error Messages --}}
             @if ($errors->any())

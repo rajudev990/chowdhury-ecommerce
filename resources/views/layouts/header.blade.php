@@ -1,36 +1,5 @@
- <!-- Navbar -->
- <!-- Sidebar -->
- <div id="sidebar">
-     <div class="d-flex justify-content-between align-items-center mb-4">
-         <h5 class="text-white m-0">Menu</h5>
-         <span class="close-btn" onclick="toggleSidebar()">&times;</span>
-     </div>
-     <ul class="list-unstyled">
-         <li class="nav-item"><a class="nav-link" href="#categories">Categories</a></li>
-         <li class="nav-item"><a class="nav-link" href="#new-products">New Products</a></li>
-         <li class="nav-item"><a class="nav-link" href="#popular-products">Popular Products</a></li>
-         <li class="nav-item"><a class="nav-link" href="#reviews">Reviews</a></li>
-         <li class="nav-item"><a class="nav-link" href="#footer">Contact</a></li>
 
-         <!-- Category Dropdown -->
-         <li class="nav-item">
-             <a class="nav-link d-flex justify-content-between align-items-center" data-bs-toggle="collapse"
-                 href="#catSubmenu" role="button" aria-expanded="false" aria-controls="catSubmenu">
-                 Category
-                 <i class="bi bi-chevron-down text-white"></i>
-             </a>
-             <ul class="collapse list-unstyled ps-3" id="catSubmenu">
-                 <li><a class="nav-link" href="#">Organic Honey</a></li>
-                 <li><a class="nav-link" href="#">Bee Products</a></li>
-                 <li><a class="nav-link" href="#">Honey Comb</a></li>
-                 <li><a class="nav-link" href="#">Gift Packs</a></li>
-             </ul>
-         </li>
-     </ul>
- </div>
-
-
- <!-- Navbar -->
+<!-- Navbar -->
  <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
      <div class="container d-flex justify-content-between align-items-center py-2">
          <!-- Small Device Hamburger -->
@@ -39,7 +8,13 @@
          </button>
 
          <!-- Logo -->
-         <a class="navbar-brand fw-bold" href="#">Blackseed Honey</a>
+         <a class="navbar-brand fw-bold" href="{{ route('index') }}">
+            @if($setting->header_logo)
+            <img src="{{ Storage::url($setting->header_logo) }}" alt="{{ $setting->title }}">
+            @else
+            Logo
+            @endif
+         </a>
 
          <!-- Search Box Large -->
          <form class="d-none d-lg-flex mx-auto" role="search">
@@ -61,22 +36,25 @@
 
              <!-- Large Device Menu -->
              <ul class="navbar-nav d-none d-lg-flex">
-                 <li class="nav-item"><a class="nav-link" href="#categories">Home</a></li>
-                 <li class="nav-item"><a class="nav-link" href="#new-products">Products</a></li>
+                 <li class="nav-item"><a class="nav-link" href="{{ route('index') }}">Home</a></li>
+                 <li class="nav-item"><a class="nav-link" href="{{ route('products') }}">Products</a></li>
                  <li class="nav-item dropdown">
-                     <a class="nav-link dropdown-toggle" href="#" id="catDropdown" role="button"
+                     <a class="nav-link @if($categories->count()) dropdown-toggle @endif" href="#" id="catDropdown" role="button"
                          data-bs-toggle="dropdown" aria-expanded="false">
                          Category
                      </a>
+                     @if($categories->count())
+
                      <ul class="dropdown-menu" aria-labelledby="catDropdown">
-                         <li><a class="dropdown-item" href="#">Organic Honey</a></li>
-                         <li><a class="dropdown-item" href="#">Bee Products</a></li>
-                         <li><a class="dropdown-item" href="#">Honey Comb</a></li>
-                         <li><a class="dropdown-item" href="#">Gift Packs</a></li>
+                        @foreach ($categories as $item)
+                            <li><a class="dropdown-item" href="#">{{ $item->name }}</a></li>
+                        @endforeach
+                        
                      </ul>
+                     @endif
                  </li>
-                 <li class="nav-item"><a class="nav-link" href="#reviews">Reviews</a></li>
-                 <li class="nav-item"><a class="nav-link" href="#footer">Contact</a></li>
+                 <li class="nav-item"><a class="nav-link" href="{{ route('reviews') }}">Reviews</a></li>
+                 <li class="nav-item"><a class="nav-link" href="{{ route('contacts') }}">Contact</a></li>
 
              </ul>
              <!-- Cart Icon Small -->
@@ -88,6 +66,37 @@
          </div>
      </div>
  </nav>
+
+ <!-- Sidebar -->
+ <div id="sidebar">
+     <div class="d-flex justify-content-between align-items-center mb-4">
+         <h5 class="text-white m-0">Menu</h5>
+         <span class="close-btn" onclick="toggleSidebar()">&times;</span>
+     </div>
+     <ul class="list-unstyled">
+         <li class="nav-item"><a class="nav-link" href="#categories">Categories</a></li>
+         <li class="nav-item"><a class="nav-link" href="{{ route('products') }}">Products</a></li>
+         <li class="nav-item"><a class="nav-link" href="{{ route('reviews') }}">Reviews</a></li>
+         <li class="nav-item"><a class="nav-link" href="{{ route('contacts') }}">Contact</a></li>
+
+         <!-- Category Dropdown -->
+         <li class="nav-item">
+             <a class="nav-link d-flex justify-content-between align-items-center" data-bs-toggle="collapse"
+                 href="#catSubmenu" role="button" aria-expanded="false" aria-controls="catSubmenu">
+                 Category
+                 <i class="bi bi-chevron-down text-white"></i>
+             </a>
+             <ul class="collapse list-unstyled ps-3" id="catSubmenu">
+                 <li><a class="nav-link" href="#">Organic Honey</a></li>
+                 <li><a class="nav-link" href="#">Bee Products</a></li>
+                 <li><a class="nav-link" href="#">Honey Comb</a></li>
+                 <li><a class="nav-link" href="#">Gift Packs</a></li>
+             </ul>
+         </li>
+     </ul>
+ </div>
+
+
 
 
  <!-- Cart Sidebar -->
