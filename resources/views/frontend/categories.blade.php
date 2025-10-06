@@ -1,13 +1,15 @@
 @extends('layouts.app')
-@section('title','Products')
+@section('title','Categories Products')
 @section('content')
+
 
 <section id="new-products" class="bg-light py-5">
     <div class="container">
-        <h2 class="section-title">All Products</h2>
+        <h2 class="section-title">{{ $category->name }}</h2>
         <div class="row g-4">
             <!-- Product Item -->
-            @foreach ($products as $item)
+             @if($category->products->count() > 0)
+            @foreach ($category->products as $item)
             <div class="col-md-3 col-6">
                 <div class="card product-card position-relative overflow-hidden border-0 shadow-sm">
                     <!-- Discount Badge -->
@@ -66,8 +68,13 @@
                 </div>
             </div>
             @endforeach
+            @else
+            <p class="text-center text-danger">Not Founded</p>
+            @endif
             <!-- More product items can follow same structure -->
         </div>
     </div>
 </section>
+
+
 @endsection

@@ -3,7 +3,7 @@
     <div class="container">
         <div class="row text-center text-md-start">
             <div class="col-md-4 mb-3">
-                 @if($setting->footer_logo)
+                @if($setting->footer_logo)
                 <img src="{{ Storage::url($setting->footer_logo) }}" alt="{{ $setting->title }}">
                 @else
                 Logo
@@ -45,17 +45,17 @@
         <i class="fas fa-comment-alt"></i>
         <span>Message</span>
     </a>
-    <a href="#" class="nav-item active">
+    <a href="{{ route('index') }}" class="nav-item active">
         <div class="circle-icon">
             <i class="fas fa-home"></i>
             <span>Home</span>
         </div>
     </a>
-    <a href="#" class="nav-item">
+    <a href="{{ route('checkout') }}" class="nav-item">
         <i class="fas fa-shopping-cart"></i>
-        <span>Cart (1)</span>
+        <span class="fcart">0</span>
     </a>
-    <a href="#" class="nav-item">
+    <a href="{{ route('login') }}" class="nav-item">
         <i class="fas fa-user"></i>
         <span>Login</span>
     </a>

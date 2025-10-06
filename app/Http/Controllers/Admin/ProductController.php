@@ -38,21 +38,16 @@ class ProductController extends Controller
     {
         $request->validate([
             'category_id' => 'required|exists:categories,id',
-            'sub_category_id' => 'required|exists:sub_categories,id',
-            'sub_sub_category_id' => 'required|exists:sub_sub_categories,id',
-            'brand_id' => 'required|exists:brands,id',
+            'sub_category_id' => 'nullable|exists:sub_categories,id',
+            'sub_sub_category_id' => 'nullable|exists:sub_sub_categories,id',
+            'brand_id' => 'nullable|exists:brands,id',
             'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
             'status' => 'required|in:0,1',
-            'price' => 'required|numeric',
-            'sku' => 'nullable|string|max:50',
-            'images.*' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-            'featured_image_1' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-            'featured_image_2' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-            'variants.*.color_id' => 'required|exists:colors,id',
-            'variants.*.size_id' => 'required|exists:sizes,id',
-            'variants.*.price' => 'required|numeric',
-            'variants.*.stock' => 'required|numeric',
+            'regular_price' => 'required|numeric',
+            'sale_price' => 'nullable|numeric',
+            'images.*' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'featured_image_1' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'featured_image_2' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
         $product = Product::create([
@@ -64,7 +59,8 @@ class ProductController extends Controller
             'slug' => Str::slug($request->name),
             'description' => $request->description,
             'status' => $request->status,
-            'regular_price' => $request->price,
+            'regular_price' => $request->regular_price,
+            'sale_price' => $request->sale_price,
             'sku' => $request->sku,
             'stock' => $request->stock ?? 0,
             'is_featured' => $request->has('is_featured') ? 1 : 0,
@@ -72,42 +68,50 @@ class ProductController extends Controller
             'is_new' => $request->has('is_new') ? 1 : 0,
         ]);
 
-        // Upload multiple images
+        // Multiple images
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $img) {
-                $path = ImageHelper::uploadImage($img);
-                ProductImage::create([
-                    'product_id' => $product->id,
-                    'image' => $path,
-                ]);
+                if ($img->isValid()) {
+                    $path = ImageHelper::uploadImage($img);
+                    ProductImage::create([
+                        'product_id' => $product->id,
+                        'image' => $path,
+                    ]);
+                }
             }
         }
 
-        // Upload featured images
+        // Featured images
         if ($request->hasFile('featured_image_1')) {
-            $path = ImageHelper::uploadImage($request->file('featured_image_1'));
-            $product->update(['featured_image_1' => $path]);
+            $product->update(['featured_image_1' => ImageHelper::uploadImage($request->file('featured_image_1'))]);
         }
         if ($request->hasFile('featured_image_2')) {
-            $path = ImageHelper::uploadImage($request->file('featured_image_2'));
-            $product->update(['featured_image_2' => $path]);
+            $product->update(['featured_image_2' => ImageHelper::uploadImage($request->file('featured_image_2'))]);
         }
 
         // Variants
-        if ($request->variants) {
+        if (!empty($request->variants)) {
             foreach ($request->variants as $variant) {
-                ProductVariant::create([
-                    'product_id' => $product->id,
-                    'color_id' => $variant['color_id'],
-                    'size_id' => $variant['size_id'],
-                    'price' => $variant['price'],
-                    'stock' => $variant['stock'],
-                ]);
+                if (
+                    !empty($variant['color_id']) ||
+                    !empty($variant['size_id']) ||
+                    !empty($variant['price']) &&
+                    !empty($variant['stock'])
+                ) {
+                    ProductVariant::create([
+                        'product_id' => $product->id,
+                        'color_id'   => $variant['color_id'],
+                        'size_id'    => $variant['size_id'],
+                        'price'      => $variant['price'],
+                        'stock'      => $variant['stock'],
+                    ]);
+                }
             }
         }
 
         return redirect()->route('admin.products.index')->with('success', 'Product created successfully!');
     }
+
 
 
     public function edit(Product $product)
@@ -120,7 +124,13 @@ class ProductController extends Controller
         $subsubcategories = SubSubCategory::where('sub_category_id', $product->sub_category_id)->get();
 
         return view('admin.products.edit', compact(
-            'product', 'categories', 'brands', 'colors', 'sizes', 'subcategories', 'subsubcategories'
+            'product',
+            'categories',
+            'brands',
+            'colors',
+            'sizes',
+            'subcategories',
+            'subsubcategories'
         ));
     }
 
@@ -131,21 +141,16 @@ class ProductController extends Controller
 
         $request->validate([
             'category_id' => 'required|exists:categories,id',
-            'sub_category_id' => 'required|exists:sub_categories,id',
-            'sub_sub_category_id' => 'required|exists:sub_sub_categories,id',
-            'brand_id' => 'required|exists:brands,id',
+            'sub_category_id' => 'nullable|exists:sub_categories,id',
+            'sub_sub_category_id' => 'nullable|exists:sub_sub_categories,id',
+            'brand_id' => 'nullable|exists:brands,id',
             'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
             'status' => 'required|in:0,1',
-            'price' => 'required|numeric',
-            'sku' => 'nullable|string|max:50',
-            'images.*' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-            'featured_image_1' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-            'featured_image_2' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-            'variants.*.color_id' => 'required|exists:colors,id',
-            'variants.*.size_id' => 'required|exists:sizes,id',
-            'variants.*.price' => 'required|numeric',
-            'variants.*.stock' => 'required|numeric',
+            'regular_price' => 'required|numeric',
+            'sale_price' => 'nullable|numeric',
+            'images.*' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'featured_image_1' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'featured_image_2' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
         $product->update([
@@ -157,7 +162,8 @@ class ProductController extends Controller
             'slug' => Str::slug($request->name),
             'description' => $request->description,
             'status' => $request->status,
-            'regular_price' => $request->price,
+            'regular_price' => $request->regular_price,
+            'sale_price' => $request->sale_price,
             'sku' => $request->sku,
             'stock' => $request->stock ?? 0,
             'is_featured' => $request->has('is_featured') ? 1 : 0,
@@ -188,15 +194,34 @@ class ProductController extends Controller
 
         // Remove old variants and add new ones
         $product->variants()->delete();
-        if ($request->variants) {
+        // if ($request->variants) {
+        //     foreach ($request->variants as $variant) {
+        //         ProductVariant::create([
+        //             'product_id' => $product->id,
+        //             'color_id' => $variant['color_id'],
+        //             'size_id' => $variant['size_id'],
+        //             'price' => $variant['price'],
+        //             'stock' => $variant['stock'],
+        //         ]);
+        //     }
+        // }
+        // Variants
+        if (!empty($request->variants)) {
             foreach ($request->variants as $variant) {
-                ProductVariant::create([
-                    'product_id' => $product->id,
-                    'color_id' => $variant['color_id'],
-                    'size_id' => $variant['size_id'],
-                    'price' => $variant['price'],
-                    'stock' => $variant['stock'],
-                ]);
+                if (
+                    !empty($variant['color_id']) ||
+                    !empty($variant['size_id']) ||
+                    !empty($variant['price']) &&
+                    !empty($variant['stock'])
+                ) {
+                    ProductVariant::create([
+                        'product_id' => $product->id,
+                        'color_id'   => $variant['color_id'],
+                        'size_id'    => $variant['size_id'],
+                        'price'      => $variant['price'],
+                        'stock'      => $variant['stock'],
+                    ]);
+                }
             }
         }
 

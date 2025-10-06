@@ -4,12 +4,58 @@ namespace App\Http\Controllers\Admin;
 
 use App\Helpers\ImageHelper;
 use App\Http\Controllers\Controller;
+use App\Models\Category;
+use App\Models\CustomerReview;
+use App\Models\Order;
+use App\Models\OrderItem;
+use App\Models\Product;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
+use Carbon\Carbon;
 
 class AdminProfileController extends Controller
 {
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth:admin');
+    }
+
+    public function dashboard()
+    {
+        $orders = Order::count();
+        $revenue = OrderItem::sum('price');
+        $pending_orders = Order::where('status','pending')->count();
+        $complete_orders = Order::where('status','complete')->count();
+        $products = Product::count();
+        $categories = Category::count();
+        $customers = User::count();
+        $new_customers = User::where('created_at', '>=', Carbon::now()->subDays(7))->count();
+        $reviews = CustomerReview::where('status',1)->count();
+        $pending_reviews = CustomerReview::where('status',0)->count();
+
+      
+       $allProducts = Product::with(['variants', 'orderItems'])->get();
+
+        $productslist = $allProducts->map(function ($product) {
+            $totalQty = $product->stock + $product->variants->sum('stock');
+            $soldQty = $product->orderItems->sum('quantity');
+            $product->available_stock = $totalQty - $soldQty;
+            return $product;
+        });
+
+        $lowStockProducts = $productslist->filter(fn($p) => $p->available_stock <= 10);
+        $otherProducts = $productslist->filter(fn($p) => $p->available_stock > 10);
+
+        return view('admin.dashboard',compact('orders','pending_orders','complete_orders','products','categories','customers','new_customers','revenue','reviews','pending_reviews','lowStockProducts','otherProducts'));
+    }
+
 
     public function settings()
     {

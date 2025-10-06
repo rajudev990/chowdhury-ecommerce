@@ -4,6 +4,18 @@
 @section('content')
 <section class="p-5 bg-gray-100 min-h-screen">
     <div class="mx-auto max-w-7xl">
+
+        {{-- Show Validation Errors --}}
+        @if ($errors->any())
+        <div class="bg-red-100 text-red-700 p-3 rounded mb-4">
+            <ul class="list-disc list-inside">
+                @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+        @endif
+
         <form action="{{ route('admin.products.update',$product->id) }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
@@ -24,10 +36,14 @@
                             <label class="block text-gray-700 mb-1">SKU</label>
                             <input type="text" name="sku" value="{{ $product->sku }}" class="w-full border rounded px-3 py-2">
                         </div>
-                        <div class="grid grid-cols-2 gap-4">
+                        <div class="grid grid-cols-3 gap-4">
                             <div>
                                 <label class="block text-gray-700 mb-1">Regular Price <span class="text-red-500">*</span></label>
-                                <input type="number" name="price" step="0.01" value="{{ $product->regular_price }}" class="w-full border rounded px-3 py-2" required>
+                                <input type="number" name="regular_price" step="0.01" value="{{ $product->regular_price }}" class="w-full border rounded px-3 py-2" required>
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 mb-1">Sales Price <span class="text-red-500">*</span></label>
+                                <input type="number" name="sale_price" step="0.01" value="{{ $product->sale_price }}" class="w-full border rounded px-3 py-2" required>
                             </div>
                             <div>
                                 <label class="block text-gray-700 mb-1">Stock</label>
@@ -62,20 +78,20 @@
                         <div id="variants-wrapper" class="space-y-2">
                             @foreach($product->variants as $index => $variant)
                             <div class="flex gap-2 variant-row">
-                                <select name="variants[{{ $index }}][color_id]" class="border rounded px-2 py-1" required>
+                                <select name="variants[{{ $index }}][color_id]" class="border rounded px-2 py-1">
                                     <option value="">Select Color</option>
                                     @foreach($colors as $color)
                                     <option value="{{ $color->id }}" {{ $variant->color_id==$color->id?'selected':'' }}>{{ $color->name }}</option>
                                     @endforeach
                                 </select>
-                                <select name="variants[{{ $index }}][size_id]" class="border rounded px-2 py-1" required>
+                                <select name="variants[{{ $index }}][size_id]" class="border rounded px-2 py-1">
                                     <option value="">Select Size</option>
                                     @foreach($sizes as $size)
                                     <option value="{{ $size->id }}" {{ $variant->size_id==$size->id?'selected':'' }}>{{ $size->name }}</option>
                                     @endforeach
                                 </select>
-                                <input type="number" name="variants[{{ $index }}][price]" value="{{ $variant->price }}" placeholder="Price" class="w-full border rounded px-2 py-1" required>
-                                <input type="number" name="variants[{{ $index }}][stock]" value="{{ $variant->stock }}" placeholder="Stock" class="w-full border rounded px-2 py-1" required>
+                                <input type="number" name="variants[{{ $index }}][price]" value="{{ $variant->price }}" placeholder="Price" class="w-full border rounded px-2 py-1">
+                                <input type="number" name="variants[{{ $index }}][stock]" value="{{ $variant->stock }}" placeholder="Stock" class="w-full border rounded px-2 py-1">
                                 <button type="button" class="bg-red-500 text-white px-2 rounded remove-variant">X</button>
                             </div>
                             @endforeach
@@ -102,7 +118,7 @@
                         </div>
                         <div>
                             <label class="block text-gray-700 mb-1">SubCategory <span class="text-red-500">*</span></label>
-                            <select name="sub_category_id" id="sub_category_id" class="w-full border rounded px-3 py-2" required>
+                            <select name="sub_category_id" id="sub_category_id" class="w-full border rounded px-3 py-2">
                                 <option value="">Select SubCategory</option>
                                 @foreach($subcategories as $sub)
                                 <option value="{{ $sub->id }}" {{ $product->sub_category_id==$sub->id?'selected':'' }}>{{ $sub->name }}</option>
@@ -111,7 +127,7 @@
                         </div>
                         <div>
                             <label class="block text-gray-700 mb-1">Sub-SubCategory <span class="text-red-500">*</span></label>
-                            <select name="sub_sub_category_id" id="sub_sub_category_id" class="w-full border rounded px-3 py-2" required>
+                            <select name="sub_sub_category_id" id="sub_sub_category_id" class="w-full border rounded px-3 py-2">
                                 <option value="">Select Sub-SubCategory</option>
                                 @foreach($subsubcategories as $subsub)
                                 <option value="{{ $subsub->id }}" {{ $product->sub_sub_category_id==$subsub->id?'selected':'' }}>{{ $subsub->name }}</option>
@@ -120,7 +136,7 @@
                         </div>
                         <div>
                             <label class="block text-gray-700 mb-1">Brand <span class="text-red-500">*</span></label>
-                            <select name="brand_id" class="w-full border rounded px-3 py-2" required>
+                            <select name="brand_id" class="w-full border rounded px-3 py-2">
                                 <option value="">Select Brand</option>
                                 @foreach($brands as $brand)
                                 <option value="{{ $brand->id }}" {{ $product->brand_id==$brand->id?'selected':'' }}>{{ $brand->name }}</option>
@@ -153,14 +169,14 @@
                             <label>Featured Image 1</label>
                             <input type="file" name="featured_image_1" class="w-full border rounded px-3 py-2">
                             @if($product->featured_image_1)
-                                <img src="{{ Storage::url($product->featured_image_1) }}" class="w-32 h-32 object-cover mt-1 rounded">
+                            <img src="{{ Storage::url($product->featured_image_1) }}" class="w-32 h-32 object-cover mt-1 rounded">
                             @endif
                         </div>
                         <div>
                             <label>Featured Image 2</label>
                             <input type="file" name="featured_image_2" class="w-full border rounded px-3 py-2">
                             @if($product->featured_image_2)
-                                <img src="{{ Storage::url($product->featured_image_2) }}" class="w-32 h-32 object-cover mt-1 rounded">
+                            <img src="{{ Storage::url($product->featured_image_2) }}" class="w-32 h-32 object-cover mt-1 rounded">
                             @endif
                         </div>
                     </div>
@@ -187,94 +203,96 @@
 
 @section('script')
 <script>
-$(document).ready(function(){
+    $(document).ready(function() {
 
-    let variantIndex = {{ count($product->variants) }};
+        let variantIndex = {{count($product->variants)}};
 
-    // Add Variant
-    $('#add-variant').click(function(){
-        let html = `<div class="flex gap-2 variant-row">
-            <select name="variants[${variantIndex}][color_id]" class="border rounded px-2 py-1" required>
+        // Add Variant
+        $('#add-variant').click(function() {
+            let html = `<div class="flex gap-2 variant-row">
+            <select name="variants[${variantIndex}][color_id]" class="border rounded px-2 py-1">
                 <option value="">Select Color</option>
                 @foreach($colors as $color)
                 <option value="{{ $color->id }}">{{ $color->name }}</option>
                 @endforeach
             </select>
-            <select name="variants[${variantIndex}][size_id]" class="border rounded px-2 py-1" required>
+            <select name="variants[${variantIndex}][size_id]" class="border rounded px-2 py-1">
                 <option value="">Select Size</option>
                 @foreach($sizes as $size)
                 <option value="{{ $size->id }}">{{ $size->name }}</option>
                 @endforeach
             </select>
-            <input type="number" name="variants[${variantIndex}][price]" placeholder="Price" class="w-full border rounded px-2 py-1" required>
-            <input type="number" name="variants[${variantIndex}][stock]" placeholder="Stock" class="w-full border rounded px-2 py-1" required>
+            <input type="number" name="variants[${variantIndex}][price]" placeholder="Price" class="w-full border rounded px-2 py-1">
+            <input type="number" name="variants[${variantIndex}][stock]" placeholder="Stock" class="w-full border rounded px-2 py-1">
             <button type="button" class="bg-red-500 text-white px-2 rounded remove-variant">X</button>
         </div>`;
-        $('#variants-wrapper').append(html);
-        variantIndex++;
-    });
+            $('#variants-wrapper').append(html);
+            variantIndex++;
+        });
 
-    // Remove Variant
-    $(document).on('click','.remove-variant',function(){
-        $(this).closest('.variant-row').remove();
-    });
+        // Remove Variant
+        $(document).on('click', '.remove-variant', function() {
+            $(this).closest('.variant-row').remove();
+        });
 
-    // Add Image
-    $('#add-image').click(function(){
-        let html = `<div class="flex gap-2 items-center image-row">
+        // Add Image
+        $('#add-image').click(function() {
+            let html = `<div class="flex gap-2 items-center image-row">
             <input type="file" name="images[]" class="w-full border rounded px-3 py-2">
             <button type="button" class="bg-red-500 text-white px-2 py-1 rounded remove-image">X</button>
         </div>`;
-        $('#images-wrapper').append(html);
-    });
+            $('#images-wrapper').append(html);
+        });
 
-    // Remove New Image
-    $(document).on('click','.remove-image',function(){
-        $(this).closest('.image-row').remove();
-    });
+        // Remove New Image
+        $(document).on('click', '.remove-image', function() {
+            $(this).closest('.image-row').remove();
+        });
 
-    // Remove Existing Image with AJAX
-    $(document).on('click','.remove-existing-image',function(){
-        let id = $(this).data('id');
-        let parent = $(this).closest('.existing-image');
-        $.ajax({
-            url: '/admin/products/remove-image/' + id,
-            type: 'DELETE',
-            data: {_token:'{{ csrf_token() }}'},
-            success: function(res){
-                parent.remove();
-                alert(res.success);
+        // Remove Existing Image with AJAX
+        $(document).on('click', '.remove-existing-image', function() {
+            let id = $(this).data('id');
+            let parent = $(this).closest('.existing-image');
+            $.ajax({
+                url: '/admin/products/remove-image/' + id,
+                type: 'DELETE',
+                data: {
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function(res) {
+                    parent.remove();
+                    alert(res.success);
+                }
+            });
+        });
+
+        // Category → SubCategory
+        $('#category_id').on('change', function() {
+            let id = $(this).val();
+            $('#sub_category_id').html('<option>Loading...</option>');
+            $('#sub_sub_category_id').html('<option value="">Select Sub-SubCategory</option>');
+            if (id) {
+                $.get('/admin/ajax/subcategories/' + id, function(data) {
+                    let html = '<option value="">Select SubCategory</option>';
+                    data.forEach(d => html += `<option value="${d.id}">${d.name}</option>`);
+                    $('#sub_category_id').html(html);
+                });
             }
         });
-    });
 
-    // Category → SubCategory
-    $('#category_id').on('change', function(){
-        let id = $(this).val();
-        $('#sub_category_id').html('<option>Loading...</option>');
-        $('#sub_sub_category_id').html('<option value="">Select Sub-SubCategory</option>');
-        if(id){
-            $.get('/admin/ajax/subcategories/'+id,function(data){
-                let html = '<option value="">Select SubCategory</option>';
-                data.forEach(d => html += `<option value="${d.id}">${d.name}</option>`);
-                $('#sub_category_id').html(html);
-            });
-        }
-    });
+        // SubCategory → SubSubCategory
+        $('#sub_category_id').on('change', function() {
+            let id = $(this).val();
+            $('#sub_sub_category_id').html('<option>Loading...</option>');
+            if (id) {
+                $.get('/admin/ajax/subsubcategories/' + id, function(data) {
+                    let html = '<option value="">Select Sub-SubCategory</option>';
+                    data.forEach(d => html += `<option value="${d.id}">${d.name}</option>`);
+                    $('#sub_sub_category_id').html(html);
+                });
+            }
+        });
 
-    // SubCategory → SubSubCategory
-    $('#sub_category_id').on('change', function(){
-        let id = $(this).val();
-        $('#sub_sub_category_id').html('<option>Loading...</option>');
-        if(id){
-            $.get('/admin/ajax/subsubcategories/'+id,function(data){
-                let html = '<option value="">Select Sub-SubCategory</option>';
-                data.forEach(d => html += `<option value="${d.id}">${d.name}</option>`);
-                $('#sub_sub_category_id').html(html);
-            });
-        }
     });
-
-});
 </script>
 @endsection

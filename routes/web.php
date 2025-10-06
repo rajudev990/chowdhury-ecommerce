@@ -40,6 +40,13 @@ Route::get('/cmd',function(){
 
 Route::get('/',[WebsiteController::class,'index'])->name('index');
 Route::get('/products',[WebsiteController::class,'products'])->name('products');
+Route::get('/product/{slug}', [WebsiteController::class,'productSingle'])->name('product.single');
+Route::get('/checkout', [WebsiteController::class, 'checkout'])->name('checkout');
+Route::post('/order-store', [WebsiteController::class, 'orderStore'])->name('order.store');
+Route::get('categories/{slug}',[WebsiteController::class, 'categories'])->name('categories');
+Route::get('/live-search', [WebsiteController::class, 'liveSearch'])->name('product.liveSearch');
+
+
 Route::get('/reviews',[WebsiteController::class,'reviews'])->name('reviews');
 Route::get('/contacts',[WebsiteController::class,'contacts'])->name('contacts');
 Route::post('/contacts-store',[WebsiteController::class,'contactStore'])->name('contact.store');
@@ -91,10 +98,10 @@ Route::prefix('admin')
     ->name('admin.')
     ->group(function () {
 
-
-        Route::get('/dashboard', function () {
-            return view('admin.dashboard');
-        })->name('dashboard');
+        Route::get('/dashboard',[AdminProfileController::class,'dashboard'])->name('dashboard');
+        // Route::get('/dashboard', function () {
+        //     return view('admin.dashboard');
+        // })->name('dashboard');
 
         Route::get('/profile/settings', [AdminProfileController::class, 'settings'])->name('profile.settings');
         Route::put('/profile/settings', [AdminProfileController::class, 'updateSettings'])->name('profile.settings.update');
