@@ -160,7 +160,7 @@ Route::prefix('admin')
         Route::post('nagad/{id}', [WebController::class, 'nagad'])->name('nagad.update');
         Route::post('sslcz/{id}', [WebController::class, 'sslcz'])->name('sslcz.update');
     // CURIORE 
-        Route::get('coriore', [WebController::class, 'curiore'])->name('curiore.setup');
+        Route::get('courier', [WebController::class, 'curiore'])->name('courier.setup');
         Route::post('stredfast/{id}', [WebController::class, 'stredfast'])->name('stredfast.update');
         Route::post('pathau/{id}', [WebController::class, 'pathau'])->name('pathau.update');
         Route::post('redx/{id}', [WebController::class, 'redx'])->name('redx.update');

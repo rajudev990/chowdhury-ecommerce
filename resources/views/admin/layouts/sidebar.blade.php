@@ -125,7 +125,7 @@
 
         {{-- Website Dropdown --}}
         @php
-        $websiteActive = request()->is('admin/website*');
+        $websiteActive = request()->is('admin/coupons*') || request()->is('admin/smtp*') || request()->is('admin/pixel*') || request()->is('admin/courier*') || request()->is('admin/marketing*') || request()->is('admin/payment*') || request()->is('admin/settings*');
         @endphp
         <div class="dropdown">
             <button
@@ -150,7 +150,7 @@
                     <i class="fas fa-bullseye w-3"></i> Pixels
                 </a>
 
-                <a href="{{ route('admin.curiore.setup') }}"
+                <a href="{{ route('admin.courier.setup') }}"
                     class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 text-sm">
                     <i class="fas fa-shipping-fast w-3"></i> Courier
                 </a>
