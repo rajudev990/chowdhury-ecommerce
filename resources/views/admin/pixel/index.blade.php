@@ -1,6 +1,6 @@
 @extends('admin.layouts.app')
 
-@section('title', 'Edit Pixels')
+@section('title', 'Update Pixels')
 
 @section('content')
 <section class="p-5 bg-gray-100 min-h-screen">
@@ -9,7 +9,7 @@
         <!-- Header -->
         <div class="bg-gradient-to-r from-cyan-600 to-cyan-500 px-6 py-4 flex justify-between items-center">
             <h2 class="text-xl font-semibold text-white">
-                Edit Pixels
+                Update Pixels
             </h2>
         </div>
 
@@ -18,7 +18,7 @@
             <form method="POST" action="{{ route('admin.pixel.update', $data->id) }}" class="space-y-6">
                 @csrf
 
-                <div class="grid md:grid-cols-2 gap-6">
+                <div class="grid md:grid-cols-3 gap-6">
                     <div>
                         <label class="block text-gray-700 font-medium mb-1">
                             Pixel Name <span class="text-red-500">*</span>
@@ -45,13 +45,15 @@
                         @enderror
                     </div>
 
-                    <div class="md:col-span-2">
+
+                     <div>
                         <label class="block text-gray-700 font-medium mb-1">
-                            Pixel Code
+                           Pixel Code <span class="text-red-500">*</span>
                         </label>
-                        <textarea name="pixel_code" rows="5"
+                        <input type="text" name="pixel_code"
+                            value="{{ old('pixel_code', $data->pixel_code) }}"
                             class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:border-indigo-500 focus:ring-0 outline-none"
-                            placeholder="Paste Pixel Code here">{{ old('pixel_code', $data->pixel_code) }}</textarea>
+                            placeholder="Enter Pixel Code" required>
                         @error('pixel_code')
                         <span class="text-red-500 text-sm">{{ $message }}</span>
                         @enderror

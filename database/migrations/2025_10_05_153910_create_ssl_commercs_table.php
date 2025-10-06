@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('ssl_commercs', function (Blueprint $table) {
             $table->id();
+            $table->string('sslcz_store_id')->nullable();
+            $table->string('sslcz_store_password')->nullable();
+            $table->string('sslcommerz_sandbox')->default(0);
             $table->timestamps();
         });
     }

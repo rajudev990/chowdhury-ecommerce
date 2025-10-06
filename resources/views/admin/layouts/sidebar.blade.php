@@ -145,22 +145,7 @@
                     <i class="fas fa-bullseye w-3"></i> Pixels
                 </a>
 
-                <a href="{{ route('admin.stred_fast.edit', 1) }}"
-                    class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 text-sm">
-                    <i class="fas fa-truck-fast w-3"></i> Steadfast
-                </a>
-
-                <a href="{{ route('admin.pathau.edit' ,1) }}"
-                    class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 text-sm">
-                    <i class="fas fa-truck w-3"></i> Pathao
-                </a>
-
-                <a href="{{ route('admin.redx.edit', 1) }}"
-                    class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 text-sm">
-                    <i class="fas fa-truck"></i> REDX
-                </a>
-
-                <a href="{{ route('admin.curiore.edit',1) }}"
+                <a href="{{ route('admin.curiore.setup') }}"
                     class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 text-sm">
                     <i class="fas fa-shipping-fast w-3"></i> Courier
                 </a>
@@ -171,26 +156,12 @@
                 </a>
 
 
-                <a href="{{ route('admin.categories.index') }}"
+                <a href="{{ route('admin.payment.setup') }}"
                     class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 text-sm">
-                    <i class="fas fa-credit-card w-3"></i> Payment
+                    <i class="fas fa-credit-card w-3"></i> Payment Method
                 </a>
 
-                <a href="{{ route('admin.bkash.edit',1) }}"
-                    class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 text-sm">
-                    <i class="fas fa-mobile-alt w-3"></i> Bkash
-                </a>
-
-                <a href="{{ route('admin.categories.index') }}"
-                    class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 text-sm">
-                    <i class="fas fa-wallet w-3"></i> Nagad
-                </a>
-
-                <a href="{{ route('admin.categories.index') }}"
-                    class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 text-sm">
-                    <i class="fas fa-shield-alt w-3"></i> SSLCommerz
-                </a>
-
+              
                 @can('view setting')
                 <a href="{{ route('admin.settings.index') }}"
                     class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 {{ request()->is('admin/settings*') ? 'bg-gray-700 font-semibold' : '' }}">

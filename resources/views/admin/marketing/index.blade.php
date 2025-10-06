@@ -1,6 +1,6 @@
 @extends('admin.layouts.app')
 
-@section('title', 'Edit Marketing')
+@section('title', 'Update Marketing')
 
 @section('content')
 <section class="p-5 bg-gray-100 min-h-screen">
@@ -9,7 +9,7 @@
         <!-- Header -->
         <div class="bg-gradient-to-r from-cyan-600 to-cyan-500 px-6 py-4 flex justify-between items-center">
             <h2 class="text-xl font-semibold text-white">
-              Marketing Information
+             Update Marketing Information
             </h2>
         </div>
 

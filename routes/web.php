@@ -147,12 +147,23 @@ Route::prefix('admin')
         // REDX
         Route::get('redx/{id}', [WebController::class, 'redxindex'])->name('redx.edit');
         Route::post('redx/{id}', [WebController::class, 'redx'])->name('redx.update');
-        // Bkash
-        Route::get('bkash/{id}', [WebController::class, 'bkashindex'])->name('bkash.edit');
-        Route::post('bkash/{id}', [WebController::class, 'bkash'])->name('bkash.update');
-        // Bkash
+        // Marketing
         Route::get('marketing/{id}', [WebController::class, 'marketingindex'])->name('marketing.edit');
         Route::post('marketing/{id}', [WebController::class, 'marketing'])->name('marketing.update');
+
+   // PAYMENT SETUP PAGE
+        Route::get('payment/setup', [WebController::class, 'paymentSetup'])->name('payment.setup');
+        Route::post('bkash/{id}', [WebController::class, 'bkash'])->name('bkash.update');
+        Route::post('nagad/{id}', [WebController::class, 'nagad'])->name('nagad.update');
+        Route::post('sslcz/{id}', [WebController::class, 'sslcz'])->name('sslcz.update');
+
+
+    // CURIORE 
+        Route::get('coriore', [WebController::class, 'curiore'])->name('curiore.setup');
+        Route::post('stredfast/{id}', [WebController::class, 'stredfast'])->name('stredfast.update');
+        Route::post('pathau/{id}', [WebController::class, 'pathau'])->name('pathau.update');
+        Route::post('redx/{id}', [WebController::class, 'redx'])->name('redx.update');
+        Route::post('curiores/{id}', [WebController::class, 'curiores'])->name('curiores.update');
     
 
 

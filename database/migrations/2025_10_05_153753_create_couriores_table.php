@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('couriores', function (Blueprint $table) {
             $table->id();
+             $table->string('url')->nullable();
             $table->string('api_key')->nullable();
             $table->string('secret_key')->nullable();
-            $table->string('status')->default(1);
             $table->timestamps();
         });
     }
