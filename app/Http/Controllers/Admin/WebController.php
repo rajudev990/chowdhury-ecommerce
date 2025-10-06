@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Bkash;
 use App\Models\Couriore;
+use App\Models\Facebook;
+use App\Models\Google;
 use App\Models\Marketing;
 use App\Models\Nagad;
 use App\Models\Pathau;
@@ -59,6 +61,31 @@ class WebController extends Controller
     }
 
 
+
+    //Marketing
+    
+    public function marketingSetup()
+    {
+        $facebook = Facebook::first();  
+        $google = Google::first();   
+
+        return view('admin.marketing.setup', compact('facebook', 'google'));
+    }
+
+    public function facebook(Request $request, $id)
+    {
+        $facebook = Facebook::findOrFail($id);
+        $facebook->update($request->all());
+        return redirect()->back()->with('success', 'Facebook updated successfully');
+    }
+
+    public function google(Request $request, $id)
+    {
+        $google = Google::findOrFail($id);
+        $google->update($request->all());
+        return redirect()->back()->with('success', 'Google updated successfully');
+    }
+
     //Payment Setup---------->>>
 
     public function paymentSetup()
@@ -92,23 +119,6 @@ class WebController extends Controller
     }
 
 
-    // Marketing...............>>
-
-    public function marketingindex($id)
-    {
-        $data = Marketing::findOrFail($id);
-        return view('admin.marketing.index', compact('data'));
-    }
-
-    public function marketing(Request $request, $id)
-    {
-        $input = Marketing::findOrFail($id);
-        $data = $request->all();
-
-        $input->update($data);
-
-        return redirect()->back()->with('success', 'Updated successfully');
-    }
 
 
     //CURIORE--------->>>

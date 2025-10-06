@@ -135,7 +135,12 @@
             </button>
 
             <div class="dropdown-menu {{ $websiteActive ? 'block' : 'hidden' }} ml-4 mt-1 space-y-1">
-                <a href="{{ route('admin.smtp.edit',1) }}"
+                <a href="{{ route('admin.coupons.index') }}"
+                    class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 text-sm">
+                    <i class="fas fa-ticket-alt w-3"></i> Coupon
+                </a>
+
+                 <a href="{{ route('admin.smtp.edit',1) }}"
                     class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 text-sm">
                     <i class="fas fa-envelope w-3"></i> SMTP
                 </a>
@@ -150,7 +155,7 @@
                     <i class="fas fa-shipping-fast w-3"></i> Courier
                 </a>
 
-                <a href="{{ route('admin.marketing.edit',1) }}"
+                <a href="{{ route('admin.marketing.setup') }}"
                     class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 text-sm">
                     <i class="fas fa-bullhorn w-4"></i> Marketing
                 </a>
