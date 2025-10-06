@@ -11,11 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('couriores', function (Blueprint $table) {
+        Schema::create('coupons', function (Blueprint $table) {
             $table->id();
-             $table->string('url')->nullable();
-            $table->string('api_key')->nullable();
-            $table->string('secret_key')->nullable();
+            $table->string('coupon_code')->nullable();
+            $table->string('status')->default(1);
             $table->timestamps();
         });
     }
@@ -25,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('couriores');
+        Schema::dropIfExists('coupons');
     }
 };

@@ -1,6 +1,6 @@
 @extends('admin.layouts.app')
 
-@section('title', 'Edit SMTP Settings')
+@section('title', 'Update SMTP Settings')
 
 @section('content')
 <section class="p-5 bg-gray-100 min-h-screen">
@@ -9,7 +9,7 @@
         <!-- Header -->
         <div class="bg-gradient-to-r from-cyan-600 to-cyan-500 px-6 py-4 flex justify-between items-center">
             <h2 class="text-xl font-semibold text-white">
-                Edit SMTP Settings
+                Update SMTP Settings
             </h2>
         </div>
 

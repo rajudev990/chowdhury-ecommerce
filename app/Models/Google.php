@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Marketing extends Model
+class Google extends Model
 {
     protected $guarded = [];
 }

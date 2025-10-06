@@ -13,6 +13,11 @@ return new class extends Migration
     {
         Schema::create('nagads', function (Blueprint $table) {
             $table->id();
+            $table->string('nagad_app_key')->nullable();
+            $table->string('nagad_secret_key')->nullable();
+            $table->string('nagad_username')->nullable();
+            $table->string('nagad_password')->nullable();
+            $table->string('status')->default('0');
             $table->timestamps();
         });
     }

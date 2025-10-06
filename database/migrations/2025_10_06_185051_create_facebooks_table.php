@@ -11,8 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('payments', function (Blueprint $table) {
+        Schema::create('facebooks', function (Blueprint $table) {
             $table->id();
+            $table->string('facebook_id')->nullable();
+            $table->string('facebook_status')->default(0);
             $table->timestamps();
         });
     }
@@ -22,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('payments');
+        Schema::dropIfExists('facebooks');
     }
 };
