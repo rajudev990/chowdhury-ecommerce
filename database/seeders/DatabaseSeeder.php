@@ -54,9 +54,6 @@ class DatabaseSeeder extends Seeder
         Couriore::firstOrCreate([
             'api_key'=>''
         ]);
-        Marketing::firstOrCreate([
-            'facebook_pixel_code'=>''
-        ]);
         
         Bkash::firstOrCreate([
             'bkash_app_key'=>''
