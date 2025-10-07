@@ -15,7 +15,7 @@
                 </h2>
             </div>
 
-            <!-- Form -->
+            <!-- Stread Fast -->
             <div class="p-8">
                 <form method="POST" action="{{ route('admin.stredfast.update', $stredfast->id) }}" class="space-y-6">
                     @csrf
@@ -159,7 +159,7 @@
 
             <!-- Form -->
             <div class="p-8">
-                <form method="POST" action="{{ route('admin.pathau.update', $redx->id) }}" class="space-y-6">
+                <form method="POST" action="{{ route('admin.redx.update', $redx->id) }}" class="space-y-6">
                     @csrf
 
                     <div class="grid md:grid-cols-3 gap-6">
