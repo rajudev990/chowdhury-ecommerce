@@ -46,6 +46,7 @@ Route::get('/checkout', [WebsiteController::class, 'checkout'])->name('checkout'
 Route::post('/order-store', [WebsiteController::class, 'orderStore'])->name('order.store');
 Route::get('categories/{slug}',[WebsiteController::class, 'categories'])->name('categories');
 Route::get('/live-search', [WebsiteController::class, 'liveSearch'])->name('product.liveSearch');
+Route::post('/coupon/validate', [WebsiteController::class, 'validateCoupon'])->name('coupon.validate');
 
 
 Route::get('/reviews',[WebsiteController::class,'reviews'])->name('reviews');

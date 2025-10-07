@@ -26,6 +26,7 @@
                         <tr class="text-left text-gray-600 font-semibold uppercase tracking-wider text-xs">
                             <th class="px-5 py-3">Sl</th>
                             <th class="px-5 py-3">Coupon</th>
+                            <th class="px-5 py-3">Amount (%)</th>
                             <th class="px-5 py-3">Status</th>
                             <th class="px-5 py-3 text-center">Action</th>
                         </tr>
@@ -37,6 +38,7 @@
                         <tr class="hover:bg-gray-50 transition-colors duration-150">
                             <td class="px-5 py-3 text-gray-700 font-medium">{{ $loop->iteration }}</td>
                             <td class="px-5 py-3 text-gray-800 font-medium">{{ $item->coupon_code }}</td>
+                            <td class="px-5 py-3 text-gray-800 font-medium">{{ $item->amount }}%</td>
 
                           <td class="px-5 py-3">
                             @if($item->status == 1)

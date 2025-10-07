@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Coupon;
 use App\Models\CustomerContact;
 use App\Models\Order;
 use App\Models\OrderItem;
@@ -65,6 +66,22 @@ class WebsiteController extends Controller
         return response()->json($products);
     }
 
+    public function validateCoupon(Request $request)
+    {
+        $coupon = Coupon::where('coupon_code', $request->coupon_code)
+                        ->where('status', 1)
+                        ->first();
+
+        if($coupon){
+            return response()->json([
+                'valid' => true,
+                'amount' => $coupon->amount
+            ]);
+        } else {
+            return response()->json(['valid' => false]);
+        }
+    }
+
 
 
     public function checkout()
@@ -115,7 +132,10 @@ class WebsiteController extends Controller
             'delivery_area' => $request->delivery_area,
             'delivery_charge' => $request->delivery_charge ?? 0,
             'transaction_id' => $request->transaction_id ?? null,
-            'payment_date' => $request->payment_date ?? null,
+            'payment_date' => now(),
+            'payment_status' => 'pending',
+            'coupon_code' => $request->coupon_code,
+            'coupon' => $request->coupon_amount,
         ]);
 
         // Save order items

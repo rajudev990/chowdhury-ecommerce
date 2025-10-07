@@ -15,11 +15,15 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->nullable()->constrained()->onDelete('cascade');
             $table->decimal('total', 10, 2);
+            $table->decimal('delivery_charge',10,2)->default(0);
+            $table->decimal('coupon', 10, 2)->nullable();
+            $table->decimal('paid', 10, 2)->nullable();
             $table->string('status')->default('pending');
+            $table->string('payment_status')->default('pending');
             $table->string('payment_method')->nullable();
             $table->string('transaction_id')->nullable();
             $table->timestamp('payment_date')->nullable();
-            $table->decimal('delivery_charge',10,2)->default(0);
+            $table->string('coupon_code')->nullable();
             $table->string('delivery_area')->nullable();
             $table->timestamps();
         });
