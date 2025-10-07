@@ -145,10 +145,10 @@
                     <i class="fas fa-envelope w-3"></i> SMTP
                 </a>
 
-                <a href="{{ route('admin.pixel.edit',1) }}"
+                {{--<a href="{{ route('admin.pixel.edit',1) }}"
                     class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 text-sm">
                     <i class="fas fa-bullseye w-3"></i> Pixels
-                </a>
+                </a>--}}
 
                 <a href="{{ route('admin.courier.setup') }}"
                     class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 text-sm">

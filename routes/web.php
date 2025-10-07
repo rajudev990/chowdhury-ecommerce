@@ -137,24 +137,13 @@ Route::prefix('admin')
 
         // <<===========WEBSITE===========>>>
 
-        // Stread Fast
-        Route::get('stred_fast/{id}', [WebController::class, 'StreadFastIndex'])->name('stred_fast.edit');
-        Route::post('stred_fast/{id}', [WebController::class, 'StreadFast'])->name('stred_fast.update');
-         // curiore
-        Route::get('curiore/{id}', [WebController::class, 'CuriorIndex'])->name('curiore.edit');
-        Route::post('curiore/{id}', [WebController::class, 'Curiore'])->name('curiore.update');
-         // Pathau
-        Route::get('pathau/{id}', [WebController::class, 'pathauIndex'])->name('pathau.edit');
-        Route::post('pathau/{id}', [WebController::class, 'pathau'])->name('pathau.update');
           // SMTP
         Route::get('smtp/{id}', [WebController::class, 'smtpindex'])->name('smtp.edit');
         Route::post('smtp/{id}', [WebController::class, 'smtp'])->name('smtp.update');
         // Pixel
         Route::get('pixel/{id}', [WebController::class, 'pixelindex'])->name('pixel.edit');
         Route::post('pixel/{id}', [WebController::class, 'pixel'])->name('pixel.update');
-        // REDX
-        Route::get('redx/{id}', [WebController::class, 'redxindex'])->name('redx.edit');
-        Route::post('redx/{id}', [WebController::class, 'redx'])->name('redx.update');
+ 
     
         // Marketing SETUP PAGE
         Route::get('marketing/setup', [WebController::class, 'marketingSetup'])->name('marketing.setup');
