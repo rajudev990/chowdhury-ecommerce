@@ -42,6 +42,19 @@ Create Coupons
 
                     <div>
                         <label class="block text-gray-700 font-medium mb-1">
+                            Coupon Amount (%)<span class="text-red-500">*</span>
+                        </label>
+                        <input type="number" name="amount"
+                            value="{{ old('amount') }}"
+                            class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:border-cyan-500 focus:ring-0 outline-none"
+                            placeholder="Enter Coupons Code" required>
+                        @error('amount')
+                        <span class="text-danger">{{$message}}</span>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label class="block text-gray-700 font-medium mb-1">
                             Status <span class="text-red-500">*</span>
                         </label>
                         <select name="status" id="status" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:border-cyan-500 focus:ring-0 outline-none">

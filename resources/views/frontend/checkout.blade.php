@@ -72,6 +72,18 @@
                     </div>
                     <p class="text-muted mt-2">Shipping & taxes calculated at checkout.</p>
                 </div>
+
+                 <!-- Coupon Code Section -->
+                <div class="mb-3 mt-3">
+                    <label for="coupon-code" class="form-label">Have a coupon?</label>
+                    <div class="input-group">
+                        <input type="text" id="coupon-code" class="form-control" placeholder="Enter coupon code">
+                        <button class="btn btn-primary" type="button" id="apply-coupon">Apply</button>
+                    </div>
+                    <div id="coupon-message" class="form-text text-success mt-1"></div>
+                </div>
+
+
             </div>
 
         </div>
@@ -80,6 +92,87 @@
 @endsection
 
 @section('script')
+
+<script>
+    // Apply discount as percentage
+$('#apply-coupon').click(function(){
+    var code = $('#coupon-code').val().trim();
+    var message = $('#coupon-message');
+
+    if(!code){
+        message.text('Please enter a coupon code.');
+        message.removeClass('text-success').addClass('text-danger');
+        return;
+    }
+
+    $.ajax({
+        url: "{{ route('coupon.validate') }}",
+        method: "POST",
+        data: { coupon_code: code },
+        headers: {'X-CSRF-TOKEN': '{{ csrf_token() }}'},
+        success: function(res){
+            if(res.valid){
+                // total before discount
+                var total = parseFloat($('#order-total').text().replace('$','')) || 0;
+
+                // calculate discount percentage
+                var discountPercent = parseFloat(res.amount);
+                var discountAmount = (total * discountPercent) / 100;
+
+                message.text('Coupon applied! ' + discountPercent + '% discount ($' + discountAmount.toFixed(2) + ') added.');
+                message.removeClass('text-danger').addClass('text-success');
+
+                // show discount below total
+                if(!$('#discount-line').length){
+                    $('<div class="d-flex justify-content-between mb-2" id="discount-line"><span>Discount ('+discountPercent+'%)</span><span id="discount-amount">-$'+discountAmount.toFixed(2)+'</span></div>').insertBefore('.order-total');
+                } else {
+                    $('#discount-line span:first').text('Discount ('+discountPercent+'%)');
+                    $('#discount-amount').text('-$'+discountAmount.toFixed(2));
+                }
+
+                // update total with discount
+                var finalTotal = total - discountAmount;
+                if(finalTotal < 0) finalTotal = 0;
+                $('#order-total').text('$' + finalTotal.toFixed(2));
+
+                // store coupon info in hidden fields
+                if(!$('#applied-coupon').length){
+                    $('<input>').attr({
+                        type: 'hidden',
+                        id: 'applied-coupon',
+                        name: 'coupon_code',
+                        value: code
+                    }).appendTo('.order-summary');
+                } else {
+                    $('#applied-coupon').val(code);
+                }
+
+                if(!$('#coupon-amount').length){
+                    $('<input>').attr({
+                        type: 'hidden',
+                        id: 'coupon-amount',
+                        name: 'coupon_amount',
+                        value: discountAmount.toFixed(2)
+                    }).appendTo('.order-summary');
+                } else {
+                    $('#coupon-amount').val(discountAmount.toFixed(2));
+                }
+
+            } else {
+                message.text('Invalid or expired coupon.');
+                message.removeClass('text-success').addClass('text-danger');
+                $('#discount-line').remove();
+            }
+        },
+        error: function(){
+            message.text('Something went wrong.');
+            message.removeClass('text-success').addClass('text-danger');
+        }
+    });
+});
+
+</script>
+
 <script>
     $(document).ready(function() {
     // Get cart from localStorage
@@ -189,7 +282,9 @@
             delivery_charge: deliveryCharge,
             payment_method: payment_method,
             items: orderItems,
-            total: total + deliveryCharge
+            total: total + deliveryCharge,
+            coupon_code: $('#applied-coupon').val() || null,
+            coupon_amount: parseFloat($('#coupon-amount').val() || 0)
         };
 
         $.ajax({
