@@ -19,6 +19,12 @@
             <i class="fas fa-home w-4"></i>
             <span>Dashboard</span>
         </a>
+
+        <a href="{{ route('wishlist.index') }}"
+            class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 {{ request()->is('wishlist.index') ? 'bg-gray-700 font-semibold' : '' }}">
+            <i class="fas fa-heart w-4"></i>
+            <span>Wishlist</span>
+        </a>
        
 
 

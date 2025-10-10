@@ -15,6 +15,9 @@ $categories = \App\Models\Category::all();
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 
+    <!-- Toastr CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
+
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('/') }}assets/css/style.css">
@@ -40,6 +43,9 @@ $categories = \App\Models\Category::all();
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <!-- Toastr JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
     <script>
         function toggleSidebar() {
             document.getElementById('sidebar').classList.toggle('active');
@@ -202,7 +208,7 @@ $categories = \App\Models\Category::all();
             var $cartTotal = $('#cartSidebar .cart-footer .price');
             var $badge = $('.position-relative .badge');
             var $fcart = $('.fcart');
-           
+
             $cartBody.empty();
             var total = 0;
 
@@ -293,57 +299,59 @@ $categories = \App\Models\Category::all();
         });
     </script>
 
-<script>
-$(document).ready(function() {
-    let $searchInput = $('#searchInput');
-    let $searchResults = $('#searchResults');
-    let typingTimer;
-    let doneTypingInterval = 300; // typing delay (ms)
+    <script>
+        $(document).ready(function() {
+            let $searchInput = $('#searchInput');
+            let $searchResults = $('#searchResults');
+            let typingTimer;
+            let doneTypingInterval = 300; // typing delay (ms)
 
-    // 🟢 Typing detection
-    $searchInput.on('keyup', function() {
-        clearTimeout(typingTimer);
-        let query = $(this).val().trim();
+            // 🟢 Typing detection
+            $searchInput.on('keyup', function() {
+                clearTimeout(typingTimer);
+                let query = $(this).val().trim();
 
-        if(query.length > 1) {
-            typingTimer = setTimeout(function() {
-                performSearch(query);
-            }, doneTypingInterval);
-        } else {
-            $searchResults.addClass('d-none').empty();
-        }
-    });
+                if (query.length > 1) {
+                    typingTimer = setTimeout(function() {
+                        performSearch(query);
+                    }, doneTypingInterval);
+                } else {
+                    $searchResults.addClass('d-none').empty();
+                }
+            });
 
-    // 🟢 AJAX Search
-    function performSearch(query) {
-        $.ajax({
-            url: "{{ route('product.liveSearch') }}",
-            method: "GET",
-            data: { q: query },
-            success: function(res) {
-                renderResults(res);
-            },
-            error: function() {
-                $searchResults.addClass('d-none').empty();
+            // 🟢 AJAX Search
+            function performSearch(query) {
+                $.ajax({
+                    url: "{{ route('product.liveSearch') }}",
+                    method: "GET",
+                    data: {
+                        q: query
+                    },
+                    success: function(res) {
+                        renderResults(res);
+                    },
+                    error: function() {
+                        $searchResults.addClass('d-none').empty();
+                    }
+                });
             }
-        });
-    }
 
-    // 🟢 Render search results
-    function renderResults(products) {
-        $searchResults.empty();
+            // 🟢 Render search results
+            function renderResults(products) {
+                $searchResults.empty();
 
-        if(products.length === 0) {
-            $searchResults.removeClass('d-none').html('<p class="p-2 mb-0 text-muted">No products found.</p>');
-            return;
-        }
+                if (products.length === 0) {
+                    $searchResults.removeClass('d-none').html('<p class="p-2 mb-0 text-muted">No products found.</p>');
+                    return;
+                }
 
-        products.forEach(function(product) {
-            let salePrice = parseFloat(product.sale_price).toFixed(2);
-            let regularPrice = parseFloat(product.regular_price).toFixed(2);
-            let url = "{{ url('product') }}/" + product.slug;
+                products.forEach(function(product) {
+                    let salePrice = parseFloat(product.sale_price).toFixed(2);
+                    let regularPrice = parseFloat(product.regular_price).toFixed(2);
+                    let url = "{{ url('product') }}/" + product.slug;
 
-            let html = `
+                    let html = `
                 <a href="${url}" class="d-flex justify-content-between align-items-center p-2 border-bottom text-decoration-none text-dark hover-bg-light">
                     <div>
                         <div class="fw-semibold">${product.name}</div>
@@ -354,20 +362,100 @@ $(document).ready(function() {
                     </div>
                 </a>
             `;
-            $searchResults.append(html);
+                    $searchResults.append(html);
+                });
+
+                $searchResults.removeClass('d-none');
+            }
+
+            // 🟢 Hide results if clicked outside
+            $(document).on('click', function(e) {
+                if (!$(e.target).closest('#searchForm').length) {
+                    $searchResults.addClass('d-none');
+                }
+            });
         });
+    </script>
 
-        $searchResults.removeClass('d-none');
-    }
 
-    // 🟢 Hide results if clicked outside
-    $(document).on('click', function(e) {
-        if (!$(e.target).closest('#searchForm').length) {
-            $searchResults.addClass('d-none');
-        }
+   <script>
+    $(document).on('click', '.add-to-wishlist', function(e) {
+        e.preventDefault(); // prevent default behavior
+
+        let icon = $(this);
+        let productId = icon.data('id');
+
+        $.ajax({
+            url: "{{ route('wishlist.store') }}",
+            method: "POST",
+            data: {
+                product_id: productId,
+                _token: "{{ csrf_token() }}"
+            },
+            success: function(res) {
+                if (res.status === 'error') {
+                    toastr.warning(res.message); // ⚠️ লগইন না থাকলে warning
+                    return;
+                }
+
+                if (res.status === 'added') {
+                    toastr.success(res.message); // ✅ Added
+                } 
+                else if (res.status === 'removed') {
+                    toastr.info(res.message); // ℹ️ Removed
+                }
+
+                // 🔁 Reload page after 0.5s so toastr is visible
+                setTimeout(function() {
+                    location.reload();
+                }, 100);
+            },
+            error: function() {
+                toastr.error('Something went wrong. Please try again.');
+            }
+        });
     });
-});
-</script>
+
+    // Toastr options
+    toastr.options = {
+        "closeButton": true,
+        "progressBar": true,
+        "positionClass": "toast-top-right",
+        "timeOut": "3000"
+    }
+    </script>
+
+    <script>
+        function goToWishlist() {
+            @if(auth()->guard('web')->check())
+            window.location.href = "{{ route('wishlist.index') }}";
+            @else
+            toastr.warning('Please login to view your wishlist.');
+            @endif
+        }
+
+        // Toastr settings
+        toastr.options = {
+            "closeButton": true,
+            "progressBar": true,
+            "positionClass": "toast-top-right",
+            "timeOut": "3000"
+        }
+    </script>
+
+    <script>
+    $(document).on('click', '#accountLink', function() {
+        @if(auth()->check())
+            window.location.href = "{{ route('dashboard') }}";
+        @else
+            toastr.info('Please login to access your account.');
+            setTimeout(function() {
+                window.location.href = "{{ route('login') }}";
+            }, 1500);
+        @endif
+    });
+    </script>
+
 
     @yield('script')
 

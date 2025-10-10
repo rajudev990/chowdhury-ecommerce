@@ -25,6 +25,17 @@
                         </div>
                         @endif
 
+                        @php
+                        $inWishlist = auth()->check() && \App\Models\Wishlist::where('user_id', auth()->id())
+                        ->where('product_id', $item->id)
+                        ->exists();
+                        @endphp
+
+                        <i data-id="{{ $item->id }}"
+                            class="fa fa-heart add-to-wishlist {{ $inWishlist ? 'text-danger' : 'text-dark' }}"
+                            style="cursor:pointer;position:absolute;top:10px;right:20px;z-index:99;font-size:25px;">
+                        </i>
+
                         <!-- Image Container -->
                         <div class="img-container position-relative overflow-hidden">
                             <!-- Main Image -->
