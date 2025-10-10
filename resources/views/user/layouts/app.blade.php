@@ -18,9 +18,13 @@ $setting = \App\Models\Setting::first();
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+    <!-- Toastr CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Toastr JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
     <style>
         /* Sidebar scrollbar styling */
@@ -216,6 +220,55 @@ $setting = \App\Models\Setting::first();
             });
         });
     </script>
+
+    <script>
+        $(document).on('click', '.add-to-wishlist', function(e) {
+            e.preventDefault(); // prevent default link behavior
+
+            let icon = $(this);
+            let productId = icon.data('id');
+
+            $.ajax({
+                url: "{{ route('wishlist.store') }}",
+                method: "POST",
+                data: {
+                    product_id: productId,
+                    _token: "{{ csrf_token() }}"
+                },
+                success: function(res) {
+                    if (res.status === 'error') {
+                        toastr.warning(res.message); // ⚠️ লগইন না থাকলে warning
+                        return;
+                    }
+
+                    if (res.status === 'added') {
+                        toastr.success(res.message); // ✅ Added
+                    } 
+                    else if (res.status === 'removed') {
+                        toastr.info(res.message); // ℹ️ Removed
+                    }
+
+                    // 🔁 Reload the page after wishlist update
+                    setTimeout(function() {
+                        location.reload();
+                    }, 100); // 0.5s delay so toastr shows briefly
+                },
+                error: function() {
+                    toastr.error('Something went wrong. Please try again.');
+                }
+            });
+        });
+
+        // ✅ Toastr settings
+        toastr.options = {
+            "closeButton": true,
+            "progressBar": true,
+            "positionClass": "toast-top-right",
+            "timeOut": "2000"
+        }
+        </script>
+
+
 
     @yield('scripts')
 </body>

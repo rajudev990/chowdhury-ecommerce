@@ -19,6 +19,7 @@ use App\Http\Controllers\Admin\WebController;
 use App\Http\Controllers\Affiliate\AffiliateAuthController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\WebsiteController;
+use App\Http\Controllers\WishlistController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Artisan;
@@ -83,6 +84,13 @@ Route::middleware(['auth', 'no.admin'])->group(function () {
     Route::put('/profile/update', [HomeController::class, 'update'])->name('user.profile.update');
     Route::get('password/edit', [HomeController::class, 'passwordEdit'])->name('user.password.edit');
     Route::post('/password-update', [HomeController::class, 'updatePassword'])->name('user.password.update');
+
+ 
+    Route::post('/wishlist/add', [WishlistController::class, 'store'])->name('wishlist.store');
+    Route::get('/wishlist/list', [WishlistController::class, 'index'])->name('wishlist.index');
+
+
+
 });
 
 
