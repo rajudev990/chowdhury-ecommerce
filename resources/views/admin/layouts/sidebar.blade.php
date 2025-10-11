@@ -166,7 +166,11 @@
                     <i class="fas fa-credit-card w-3"></i> Payment Method
                 </a>
 
-              
+                <a href="{{ route('admin.bannars.index') }}"
+                    class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 text-sm">
+                    <i class="fas fa-images w-3"></i> Banners
+                </a>
+
                 @can('view setting')
                 <a href="{{ route('admin.settings.index') }}"
                     class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 {{ request()->is('admin/settings*') ? 'bg-gray-700 font-semibold' : '' }}">

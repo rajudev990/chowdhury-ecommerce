@@ -3,6 +3,7 @@
 
 use App\Http\Controllers\Admin\AdminProfileController;
 use App\Http\Controllers\Admin\Auth\LoginController;
+use App\Http\Controllers\Admin\BannarController;
 use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ColorController;
@@ -172,6 +173,7 @@ Route::prefix('admin')
         Route::post('curiores/{id}', [WebController::class, 'curiores'])->name('curiores.update');
         //Coupon
         Route::resource('coupons', CouponController::class);
+        Route::resource('bannars', BannarController::class);
     
 
 
