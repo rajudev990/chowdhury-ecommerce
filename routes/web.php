@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ColorController;
 use App\Http\Controllers\Admin\CouponController;
+use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\SettingController;
@@ -24,13 +25,14 @@ use App\Http\Controllers\WishlistController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Artisan;
+use App\Http\Controllers\SslCommerzPaymentController;
 
 
 Route::get('auth/{provider}', [WebsiteController::class, 'redirect'])->name('social.redirect');
 Route::get('auth/{provider}/callback', [WebsiteController::class, 'callback'])->name('social.callback');
 
 
-Route::get('/cmd',function(){
+Route::get('/cmd', function () {
     Artisan::call('storage:link');
     Artisan::call('optimize:clear');
     Artisan::call('route:clear');
@@ -41,19 +43,39 @@ Route::get('/cmd',function(){
 
 
 
-Route::get('/',[WebsiteController::class,'index'])->name('index');
-Route::get('/products',[WebsiteController::class,'products'])->name('products');
-Route::get('/product/{slug}', [WebsiteController::class,'productSingle'])->name('product.single');
+
+// SSLCOMMERZ Start
+Route::get('/example1', [SslCommerzPaymentController::class, 'exampleEasyCheckout']);
+Route::get('/example2', [SslCommerzPaymentController::class, 'exampleHostedCheckout']);
+
+Route::post('/pay', [SslCommerzPaymentController::class, 'index'])->name('pay');
+Route::post('/pay-via-ajax', [SslCommerzPaymentController::class, 'payViaAjax']);
+
+Route::post('/success', [SslCommerzPaymentController::class, 'success']);
+Route::post('/fail', [SslCommerzPaymentController::class, 'fail']);
+Route::post('/cancel', [SslCommerzPaymentController::class, 'cancel']);
+
+Route::post('/ipn', [SslCommerzPaymentController::class, 'ipn']);
+//SSLCOMMERZ END
+
+
+
+Route::get('/', [WebsiteController::class, 'index'])->name('index');
+Route::get('/products', [WebsiteController::class, 'products'])->name('products');
+Route::get('/product/{slug}', [WebsiteController::class, 'productSingle'])->name('product.single');
 Route::get('/checkout', [WebsiteController::class, 'checkout'])->name('checkout');
 Route::post('/order-store', [WebsiteController::class, 'orderStore'])->name('order.store');
-Route::get('categories/{slug}',[WebsiteController::class, 'categories'])->name('categories');
+Route::get('categories/{slug}', [WebsiteController::class, 'categories'])->name('categories');
 Route::get('/live-search', [WebsiteController::class, 'liveSearch'])->name('product.liveSearch');
 Route::post('/coupon/validate', [WebsiteController::class, 'validateCoupon'])->name('coupon.validate');
 
+// Track Order
+Route::get('/track-order', [WebsiteController::class, 'trackorder'])->name('track.order');
 
-Route::get('/reviews',[WebsiteController::class,'reviews'])->name('reviews');
-Route::get('/contacts',[WebsiteController::class,'contacts'])->name('contacts');
-Route::post('/contacts-store',[WebsiteController::class,'contactStore'])->name('contact.store');
+
+Route::get('/reviews', [WebsiteController::class, 'reviews'])->name('reviews');
+Route::get('/contacts', [WebsiteController::class, 'contacts'])->name('contacts');
+Route::post('/contacts-store', [WebsiteController::class, 'contactStore'])->name('contact.store');
 
 
 // Registration & Login
@@ -77,7 +99,7 @@ Route::middleware(['auth', 'no.admin'])->group(function () {
     //     return view('home');
     // })->name('home');
 
-    Route::get('/dashboard',[HomeController::class,'index'])->name('dashboard');
+    Route::get('/dashboard', [HomeController::class, 'index'])->name('dashboard');
 
     Route::get('settings', [HomeController::class, 'settings'])->name('user.settings');
     Route::get('profile', [HomeController::class, 'profile'])->name('user.profile');
@@ -86,15 +108,12 @@ Route::middleware(['auth', 'no.admin'])->group(function () {
     Route::get('password/edit', [HomeController::class, 'passwordEdit'])->name('user.password.edit');
     Route::post('/password-update', [HomeController::class, 'updatePassword'])->name('user.password.update');
 
- 
+
     Route::post('/wishlist/add', [WishlistController::class, 'store'])->name('wishlist.store');
     Route::get('/wishlist/list', [WishlistController::class, 'index'])->name('wishlist.index');
 
     Route::get('/order/list', [WishlistController::class, 'Orderindex'])->name('order.index');
-
-
-
-
+    Route::get('/order/view/{id}', [WishlistController::class, 'orderView'])->name('order.view');
 });
 
 
@@ -112,7 +131,7 @@ Route::prefix('admin')
     ->name('admin.')
     ->group(function () {
 
-        Route::get('/dashboard',[AdminProfileController::class,'dashboard'])->name('dashboard');
+        Route::get('/dashboard', [AdminProfileController::class, 'dashboard'])->name('dashboard');
         // Route::get('/dashboard', function () {
         //     return view('admin.dashboard');
         // })->name('dashboard');
@@ -134,12 +153,12 @@ Route::prefix('admin')
         // AJAX routes
         Route::get('ajax/subcategories/{category}', [ProductController::class, 'getSubCategories']);
         Route::get('ajax/subsubcategories/{subcategory}', [ProductController::class, 'getSubSubCategories']);
-            
+
         Route::resource('categories', CategoryController::class);
         Route::resource('subcategories', SubCategoryController::class);
         Route::resource('subsubcategories', SubSubCategoryController::class)->parameters(['subsubcategories' => 'subSubCategory']);
         // Ajax for dynamic subcategories
-        Route::get('ajax/subcategories/{category}', [SubSubCategoryController::class,'getSubCategories'])->name('ajax.subcategories');
+        Route::get('ajax/subcategories/{category}', [SubSubCategoryController::class, 'getSubCategories'])->name('ajax.subcategories');
         Route::get('ajax/subsubcategories/{subcategory}', [SubSubCategoryController::class, 'getSubSubCategories']);
 
 
@@ -150,25 +169,25 @@ Route::prefix('admin')
 
         // <<===========WEBSITE===========>>>
 
-          // SMTP
+        // SMTP
         Route::get('smtp/{id}', [WebController::class, 'smtpindex'])->name('smtp.edit');
         Route::post('smtp/{id}', [WebController::class, 'smtp'])->name('smtp.update');
         // Pixel
         Route::get('pixel/{id}', [WebController::class, 'pixelindex'])->name('pixel.edit');
         Route::post('pixel/{id}', [WebController::class, 'pixel'])->name('pixel.update');
- 
-    
+
+
         // Marketing SETUP PAGE
         Route::get('marketing/setup', [WebController::class, 'marketingSetup'])->name('marketing.setup');
         Route::post('facebook/{id}', [WebController::class, 'facebook'])->name('facebook.update');
         Route::post('google/{id}', [WebController::class, 'google'])->name('google.update');
 
-   // PAYMENT SETUP PAGE
+        // PAYMENT SETUP PAGE
         Route::get('payment/setup', [WebController::class, 'paymentSetup'])->name('payment.setup');
         Route::post('bkash/{id}', [WebController::class, 'bkash'])->name('bkash.update');
         Route::post('nagad/{id}', [WebController::class, 'nagad'])->name('nagad.update');
         Route::post('sslcz/{id}', [WebController::class, 'sslcz'])->name('sslcz.update');
-    // CURIORE 
+        // CURIORE 
         Route::get('courier', [WebController::class, 'curiore'])->name('courier.setup');
         Route::post('stredfast/{id}', [WebController::class, 'stredfast'])->name('stredfast.update');
         Route::post('pathau/{id}', [WebController::class, 'pathau'])->name('pathau.update');
@@ -177,7 +196,21 @@ Route::prefix('admin')
         //Coupon
         Route::resource('coupons', CouponController::class);
         Route::resource('bannars', BannarController::class);
-    
+
+    // <<<<<--Orders-->>>>>
+
+    Route::get('all-orders', [OrderController::class, 'allOrders'])->name('all-orders');
+    Route::get('/orders/{order}',[OrderController::class, 'show'])->name('admin.orders.show');
+    Route::get('pending-orders', [OrderController::class, 'pendingOrders'])->name('pending-orders');
+    Route::get('processing-orders', [OrderController::class, 'processingOrders'])->name('processing-orders');
+    Route::get('on-the-way-orders', [OrderController::class, 'onTheWayOrders'])->name('on-the-way-orders');
+    Route::get('hold-orders', [OrderController::class, 'holdOrders'])->name('hold-orders');
+    Route::get('courier-orders', [OrderController::class, 'courierOrders'])->name('courier-orders');
+    Route::get('complete-orders', [OrderController::class, 'completeOrders'])->name('complete-orders');
+    Route::get('cancelled-orders', [OrderController::class, 'cancelledOrders'])->name('cancelled-orders');
+
+    Route::get('orders/{id}', [OrderController::class, 'show'])->name('orders.show');
+    Route::post('/orders/{order}/update-status', [OrderController::class, 'updateStatus'])->name('orders.updateStatus');
 
 
 

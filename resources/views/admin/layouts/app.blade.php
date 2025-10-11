@@ -37,6 +37,27 @@ $setting = \App\Models\Setting::first();
         .sidebar-transition {
             transition: all 0.3s ease;
         }
+        /* Print */
+        /* Hide everything except invoice section when printing */
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            #printSection, #printSection * {
+                visibility: visible;
+            }
+            #printSection {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+            }
+
+            /* Hide print button */
+            #printBtn {
+                display: none !important;
+            }
+        }
     </style>
     @yield('styles')
 </head>
@@ -217,6 +238,37 @@ $setting = \App\Models\Setting::first();
             });
         });
     </script>
+    <script>
+        document.getElementById('printBtn').addEventListener('click', function() {
+            // Save original page content
+            const originalContent = document.body.innerHTML;
+
+            // Get only the invoice section
+            const printSection = document.getElementById('printSection').cloneNode(true);
+
+            // Replace body content with section content
+            document.body.innerHTML = '';
+            document.body.appendChild(printSection);
+
+            // Remove select box styling and only show selected text
+            const selects = document.querySelectorAll('select');
+            selects.forEach(function(sel) {
+                const span = document.createElement('span');
+                span.textContent = sel.options[sel.selectedIndex].text;
+                sel.parentNode.replaceChild(span, sel);
+            });
+
+            // Trigger print
+            window.print();
+
+            // Restore original content after print
+            document.body.innerHTML = originalContent;
+
+            // Reload JS scripts to make page functional again
+            location.reload();
+        });
+        </script>
+
 
     @yield('script')
 </body>

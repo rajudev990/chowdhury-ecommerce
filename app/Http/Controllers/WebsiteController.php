@@ -10,6 +10,7 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
 use App\Models\Setting;
+use App\Models\SslCommerc;
 use Laravel\Socialite\Facades\Socialite;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
@@ -22,6 +23,8 @@ use Symfony\Contracts\Service\Attribute\Required;
 
 class WebsiteController extends Controller
 {
+    
+
     public function index()
     {
         $setting = Setting::first();
@@ -88,7 +91,8 @@ class WebsiteController extends Controller
 
     public function checkout()
     {
-        return view('frontend.checkout');
+        $ssl = SslCommerc::first();
+        return view('frontend.checkout',compact('ssl'));
     }
 
     public function orderStore(Request $request)
@@ -254,5 +258,26 @@ class WebsiteController extends Controller
         event(new Registered($user));
 
         return redirect()->route('verification.notice');
+    }
+
+    // Track Order
+    // public function trackorder()
+    // {
+    //     return view('frontend.track-order');
+    // }
+
+    public function trackorder(Request $request)
+    {
+        $order = null;
+
+        if ($request->has('invoice_id')) {
+            $invoiceId = $request->invoice_id;
+
+            $order = Order::with('orderItems.product', 'user')
+                        ->where('order_id', $invoiceId)
+                        ->first();
+        }
+
+        return view('frontend.track-order', compact('order'));
     }
 }

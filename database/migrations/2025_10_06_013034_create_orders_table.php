@@ -26,6 +26,8 @@ return new class extends Migration
             $table->timestamp('payment_date')->nullable();
             $table->string('coupon_code')->nullable();
             $table->string('delivery_area')->nullable();
+            $table->string('currency')->nullable();
+            $table->string('notes')->nullable();
             $table->timestamps();
         });
     }

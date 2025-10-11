@@ -18,7 +18,8 @@ $setting = \App\Models\Setting::first();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'User Dashboard')</title>
     <link rel="icon" href="{{ Storage::url($setting->favicon) }}" type="image/x-icon">
-
+      <!-- CSRF Token -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -83,6 +84,16 @@ $setting = \App\Models\Setting::first();
 
     <!-- Right Section -->
     <div class="flex items-center space-x-4">
+
+         <!-- Browser / Home Icon -->
+       <div class="cursor-pointer hover:bg-gray-100 p-1 rounded transition duration-200" 
+            onclick="window.location.href='{{ url('/') }}'" 
+            title="Go to Home">
+            <img src="https://img.icons8.com/ios-filled/24/1e40af/home.png" 
+                class="w-6 h-6" 
+                alt="Home" />
+        </div>
+
         <!-- Wishlist Icon -->
         <div onclick="goToWishlist()" class="relative cursor-pointer">
             <img src="https://img.icons8.com/ios-filled/24/fa314a/like.png" class="w-6 h-6" />

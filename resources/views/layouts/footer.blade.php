@@ -17,6 +17,7 @@
                     <li><a href="{{ route('reviews') }}">Reviews</a></li>
                     <li><a href="{{ route('contacts') }}">Contacts</a></li>
                     <li><a href="{{ route('affiliate.register') }}">Affiliate</a></li>
+                    <li><a href="{{ route('track.order') }}">Track Order</a></li>
                 </ul>
             </div>
             <div class="col-md-4 mb-3">

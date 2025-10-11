@@ -86,7 +86,7 @@
 
         {{-- Orders Dropdown --}}
         @php
-        $orderActive = request()->is('admin/orders*');
+        $orderActive = request()->is('admin/all-orders*') || request()->is('admin/pending-orders*') || request()->is('admin/processing-orders*') || request()->is('admin/on-the-way*') || request()->is('admin/hold-orders*') || request()->is('admin/courier-orders*') || request()->is('admin/complete-orders*') || request()->is('admin/cancelled-orders*') || request()->is('admin/orders*');
         @endphp
         <div class="dropdown">
             <button
@@ -94,33 +94,42 @@
                 <span class="flex items-center gap-2"><i class="fas fa-shopping-cart w-4"></i> Orders</span>
                 <i class="fas fa-chevron-down transition-transform {{ $orderActive ? 'rotate-180' : '' }}"></i>
             </button>
+
             <div class="dropdown-menu {{ $orderActive ? 'block' : 'hidden' }} ml-4 mt-1 space-y-1">
-                <a href="{{ route('admin.products.index') }}"
-                    class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 text-sm {{ request()->is('admin/products*') ? 'bg-gray-700 font-semibold' : '' }}">
+                <a href="{{ route('admin.all-orders') }}" class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 text-sm {{ request()->is('admin/all-orders*') ? 'bg-gray-700 font-semibold' : '' }}">
                     <i class="fas fa-list w-3"></i> All Orders
                 </a>
-                <a href="{{ route('admin.categories.index') }}"
-                    class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 text-sm">
-                    <i class="fas fa-clock w-3"></i> Pending Orders
+
+                <a href="{{ route('admin.pending-orders') }}" class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 text-sm">
+                    <i class="fas fa-hourglass-start w-3 text-orange-400"></i> Pending
                 </a>
-                <a href="{{ route('admin.categories.index') }}"
-                    class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 text-sm">
-                    <i class="fas fa-times-circle w-3"></i> Reject Orders
+
+                <a href="{{ route('admin.processing-orders') }}" class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 text-sm">
+                    <i class="fas fa-spinner w-3 text-blue-400"></i> Processing
                 </a>
-                <a href="{{ route('admin.categories.index') }}"
-                    class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 text-sm">
-                    <i class="fas fa-ban w-3"></i> Cancel Orders
+
+                <a href="{{ route('admin.on-the-way-orders') }}" class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 text-sm">
+                    <i class="fas fa-truck w-3 text-indigo-400"></i> On The Way
                 </a>
-                <a href="{{ route('admin.categories.index') }}"
-                    class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 text-sm">
-                    <i class="fas fa-check-circle w-3"></i> Completed Orders
+
+                <a href="{{ route('admin.hold-orders') }}" class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 text-sm">
+                    <i class="fas fa-pause-circle w-3 text-yellow-500"></i> On Hold
                 </a>
-                <a href="{{ route('admin.categories.index') }}"
-                    class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 text-sm">
-                    <i class="fas fa-trash w-3"></i> Trash Orders
+
+                <a href="{{ route('admin.courier-orders') }}" class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 text-sm">
+                    <i class="fas fa-shipping-fast w-3 text-teal-400"></i> Courier
+                </a>
+
+                <a href="{{ route('admin.complete-orders') }}" class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 text-sm">
+                    <i class="fas fa-check-circle w-3 text-green-500"></i> Completed
+                </a>
+
+                <a href="{{ route('admin.cancelled-orders') }}" class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 text-sm">
+                    <i class="fas fa-times-circle w-3 text-red-500"></i> Cancelled
                 </a>
             </div>
         </div>
+
 
 
         {{-- Website Dropdown --}}
@@ -140,14 +149,14 @@
                     <i class="fas fa-ticket-alt w-3"></i> Coupon
                 </a>
 
-                 <a href="{{ route('admin.smtp.edit',1) }}"
+                <a href="{{ route('admin.smtp.edit',1) }}"
                     class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 text-sm">
                     <i class="fas fa-envelope w-3"></i> SMTP
                 </a>
 
                 {{--<a href="{{ route('admin.pixel.edit',1) }}"
-                    class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 text-sm">
-                    <i class="fas fa-bullseye w-3"></i> Pixels
+                class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 text-sm">
+                <i class="fas fa-bullseye w-3"></i> Pixels
                 </a>--}}
 
                 <a href="{{ route('admin.courier.setup') }}"

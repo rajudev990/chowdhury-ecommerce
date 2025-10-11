@@ -48,11 +48,23 @@
                             <input class="form-check-input" type="radio" name="payment_method" id="cod" value="cod" checked>
                             <label class="form-check-label" for="cod">Cash on Delivery</label>
                         </div>
+                        @if(empty($ssl->sslcz_store_id))
+                        @else
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="radio" name="payment_method" id="sslcommerz" value="sslcommerz">
+                            <label class="form-check-label" for="sslcommerz">SSLCOMMERZ</label>
+                        </div>
+                        @endif
+
                     </div>
 
                     <button id="place-order" class="btn btn-primary w-100 py-2">
                         <i class="fas fa-credit-card me-2"></i> Place Order
                     </button>
+
+            
+
+
                 </div>
             </div>
 
@@ -174,137 +186,102 @@ $('#apply-coupon').click(function(){
 </script>
 
 <script>
-    $(document).ready(function() {
-    // Get cart from localStorage
+$(document).ready(function(){
     var cart = JSON.parse(localStorage.getItem('cart')) || [];
     var $orderItems = $('#order-items');
     var total = 0;
     var deliveryCharge = 0;
 
-    // Render cart items
     function renderCart() {
         $orderItems.empty();
         total = 0;
-
         if(cart.length === 0){
             $orderItems.html('<p class="text-muted">Your cart is empty.</p>');
         } else {
             cart.forEach(function(item, index){
-                var price = item.price || 0;
-                var subtotal = price * item.quantity;
+                var subtotal = item.price * item.quantity;
                 total += subtotal;
-
-                var productUrl = "{{ url('product') }}/" + item.slug;
-
-                var html = `
-                    <div class="order-item d-flex justify-content-between align-items-center mb-2">
-                        <span class="d-flex align-items-center">
-                            <i class="fas fa-trash text-danger me-2 remove-item" data-index="${index}"></i>
-                            <a href="${productUrl}" class="text-decoration-none text-dark">
-                                ${item.name}${item.color ? ' - ' + item.color : ''}${item.size ? ' - ' + item.size : ''}
-                            </a> (x${item.quantity})
-                        </span>
-                        <span>
-                            $${subtotal.toFixed(2)}
-                        </span>
-                    </div>
-                `;
+                var html = `<div class="order-item d-flex justify-content-between mb-2">
+                    <span>${item.name} (x${item.quantity})</span>
+                    <span>$${subtotal.toFixed(2)}</span>
+                </div>`;
                 $orderItems.append(html);
             });
         }
-
         updateTotal();
     }
 
-    // Update delivery charge & total
     function updateTotal() {
         $('#delivery-charge').text('$' + deliveryCharge.toFixed(2));
         $('#order-total').text('$' + (total + deliveryCharge).toFixed(2));
     }
 
-    // Remove item from cart
-    $(document).on('click', '.remove-item', function(){
-        var index = $(this).data('index');
-        cart.splice(index, 1);
-        localStorage.setItem('cart', JSON.stringify(cart));
-        renderCart();
-    });
-
-    // Delivery area change
     $('#delivery_area').change(function(){
-        var selected = $(this).find('option:selected');
-        deliveryCharge = parseFloat(selected.data('value')) || 0;
+        deliveryCharge = parseFloat($(this).find('option:selected').data('value')) || 0;
         updateTotal();
     });
 
-    // Initial render
     renderCart();
 
     // Place Order
-    $('#place-order').click(function(){
-        var name = $('#name').val();
-        var phone = $('#phone').val();
-        var address = $('#address').val();
-        var notes = $('#notes').val();
-        var delivery_area = $('#delivery_area').val();
-        var payment_method = $('input[name="payment_method"]:checked').val();
+    $('#place-order').click(function(e){
+    e.preventDefault(); // prevent default button action
 
-        if(cart.length === 0){
-            alert('Cart is empty!');
-            return;
-        }
+    var payment_method = $('input[name="payment_method"]:checked').val();
+    var orderData = {
+        customer_name: $('#name').val(),
+        phone: $('#phone').val(),
+        address: $('#address').val(),
+        notes: $('#notes').val(),
+        delivery_area: $('#delivery_area').val(),
+        delivery_charge: deliveryCharge,
+        payment_method: payment_method,
+        items: cart,
+        total: total + deliveryCharge,
+        _token: '{{ csrf_token() }}'
+    };
 
-        if(!name || !phone || !address || !delivery_area){
-            alert('Please fill all required fields!');
-            return;
-        }
-
-        var orderItems = cart.map(function(item){
-            // Create variant array/object
-            var variant = {};
-            if(item.color) variant.color = item.color;
-            if(item.size) variant.size = item.size;
-
-            return {
-                productId: item.productId,
-                variantId: Object.keys(variant).length > 0 ? variant : null, // Only send if exists
-                quantity: item.quantity,
-                price: item.price
-            };
+    if(payment_method === 'cod'){
+        // Normal AJAX order for COD
+        $.post("{{ route('order.store') }}", orderData, function(res){
+            localStorage.removeItem('cart');
+            alert('Order placed successfully with COD!');
+            window.location.href = "{{ url('/') }}";
+        });
+    } else if(payment_method === 'sslcommerz'){
+        // Redirect to /pay with form submission (no AJAX)
+        // Dynamically create a form
+        var form = $('<form>', {
+            'method': 'POST',
+            'action': '{{ route("pay") }}'
         });
 
-        var orderData = {
-            customer_name: name,
-            phone: phone,
-            address: address,
-            notes: notes,
-            delivery_area: delivery_area,
-            delivery_charge: deliveryCharge,
-            payment_method: payment_method,
-            items: orderItems,
-            total: total + deliveryCharge,
-            coupon_code: $('#applied-coupon').val() || null,
-            coupon_amount: parseFloat($('#coupon-amount').val() || 0)
-        };
+        // Add CSRF token
+        form.append($('<input>', {
+            'type': 'hidden',
+            'name': '_token',
+            'value': '{{ csrf_token() }}'
+        }));
 
-        $.ajax({
-            url: "{{ route('order.store') }}",
-            method: "POST",
-            data: orderData,
-            headers: {'X-CSRF-TOKEN': '{{ csrf_token() }}'},
-            success: function(res){
-                localStorage.removeItem('cart'); // Clear cart
-                alert('Order placed successfully!');
-                window.location.href = "{{ url('/') }}";
-            },
-            error: function(err){
-                alert('Something went wrong. Please try again.');
+        // Add all order data
+        $.each(orderData, function(key, value){
+            // Convert items array to JSON string
+            if(key === 'items'){
+                value = JSON.stringify(value);
             }
+            form.append($('<input>', {
+                'type': 'hidden',
+                'name': key,
+                'value': value
+            }));
         });
-    });
 
-
+        // Append form to body and submit
+        form.appendTo('body').submit();
+    }
 });
 
+});
 </script>
+
 @endsection
