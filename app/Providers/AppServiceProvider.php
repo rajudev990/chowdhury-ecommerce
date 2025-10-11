@@ -23,7 +23,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        
+
         Blade::if('anycan', function (...$permissions) {
             $user = Auth::guard('admin')->user();
             foreach ($permissions as $permission) {
@@ -33,15 +33,5 @@ class AppServiceProvider extends ServiceProvider
             }
             return false;
         });
-
-        view()->composer('*', function ($view) {
-            $wishlistCount = 0;
-            if (Auth::guard('web')->check()) {
-                $wishlistCount = Wishlist::where('user_id', Auth::guard('web')->id())->count();
-            }
-            $view->with('wishlistCount', $wishlistCount);
-        });
-
-
     }
 }

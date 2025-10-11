@@ -23,29 +23,42 @@ class WishlistController extends Controller
     }
 
     public function store(Request $request)
-    {
-        if (!auth()->check()) {
-            return response()->json(['status' => 'error', 'message' => 'Please login to add to wishlist.']);
-        }
-
-        $product_id = $request->product_id;
-        $user_id = auth()->id();
-
-        $exists = Wishlist::where('user_id', $user_id)
-            ->where('product_id', $product_id)
-            ->first();
-
-        if ($exists) {
-            // remove if already exists
-            $exists->delete();
-            return response()->json(['status' => 'removed', 'message' => 'Removed from wishlist.']);
-        }
-
-        Wishlist::create([
-            'user_id' => $user_id,
-            'product_id' => $product_id,
-        ]);
-
-        return response()->json(['status' => 'added', 'message' => 'Added to wishlist.']);
+{
+    if (!auth()->check()) {
+        return response()->json(['status' => 'error', 'message' => 'Please login to add to wishlist.']);
     }
+
+    $product_id = $request->product_id;
+    $user_id = auth()->id();
+
+    $exists = Wishlist::where('user_id', $user_id)
+        ->where('product_id', $product_id)
+        ->first();
+
+    if ($exists) {
+        $exists->delete();
+        $wishlistCount = Wishlist::where('user_id', $user_id)->count();
+
+        return response()->json([
+            'status' => 'removed',
+            'message' => 'Removed from wishlist.',
+            'wishlistCount' => $wishlistCount,
+        ]);
+    }
+
+    Wishlist::create([
+        'user_id' => $user_id,
+        'product_id' => $product_id,
+    ]);
+
+    $wishlistCount = Wishlist::where('user_id', $user_id)->count();
+
+    return response()->json([
+        'status' => 'added',
+        'message' => 'Added to wishlist.',
+        'wishlistCount' => $wishlistCount,
+    ]);
+}
+
+
 }
