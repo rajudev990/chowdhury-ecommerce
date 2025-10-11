@@ -206,7 +206,7 @@ $categories = \App\Models\Category::all();
             var cart = JSON.parse(localStorage.getItem('cart')) || [];
             var $cartBody = $('#cartSidebar .cart-body');
             var $cartTotal = $('#cartSidebar .cart-footer .price');
-            var $badge = $('.position-relative .badge');
+            var $badge = $('.position-relative .cart');
             var $fcart = $('.fcart');
 
             $cartBody.empty();
@@ -378,52 +378,50 @@ $categories = \App\Models\Category::all();
     </script>
 
 
-   <script>
-    $(document).on('click', '.add-to-wishlist', function(e) {
-        e.preventDefault(); // prevent default behavior
+    <script>
+$(document).on('click', '.add-to-wishlist', function(e) {
+    e.preventDefault();
 
-        let icon = $(this);
-        let productId = icon.data('id');
+    let icon = $(this);
+    let productId = icon.data('id');
 
-        $.ajax({
-            url: "{{ route('wishlist.store') }}",
-            method: "POST",
-            data: {
-                product_id: productId,
-                _token: "{{ csrf_token() }}"
-            },
-            success: function(res) {
-                if (res.status === 'error') {
-                    toastr.warning(res.message); // ⚠️ লগইন না থাকলে warning
-                    return;
-                }
-
-                if (res.status === 'added') {
-                    toastr.success(res.message); // ✅ Added
-                } 
-                else if (res.status === 'removed') {
-                    toastr.info(res.message); // ℹ️ Removed
-                }
-
-                // 🔁 Reload page after 0.5s so toastr is visible
-                setTimeout(function() {
-                    location.reload();
-                }, 100);
-            },
-            error: function() {
-                toastr.error('Something went wrong. Please try again.');
+    $.ajax({
+        url: "{{ route('wishlist.store') }}",
+        method: "POST",
+        data: {
+            product_id: productId,
+            _token: "{{ csrf_token() }}"
+        },
+        success: function(res) {
+            if (res.status === 'error') {
+                toastr.warning(res.message);
+                return;
             }
-        });
-    });
 
-    // Toastr options
-    toastr.options = {
-        "closeButton": true,
-        "progressBar": true,
-        "positionClass": "toast-top-right",
-        "timeOut": "3000"
-    }
-    </script>
+            if (res.status === 'added') {
+                toastr.success(res.message);
+            } else if (res.status === 'removed') {
+                toastr.info(res.message);
+            }
+
+            // ✅ Short delay so toastr shows before reload
+            setTimeout(() => location.reload(), 800);
+        },
+        error: function() {
+            toastr.error('Please login to add to wishlist.');
+        }
+    });
+});
+
+toastr.options = {
+    "closeButton": true,
+    "progressBar": true,
+    "positionClass": "toast-top-right",
+    "timeOut": "3000"
+};
+</script>
+
+
 
     <script>
         function goToWishlist() {

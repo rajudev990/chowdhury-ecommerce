@@ -1,4 +1,11 @@
+@php
+    use App\Models\Wishlist;
+    $wishlistCount = 0;
 
+    if (auth()->check()) {
+        $wishlistCount = Wishlist::where('user_id', auth()->id())->count();
+    }
+@endphp
 <!-- Navbar -->
  <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
      <div class="container d-flex justify-content-between align-items-center py-2">
@@ -34,18 +41,18 @@
          <!-- Right Menu -->
          <div class="d-flex align-items-center">
              
-            <!-- Wishlist Icon -->
-            <div class="me-4 d-lg-none position-relative" style="cursor:pointer;" onclick="goToWishlist()">
+           <div class="me-4 d-lg-none position-relative" style="cursor:pointer;" onclick="goToWishlist()">
                 <img src="https://img.icons8.com/ios-filled/24/ffffff/like.png"/>
-                <span class="badge rounded-pill bg-danger position-absolute top-0 start-100 translate-middle">
+                <span class="badge rounded-pill bg-danger position-absolute top-0 start-100 translate-middle wishlist-count">
                     {{ $wishlistCount ?? 0 }}
                 </span>
             </div>
 
+
             <!-- Cart Icon Small -->
              <div class="me-2 d-lg-none position-relative" onclick="toggleCart()" style="cursor:pointer;">
                 <img src="https://img.icons8.com/ios-filled/24/ffffff/shopping-cart.png"/>
-                <span class="badge rounded-pill bg-danger position-absolute top-0 start-100 translate-middle">0</span>
+                <span class="badge cart rounded-pill bg-danger position-absolute top-0 start-100 translate-middle">0</span>
             </div>
 
 
@@ -83,7 +90,7 @@
             <!-- Cart Icon -->
             <div class="me-2 d-lg-block d-none position-relative" onclick="toggleCart()" style="cursor:pointer;">
                 <img src="https://img.icons8.com/ios-filled/24/ffffff/shopping-cart.png"/>
-                <span class="badge rounded-pill bg-danger position-absolute top-0 start-100 translate-middle">0</span>
+                <span class="badge cart rounded-pill bg-danger position-absolute top-0 start-100 translate-middle">0</span>
             </div>
            <div class="me-2 d-lg-block d-none position-relative" style="cursor:pointer;">
                 <a href="javascript:void(0)" id="accountLink" 
