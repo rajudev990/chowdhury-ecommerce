@@ -10,7 +10,7 @@
          <!-- Logo -->
          <a class="navbar-brand fw-bold" href="{{ route('index') }}">
             @if($setting->header_logo)
-            <img src="{{ Storage::url($setting->header_logo) }}" alt="{{ $setting->title }}">
+            <img class="img-fluid" src="{{ Storage::url($setting->header_logo) }}" alt="{{ $setting->title }}" width="120">
             @else
             Logo
             @endif

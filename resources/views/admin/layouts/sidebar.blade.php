@@ -125,7 +125,7 @@
 
         {{-- Website Dropdown --}}
         @php
-        $websiteActive = request()->is('admin/coupons*') || request()->is('admin/smtp*') || request()->is('admin/pixel*') || request()->is('admin/courier*') || request()->is('admin/marketing*') || request()->is('admin/payment*') || request()->is('admin/settings*');
+        $websiteActive = request()->is('admin/coupons*') || request()->is('admin/smtp*') || request()->is('admin/pixel*') || request()->is('admin/courier*') || request()->is('admin/marketing*') || request()->is('admin/payment*') || request()->is('admin/settings*') || request()->is('admin/bannars*');
         @endphp
         <div class="dropdown">
             <button

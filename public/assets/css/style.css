@@ -133,7 +133,10 @@ body {
 /* Banner Section */
 .banner {
     position: relative;
-    background: url('../img/gani.jpg') center/cover no-repeat;
+    /* background: url('../img/gani.jpg') center/cover no-repeat; */
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
     height: 70vh;
     display: flex;
     justify-content: center;

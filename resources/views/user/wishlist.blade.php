@@ -85,7 +85,7 @@
 <div class="flex flex-col items-center justify-center py-16 bg-gray-50 text-center">
     <img src="https://cdn-icons-png.flaticon.com/512/4076/4076504.png" class="w-24 h-24 mb-4 opacity-70" alt="Empty Wishlist">
     <h4 class="text-xl font-semibold text-gray-700">Your wishlist is empty ❤️</h4>
-    <a href="{{ route('home') }}" class="mt-4 inline-block bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition">
+    <a href="{{ route('index') }}" class="mt-4 inline-block bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition">
         Continue Shopping
     </a>
 </div>

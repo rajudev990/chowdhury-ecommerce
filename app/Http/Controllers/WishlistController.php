@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Order;
 use App\Models\Wishlist;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -11,6 +12,14 @@ class WishlistController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+    }
+
+
+     public function Orderindex()
+    {
+        $orders = Order::where('user_id', Auth::id())
+            ->get();
+        return view('user.order', compact('orders'));
     }
 
     // 🧡 Wishlist দেখানো
@@ -48,4 +57,6 @@ class WishlistController extends Controller
 
         return response()->json(['status' => 'added', 'message' => 'Added to wishlist.']);
     }
+
+
 }

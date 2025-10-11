@@ -57,17 +57,18 @@ class BannarController extends Controller
     public function update(Request $request, string $id)
     {
         $data = Bannar::findOrFail($id);
-        $image =$request->hasFile('image') ? ImageHelper::uploadImage($request->file('image')): '';
+        $image = $request->hasFile('image') ? ImageHelper::uploadImage($request->file('image')) : null;
 
-        if($request->hasFile('image') && $data->image){
-            Storage::disk('public')->delete($data->imgae);
-        };
-
-        $input=$request->all();
-
-        if($image){
-            $data ['image'] = $image;
+        if ($request->hasFile('image') && $data->image) {
+            Storage::disk('public')->delete($data->image);
         }
+
+        $input = $request->all();
+
+        if ($image) {
+            $input['image'] = $image;
+        }
+
         $data->update($input);
 
         return redirect()->back()->with('success', 'Banner updated successfully.');

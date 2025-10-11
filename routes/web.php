@@ -90,6 +90,9 @@ Route::middleware(['auth', 'no.admin'])->group(function () {
     Route::post('/wishlist/add', [WishlistController::class, 'store'])->name('wishlist.store');
     Route::get('/wishlist/list', [WishlistController::class, 'index'])->name('wishlist.index');
 
+    Route::get('/order/list', [WishlistController::class, 'Orderindex'])->name('order.index');
+
+
 
 
 });

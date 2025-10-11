@@ -25,6 +25,15 @@
             <i class="fas fa-heart w-4"></i>
             <span>Wishlist</span>
         </a>
+
+         <a href="{{ route('order.index') }}"
+            class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 {{ request()->routeIs('order.index') ? 'bg-gray-700 font-semibold text-white' : '' }}">
+            <i class="fas fa-receipt w-4"></i>
+            <span>Orders</span>
+        </a>
+
+
+
        
 
 

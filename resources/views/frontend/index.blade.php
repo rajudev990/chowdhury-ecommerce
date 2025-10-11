@@ -5,17 +5,19 @@
 @section('content')
 
 
-
+@if(empty($banner->title))
+@else
 <!-- Banner -->
-<section class="banner">
+<section class="banner" style="background-image: url({{Storage::url($banner->image ?? '')}});">
     <div class="banner-content">
-        <h1>Pure Blackseed Flower Honey</h1>
-        <p>Experience the natural sweetness of organic honey</p>
-        <a href="#new-products" class="btn btn-primary">
+        <h1>{{$banner->title ?? ''}}</h1>
+        <p>{{$banner->description ?? ''}}</p>
+        <a href="{{$banner->product_link ?? '#'}}" class="btn btn-primary">
             <i class="fas fa-shopping-cart me-2"></i> Shop Now
         </a>
     </div>
 </section>
+@endif
 
 <!-- Popular Categories -->
 <section id="categories">

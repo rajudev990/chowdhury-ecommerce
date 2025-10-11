@@ -76,10 +76,13 @@
 
 @section('script')
 <script>
-    // Image preview logic
-    document.getElementById('image').addEventListener('change', function(event) {
-        const preview = document.getElementById('preview-image');
+document.addEventListener("DOMContentLoaded", function () {
+    const input = document.getElementById('image');
+    const preview = document.getElementById('preview-image');
+
+    input.addEventListener('change', function (event) {
         const file = event.target.files[0];
+
         if (file) {
             const reader = new FileReader();
             reader.onload = e => {
@@ -88,8 +91,10 @@
             };
             reader.readAsDataURL(file);
         } else {
+            preview.src = '';
             preview.classList.add('hidden');
         }
     });
+});
 </script>
 @endsection

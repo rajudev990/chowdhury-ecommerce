@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Bannar;
 use App\Models\Category;
 use App\Models\Coupon;
 use App\Models\CustomerContact;
@@ -28,7 +29,8 @@ class WebsiteController extends Controller
         $is_new = Product::where('status', 1)->where('is_new', 1)->get();
         $is_popular = Product::where('status', 1)->where('is_popular', 1)->get();
         $is_featured = Product::where('status', 1)->where('is_featured', 1)->get();
-        return view('frontend.index', compact('setting', 'categories', 'is_new', 'is_popular', 'is_featured'));
+        $banner = Bannar::first();
+        return view('frontend.index', compact('setting', 'categories', 'is_new', 'is_popular', 'is_featured','banner'));
     }
     public function products()
     {
