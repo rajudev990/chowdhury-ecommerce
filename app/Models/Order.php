@@ -36,4 +36,9 @@ class Order extends Model
             }
         });
     }
+
+    public function vendors()
+    {
+        return $this->belongsToMany(Vendor::class, 'order_items', 'order_id', 'vendor_id');
+    }
 }

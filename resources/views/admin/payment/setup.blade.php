@@ -239,13 +239,28 @@
                             </label>
                             <select name="sslcommerz_sandbox"
                                 class="w-full border border-gray-300 rounded-lg px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-cyan-500 transition">
-                                <option value="1" {{ old('sslcommerz_sandbox', $sslcz->sslcommerz_sandbox ?? '') == 1 ? 'selected' : '' }}>Active</option>
-                                <option value="0" {{ old('sslcommerz_sandbox', $sslcz->sslcommerz_sandbox ?? '') == 0 ? 'selected' : '' }}>Inactive</option>
+                                <option value="live" {{ old('sslcommerz_sandbox', $sslcz->sslcommerz_sandbox ?? '') == 'live' ? 'selected' : '' }}>Live</option>
+                                <option value="test" {{ old('sslcommerz_sandbox', $sslcz->sslcommerz_sandbox ?? '') == 'test' ? 'selected' : '' }}>Test</option>
                             </select>
                             @error('sslcommerz_sandbox')
                             <span class="text-red-500 text-sm">{{ $message }}</span>
                             @enderror
                         </div>
+
+                        <div>
+                            <label class="block text-gray-700 font-medium mb-1">
+                                Status <span class="text-red-500">*</span>
+                            </label>
+                            <select name="status"
+                                class="w-full border border-gray-300 rounded-lg px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-cyan-500 transition">
+                                <option value="1" {{ old('status', $sslcz->status ?? '') == 1 ? 'selected' : '' }}>Active</option>
+                                <option value="0" {{ old('status', $sslcz->status ?? '') == 0 ? 'selected' : '' }}>InActive</option>
+                            </select>
+                            @error('status')
+                            <span class="text-red-500 text-sm">{{ $message }}</span>
+                            @enderror
+                        </div>
+
                     </div>
 
                     <div class="flex justify-end pt-4 border-t">

@@ -15,7 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('sslcz_store_id')->nullable();
             $table->string('sslcz_store_password')->nullable();
-            $table->string('sslcommerz_sandbox')->default(0);
+            $table->string('sslcommerz_sandbox')->nullable();
+            $table->string('status')->default(1);
             $table->timestamps();
         });
     }

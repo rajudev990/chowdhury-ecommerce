@@ -26,6 +26,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Artisan;
 use App\Http\Controllers\SslCommerzPaymentController;
+use App\Http\Controllers\Vendor\Auth\VendorLoginController;
 
 
 Route::get('auth/{provider}', [WebsiteController::class, 'redirect'])->name('social.redirect');
@@ -78,48 +79,63 @@ Route::get('/contacts', [WebsiteController::class, 'contacts'])->name('contacts'
 Route::post('/contacts-store', [WebsiteController::class, 'contactStore'])->name('contact.store');
 
 
-// Registration & Login
-Route::get('affiliate/register', [AffiliateAuthController::class, 'showRegister'])->name('affiliate.register');
-Route::post('affiliate/register', [AffiliateAuthController::class, 'register'])->name('affiliate.register.submit');
-
-Route::get('affiliate/login', [AffiliateAuthController::class, 'showLogin'])->name('affiliate.login');
-Route::post('affiliate/login', [AffiliateAuthController::class, 'login'])->name('affiliate.login.submit');
-
-Route::middleware('auth:affiliate')->group(function () {
-    Route::get('affiliate/dashboard', [AffiliateAuthController::class, 'dashboard'])->name('affiliate.dashboard');
-    Route::post('affiliate/logout', [AffiliateAuthController::class, 'logout'])->name('affiliate.logout');
-});
-
 
 Auth::routes(); // ✅ Removed ['verify' => true]
 
+
+// User Dashboard
+
 Route::middleware(['auth', 'no.admin'])->group(function () {
-
-    // Route::get('/home', function () {
-    //     return view('home');
-    // })->name('home');
-
     Route::get('/dashboard', [HomeController::class, 'index'])->name('dashboard');
-
     Route::get('settings', [HomeController::class, 'settings'])->name('user.settings');
     Route::get('profile', [HomeController::class, 'profile'])->name('user.profile');
     Route::get('profile/edit', [HomeController::class, 'profileEdit'])->name('user.profile.edit');
     Route::put('/profile/update', [HomeController::class, 'update'])->name('user.profile.update');
     Route::get('password/edit', [HomeController::class, 'passwordEdit'])->name('user.password.edit');
     Route::post('/password-update', [HomeController::class, 'updatePassword'])->name('user.password.update');
-
-
     Route::post('/wishlist/add', [WishlistController::class, 'store'])->name('wishlist.store');
     Route::get('/wishlist/list', [WishlistController::class, 'index'])->name('wishlist.index');
-
     Route::get('/order/list', [WishlistController::class, 'Orderindex'])->name('order.index');
     Route::get('/order/view/{id}', [WishlistController::class, 'orderView'])->name('order.view');
 });
 
 
+// Affiliate Registration & Login
+Route::get('affiliate/register', [AffiliateAuthController::class, 'showRegister'])->name('affiliate.register');
+Route::post('affiliate/register', [AffiliateAuthController::class, 'register'])->name('affiliate.register.submit');
 
 
-// Admin Auth
+Route::prefix('affiliate')->name('affiliate.')->group(function () {
+
+    Route::get('login', [AffiliateAuthController::class, 'showLogin'])->name('login');
+    Route::post('login', [AffiliateAuthController::class, 'login'])->name('login.submit');
+    Route::post('logout', [AffiliateAuthController::class, 'logout'])->name('logout');
+
+    Route::middleware('auth:affiliate')->group(function () {
+        Route::get('dashboard', [AffiliateAuthController::class, 'dashboard'])->name('dashboard');
+       
+    });
+    
+});
+
+
+
+// Vendor
+Route::prefix('vendor')->name('vendor.')->group(function () {
+    Route::get('login', [VendorLoginController::class, 'showLoginForm'])->name('login');
+    Route::post('login', [VendorLoginController::class, 'login'])->name('login.submit');
+    Route::post('logout', [VendorLoginController::class, 'logout'])->name('logout');
+
+    Route::middleware('auth:vendor')->group(function () {
+        Route::get('dashboard', function () {
+            return view('vendor.dashboard');
+        })->name('dashboard');
+    });
+});
+
+
+
+// Super Admin Auth
 Route::get('/admin/login', [LoginController::class, 'showLoginForm'])->name('admin.login.form');
 Route::post('/admin/login', [LoginController::class, 'login'])->name('admin.login');
 Route::post('/admin/logout', [LoginController::class, 'logout'])->name('admin.logout');
