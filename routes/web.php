@@ -104,7 +104,7 @@ Route::middleware(['auth', 'no.admin'])->group(function () {
 Route::get('affiliate/register', [AffiliateAuthController::class, 'showRegister'])->name('affiliate.register');
 Route::post('affiliate/register', [AffiliateAuthController::class, 'register'])->name('affiliate.register.submit');
 
-
+// Affiliate Dashboard
 Route::prefix('affiliate')->name('affiliate.')->group(function () {
 
     Route::get('login', [AffiliateAuthController::class, 'showLogin'])->name('login');
@@ -112,7 +112,15 @@ Route::prefix('affiliate')->name('affiliate.')->group(function () {
     Route::post('logout', [AffiliateAuthController::class, 'logout'])->name('logout');
 
     Route::middleware('auth:affiliate')->group(function () {
+
         Route::get('dashboard', [AffiliateAuthController::class, 'dashboard'])->name('dashboard');
+
+        Route::get('settings', [HomeController::class, 'settings'])->name('settings');
+        Route::get('profile', [HomeController::class, 'profile'])->name('profile');
+        Route::get('profile/edit', [HomeController::class, 'profileEdit'])->name('profile.edit');
+        Route::put('/profile/update', [HomeController::class, 'update'])->name('profile.update');
+        Route::get('password/edit', [HomeController::class, 'passwordEdit'])->name('password.edit');
+        Route::post('/password-update', [HomeController::class, 'updatePassword'])->name('password.update');
        
     });
     
@@ -127,9 +135,16 @@ Route::prefix('vendor')->name('vendor.')->group(function () {
     Route::post('logout', [VendorLoginController::class, 'logout'])->name('logout');
 
     Route::middleware('auth:vendor')->group(function () {
-        Route::get('dashboard', function () {
-            return view('vendor.dashboard');
-        })->name('dashboard');
+
+        Route::get('/dashboard', [AdminProfileController::class, 'dashboard'])->name('dashboard');
+
+         Route::get('/profile/settings', [AdminProfileController::class, 'settings'])->name('profile.settings');
+        Route::put('/profile/settings', [AdminProfileController::class, 'updateSettings'])->name('profile.settings.update');
+
+        Route::get('/change-password', [AdminProfileController::class, 'changePassword'])->name('change.password');
+        Route::put('/change-password', [AdminProfileController::class, 'updatePassword'])->name('change.password.update');
+
+        
     });
 });
 
