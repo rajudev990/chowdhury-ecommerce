@@ -48,7 +48,7 @@ class AffiliateAuthController extends Controller
     // Show Login Form
     public function showLogin()
     {
-        return view('affiliate.login');
+        return view('affiliate.auth.login');
     }
 
     // Login
@@ -71,12 +71,6 @@ class AffiliateAuthController extends Controller
         }
 
         return redirect()->back()->with('error', 'Invalid credentials.');
-    }
-
-    // Dashboard
-    public function dashboard()
-    {
-        return view('affiliate.dashboard');
     }
 
     // Logout

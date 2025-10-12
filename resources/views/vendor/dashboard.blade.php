@@ -1,4 +1,4 @@
-@extends('affiliate.layouts.app')
+@extends('vendor.layouts.app')
 
 @section('title','Dashboard')
 

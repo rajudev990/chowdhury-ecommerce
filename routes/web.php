@@ -2,6 +2,7 @@
 
 
 use App\Http\Controllers\Admin\AdminProfileController;
+use App\Http\Controllers\Admin\AffiliatesController;
 use App\Http\Controllers\Admin\Auth\LoginController;
 use App\Http\Controllers\Admin\BannarController;
 use App\Http\Controllers\Admin\BrandController;
@@ -17,8 +18,10 @@ use App\Http\Controllers\Admin\SmtpController;
 use App\Http\Controllers\Admin\SubCategoryController;
 use App\Http\Controllers\Admin\SubSubCategoryController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\VendorsController;
 use App\Http\Controllers\Admin\WebController;
 use App\Http\Controllers\Affiliate\AffiliateAuthController;
+use App\Http\Controllers\Affiliate\AffiliateController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\WebsiteController;
 use App\Http\Controllers\WishlistController;
@@ -27,7 +30,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Artisan;
 use App\Http\Controllers\SslCommerzPaymentController;
 use App\Http\Controllers\Vendor\Auth\VendorLoginController;
-
+use App\Http\Controllers\Vendor\VendorController;
 
 Route::get('auth/{provider}', [WebsiteController::class, 'redirect'])->name('social.redirect');
 Route::get('auth/{provider}/callback', [WebsiteController::class, 'callback'])->name('social.callback');
@@ -112,18 +115,15 @@ Route::prefix('affiliate')->name('affiliate.')->group(function () {
     Route::post('logout', [AffiliateAuthController::class, 'logout'])->name('logout');
 
     Route::middleware('auth:affiliate')->group(function () {
+        Route::get('dashboard', [AffiliateController::class, 'dashboard'])->name('dashboard');
+        Route::get('settings', [AffiliateController::class, 'settings'])->name('affiliate.settings');
+        Route::get('profile', [AffiliateController::class, 'profile'])->name('affiliates.profile');
+        Route::get('profile/edit', [AffiliateController::class, 'profileEdit'])->name('affiliate.profile.edit');
+        Route::put('/profile/update', [AffiliateController::class, 'update'])->name('profile.update');
+        Route::get('/change-password', [AffiliateController::class, 'passwordEdit'])->name('password.edit');
+        Route::post('/password-update', [AffiliateController::class, 'updatePassword'])->name('password.update');
 
-        Route::get('dashboard', [AffiliateAuthController::class, 'dashboard'])->name('dashboard');
-
-        Route::get('settings', [HomeController::class, 'settings'])->name('settings');
-        Route::get('profile', [HomeController::class, 'profile'])->name('profile');
-        Route::get('profile/edit', [HomeController::class, 'profileEdit'])->name('profile.edit');
-        Route::put('/profile/update', [HomeController::class, 'update'])->name('profile.update');
-        Route::get('password/edit', [HomeController::class, 'passwordEdit'])->name('password.edit');
-        Route::post('/password-update', [HomeController::class, 'updatePassword'])->name('password.update');
-       
     });
-    
 });
 
 
@@ -136,15 +136,11 @@ Route::prefix('vendor')->name('vendor.')->group(function () {
 
     Route::middleware('auth:vendor')->group(function () {
 
-        Route::get('/dashboard', [AdminProfileController::class, 'dashboard'])->name('dashboard');
-
-         Route::get('/profile/settings', [AdminProfileController::class, 'settings'])->name('profile.settings');
-        Route::put('/profile/settings', [AdminProfileController::class, 'updateSettings'])->name('profile.settings.update');
-
-        Route::get('/change-password', [AdminProfileController::class, 'changePassword'])->name('change.password');
-        Route::put('/change-password', [AdminProfileController::class, 'updatePassword'])->name('change.password.update');
-
-        
+        Route::get('/dashboard', [VendorController::class, 'dashboard'])->name('dashboard');
+        Route::get('/profile/settings', [VendorController::class, 'settings'])->name('profile.settings');
+        Route::put('/profile/settings', [VendorController::class, 'updateSettings'])->name('profile.settings.update');
+        Route::get('/change-password', [VendorController::class, 'changePassword'])->name('change.password');
+        Route::put('/change-password', [VendorController::class, 'updatePassword'])->name('change.password.update');
     });
 });
 
@@ -228,22 +224,26 @@ Route::prefix('admin')
         Route::resource('coupons', CouponController::class);
         Route::resource('bannars', BannarController::class);
 
-    // <<<<<--Orders-->>>>>
+        // <<<<<--Orders-->>>>>
 
-    Route::get('all-orders', [OrderController::class, 'allOrders'])->name('all-orders');
-    Route::get('/orders/{order}',[OrderController::class, 'show'])->name('admin.orders.show');
-    Route::get('pending-orders', [OrderController::class, 'pendingOrders'])->name('pending-orders');
-    Route::get('processing-orders', [OrderController::class, 'processingOrders'])->name('processing-orders');
-    Route::get('on-the-way-orders', [OrderController::class, 'onTheWayOrders'])->name('on-the-way-orders');
-    Route::get('hold-orders', [OrderController::class, 'holdOrders'])->name('hold-orders');
-    Route::get('courier-orders', [OrderController::class, 'courierOrders'])->name('courier-orders');
-    Route::get('complete-orders', [OrderController::class, 'completeOrders'])->name('complete-orders');
-    Route::get('cancelled-orders', [OrderController::class, 'cancelledOrders'])->name('cancelled-orders');
+        Route::get('all-orders', [OrderController::class, 'allOrders'])->name('all-orders');
+        Route::get('/orders/{order}', [OrderController::class, 'show'])->name('admin.orders.show');
+        Route::get('pending-orders', [OrderController::class, 'pendingOrders'])->name('pending-orders');
+        Route::get('processing-orders', [OrderController::class, 'processingOrders'])->name('processing-orders');
+        Route::get('on-the-way-orders', [OrderController::class, 'onTheWayOrders'])->name('on-the-way-orders');
+        Route::get('hold-orders', [OrderController::class, 'holdOrders'])->name('hold-orders');
+        Route::get('courier-orders', [OrderController::class, 'courierOrders'])->name('courier-orders');
+        Route::get('complete-orders', [OrderController::class, 'completeOrders'])->name('complete-orders');
+        Route::get('cancelled-orders', [OrderController::class, 'cancelledOrders'])->name('cancelled-orders');
 
-    Route::get('orders/{id}', [OrderController::class, 'show'])->name('orders.show');
-    Route::post('/orders/{order}/update-status', [OrderController::class, 'updateStatus'])->name('orders.updateStatus');
+        Route::get('orders/{id}', [OrderController::class, 'show'])->name('orders.show');
+        Route::post('/orders/{order}/update-status', [OrderController::class, 'updateStatus'])->name('orders.updateStatus');
+        
+        // <<<<<--Affiliate-->>>>>
+        Route::resource('all-users',AffiliatesController::class);
 
-
+        // <<<<<--Vendor-->>>>>
+         Route::resource('all-sellers',VendorsController::class);
 
     });
 

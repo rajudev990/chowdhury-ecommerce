@@ -191,6 +191,56 @@
         </div>
 
 
+        {{-- Affiliate  --}}
+
+        @php
+        $AffiliateActive = request()->is('admin/all-users*');
+        @endphp
+
+        <div class="dropdown">
+            <button
+                class="dropdown-btn flex justify-between items-center w-full p-2 rounded hover:bg-gray-700 focus:outline-none {{ $AffiliateActive ? 'bg-gray-700 font-semibold' : '' }}">
+                <span class="flex items-center gap-2">
+                    <i class="fas fa-handshake w-4"></i> Affiliate
+                </span>
+                <i class="fas fa-chevron-down transition-transform {{ $AffiliateActive ? 'rotate-180' : '' }}"></i>
+            </button>
+
+            <div class="dropdown-menu {{ $AffiliateActive ? 'block' : 'hidden' }} ml-4 mt-1 space-y-1">
+                <a href="{{ route('admin.all-users.index') }}"
+                    class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 text-sm {{ request()->is('admin/all-users*') ? 'bg-gray-700 font-semibold' : '' }}">
+                    <i class="fas fa-user-tie w-3"></i> Users
+                </a>
+            </div>
+        </div>
+
+
+
+        {{-- Sellers --}}
+        @php
+        $VendorActive = request()->is('admin/all-sellers*');
+        @endphp
+
+        <div class="dropdown">
+            <button
+                class="dropdown-btn flex justify-between items-center w-full p-2 rounded hover:bg-gray-700 focus:outline-none {{ $VendorActive ? 'bg-gray-700 font-semibold' : '' }}">
+                <span class="flex items-center gap-2">
+                    <i class="fas fa-store w-4"></i> Vendor
+                </span>
+                <i class="fas fa-chevron-down transition-transform {{ $VendorActive ? 'rotate-180' : '' }}"></i>
+            </button>
+
+            <div class="dropdown-menu {{ $VendorActive ? 'block' : 'hidden' }} ml-4 mt-1 space-y-1">
+                <a href="{{ route('admin.all-sellers.index') }}"
+                    class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 text-sm {{ request()->is('admin/all-sellers*') ? 'bg-gray-700 font-semibold' : '' }}">
+                    <i class="fas fa-store-alt w-3"></i> Sellers
+                </a>
+            </div>
+        </div>
+
+
+
+
 
         {{-- User Management --}}
         @can(['view role','view user'])
