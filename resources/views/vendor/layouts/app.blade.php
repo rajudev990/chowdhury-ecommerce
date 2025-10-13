@@ -99,7 +99,7 @@ $setting = \App\Models\Setting::first();
                         @else
                         <img class="w-8 h-8 rounded-full border-2 border-gray-300" src="https://i.pravatar.cc/40" alt="Profile">
                         @endif
-                        <span class="hidden md:block font-medium">{{ Auth::guard('vendor')->user()->name ?? 'Admin' }}</span>
+                        <span class="hidden md:block font-medium">{{ Auth::guard('vendor')->user()->name ?? 'Vendor' }}</span>
                         <i class="fas fa-chevron-down"></i>
                     </button>
 

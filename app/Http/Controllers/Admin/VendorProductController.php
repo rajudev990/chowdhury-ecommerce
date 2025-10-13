@@ -241,7 +241,7 @@ class VendorProductController extends Controller
         $product->variants()->delete();
         $product->delete();
 
-        return redirect()->route('vendor.vendor-product.index')->with('success', 'Product deleted successfully!');
+        return redirect()->route('vendor.products.index')->with('success', 'Product deleted successfully!');
     }
 
     // AJAX

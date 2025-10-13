@@ -145,11 +145,13 @@ Route::prefix('vendor')->name('vendor.')->group(function () {
         Route::put('/change-password', [VendorController::class, 'updatePassword'])->name('change.password.update');
     });
 
+        //  <<< Product & Orders >>>
+        Route::resource('products',VendorProductController::class);
+        Route::get('/products/remove-image/{id}', [VendorProductController::class, 'removeImage'])->name('products.removeImage');     
+        // AJAX routes
+        Route::get('ajax/subcategories/{category}', [VendorProductController::class, 'getSubCategories']);
+        Route::get('ajax/subsubcategories/{subcategory}', [VendorProductController::class, 'getSubSubCategories']);
 
-    //  <<< Product & Orders >>>
-
-      Route::resource('products',VendorProductController::class);
-      Route::get('/products/remove-image/{id}', [VendorProductController::class, 'removeImage'])->name('products.removeImage');
 
       //orders
         Route::get('all-orders', [VendorOrderController::class, 'allOrders'])->name('all-orders');

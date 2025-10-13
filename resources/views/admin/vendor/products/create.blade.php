@@ -1,5 +1,5 @@
 @extends('vendor.layouts.app')
-@section('title','Create Vendor Product')
+@section('title','Create Product')
 
 @section('content')
 <section class="p-5 bg-gray-100 min-h-screen">
