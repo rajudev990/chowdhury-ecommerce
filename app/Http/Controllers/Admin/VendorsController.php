@@ -39,6 +39,8 @@ class VendorsController extends Controller
         $data['logo'] = $logo;
         $data['banner'] = $banner;
 
+        $data['password'] = bcrypt($request->password);
+
         Vendor::create($data);
         return redirect()->route('admin.all-sellers.index')->with('success', 'Sellers Create Successfully');
     }
@@ -66,7 +68,7 @@ class VendorsController extends Controller
     public function update(Request $request, string $id)
     {
         $data = Vendor::findOrFail($id);
-       $logo = $request->hasFile('logo') ? ImageHelper::uploadImage($request->file('logo')) : null;
+        $logo = $request->hasFile('logo') ? ImageHelper::uploadImage($request->file('logo')) : null;
         $banner = $request->hasFile('banner') ? ImageHelper::uploadImage($request->file('banner')) : null;
 
         if ($request->hasFile('logo') && $data->logo) {
@@ -76,7 +78,7 @@ class VendorsController extends Controller
             Storage::disk('public')->delete($data->banner);
         }
 
-         $input = $request->all();
+        $input = $request->all();
 
         if ($logo) {
             $input['logo'] = $logo;
@@ -85,8 +87,13 @@ class VendorsController extends Controller
             $input['banner'] = $banner;
         }
 
-       
-        $data->update($input);
+        if($request->password)
+        {
+            $input['password'] = bcrypt($request->password);
+            $data->update($input);
+        }else{
+            $data->update($input);
+        }
         return redirect()->route('admin.all-sellers.index')->with('success', 'Sellers Update Successfully');
     }
 

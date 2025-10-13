@@ -26,7 +26,6 @@ return new class extends Migration
             $table->string('country')->nullable();
             $table->string('postal_code')->nullable();
             $table->text('description')->nullable();
-            $table->enum('is_verified',['pending', 'active', 'rejected'])->default('pending');
             $table->enum('status', ['active', 'inactive', 'banned'])->default('inactive');
             $table->rememberToken();
             $table->timestamps();

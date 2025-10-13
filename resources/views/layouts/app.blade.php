@@ -379,47 +379,47 @@ $categories = \App\Models\Category::all();
 
 
     <script>
-$(document).on('click', '.add-to-wishlist', function(e) {
-    e.preventDefault();
+        $(document).on('click', '.add-to-wishlist', function(e) {
+            e.preventDefault();
 
-    let icon = $(this);
-    let productId = icon.data('id');
+            let icon = $(this);
+            let productId = icon.data('id');
 
-    $.ajax({
-        url: "{{ route('wishlist.store') }}",
-        method: "POST",
-        data: {
-            product_id: productId,
-            _token: "{{ csrf_token() }}"
-        },
-        success: function(res) {
-            if (res.status === 'error') {
-                toastr.warning(res.message);
-                return;
-            }
+            $.ajax({
+                url: "{{ route('wishlist.store') }}",
+                method: "POST",
+                data: {
+                    product_id: productId,
+                    _token: "{{ csrf_token() }}"
+                },
+                success: function(res) {
+                    if (res.status === 'error') {
+                        toastr.warning(res.message);
+                        return;
+                    }
 
-            if (res.status === 'added') {
-                toastr.success(res.message);
-            } else if (res.status === 'removed') {
-                toastr.info(res.message);
-            }
+                    if (res.status === 'added') {
+                        toastr.success(res.message);
+                    } else if (res.status === 'removed') {
+                        toastr.info(res.message);
+                    }
 
-            // ✅ Short delay so toastr shows before reload
-            setTimeout(() => location.reload(), 800);
-        },
-        error: function() {
-            toastr.error('Please login to add to wishlist.');
-        }
-    });
-});
+                    // ✅ Short delay so toastr shows before reload
+                    setTimeout(() => location.reload(), 800);
+                },
+                error: function() {
+                    toastr.error('Please login to add to wishlist.');
+                }
+            });
+        });
 
-toastr.options = {
-    "closeButton": true,
-    "progressBar": true,
-    "positionClass": "toast-top-right",
-    "timeOut": "3000"
-};
-</script>
+        toastr.options = {
+            "closeButton": true,
+            "progressBar": true,
+            "positionClass": "toast-top-right",
+            "timeOut": "3000"
+        };
+    </script>
 
 
 
@@ -442,16 +442,59 @@ toastr.options = {
     </script>
 
     <script>
-    $(document).on('click', '#accountLink', function() {
-        @if(auth()->check())
+        $(document).on('click', '#accountLink', function() {
+            @if(auth()->check())
             window.location.href = "{{ route('dashboard') }}";
-        @else
+            @else
             toastr.info('Please login to access your account.');
             setTimeout(function() {
                 window.location.href = "{{ route('login') }}";
             }, 1500);
+            @endif
+        });
+    </script>
+
+
+    <script>
+        @if(Session::has('success'))
+        toastr.options = {
+            "closeButton": true,
+            "progressBar": true,
+            "positionClass": "toast-top-right",
+            "timeOut": "3000"
+        };
+        toastr.success("{{ Session::get('success') }}");
         @endif
-    });
+
+        @if(Session::has('error'))
+        toastr.options = {
+            "closeButton": true,
+            "progressBar": true,
+            "positionClass": "toast-top-right",
+            "timeOut": "3000"
+        };
+        toastr.error("{{ Session::get('error') }}");
+        @endif
+
+        @if(Session::has('warning'))
+        toastr.options = {
+            "closeButton": true,
+            "progressBar": true,
+            "positionClass": "toast-top-right",
+            "timeOut": "3000"
+        };
+        toastr.warning("{{ Session::get('warning') }}");
+        @endif
+
+        @if(Session::has('info'))
+        toastr.options = {
+            "closeButton": true,
+            "progressBar": true,
+            "positionClass": "toast-top-right",
+            "timeOut": "3000"
+        };
+        toastr.info("{{ Session::get('info') }}");
+        @endif
     </script>
 
 

@@ -42,7 +42,7 @@ class AffiliateAuthController extends Controller
             'status' => 'pending', // default
         ]);
 
-        return redirect()->route('affiliate.login')->with('success', 'Registration successful! Your account is pending approval.');
+        return redirect()->back()->with('success', 'Registration successful! Your account is pending approval.');
     }
 
     // Show Login Form

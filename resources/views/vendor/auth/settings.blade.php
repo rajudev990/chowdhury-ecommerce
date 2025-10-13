@@ -11,7 +11,7 @@
         </div>
 
         <!-- Form -->
-        <form action="{{ route('profile.settings.update') }}" method="POST" enctype="multipart/form-data" class="p-8 space-y-6">
+        <form action="{{ route('vendor.profile.update') }}" method="POST" enctype="multipart/form-data" class="p-8 space-y-6">
             @csrf
             @method('PUT')
 

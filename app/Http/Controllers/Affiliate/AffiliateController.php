@@ -79,23 +79,13 @@ class AffiliateController extends Controller
         $affilitae = Auth::guard('affiliate')->user();
 
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'dob' => 'nullable|date',
-            'username' => 'nullable|string|max:255|unique:affiliates,username,' . $affilitae->id,
+            'fname' => 'required|string|max:255',
+            'username' => 'required|string|max:255|unique:affiliates,username,' . $affilitae->id,
             'email' => 'required|email|max:255|unique:affiliates,email,' . $affilitae->id,
-            'phone' => [
-                'nullable',
-                'regex:/^\d{11}$/',
-                'unique:affiliates,phone,' . $affilitae->id,
-            ],
-            'gender' => 'nullable|string|max:10',
-            'address' => 'nullable|string|max:255',
-            'bio' => 'nullable|string|max:1000',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
-        ], [
-            'phone.regex' => 'The phone number must be 11 digits.',
-            'phone.unique' => 'This phone number has already been taken.',
+            'phone' => ['required','unique:affiliates,phone,' . $affilitae->id,],
         ]);
+
+        $data = $request->all();
 
         // Handle image upload
         if ($request->hasFile('image')) {
@@ -113,11 +103,11 @@ class AffiliateController extends Controller
             Storage::disk('public')->put($filename, file_get_contents($image));
 
             // Set validated image path
-            $validated['image'] = $filename;
+            $data['image'] = $filename;
         }
 
         // Update user data
-        $affilitae->update($validated);
+        $affilitae->update($data);
 
         return redirect()->back()->with('success', 'Profile updated successfully!');
     }

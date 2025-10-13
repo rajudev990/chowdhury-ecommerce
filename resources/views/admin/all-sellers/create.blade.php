@@ -153,18 +153,7 @@
                     </div>
 
 
-                    <div>
-                        <label class="block text-gray-700 font-medium mb-1">Verified Status</label>
-                        <select name="is_verified"
-                            class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:border-cyan-500 focus:ring-0 outline-none">
-                            <option value="pending" {{ old('is_verified') == 'pending' ? 'selected' : '' }}>Pending</option>
-                            <option value="active" {{ old('is_verified') == 'active' ? 'selected' : '' }}>Active</option>
-                            <option value="rejected" {{ old('is_verified') == 'rejected' ? 'selected' : '' }}>Rejected</option>
-                        </select>
-                        @error('is_verified')
-                        <span class="text-red-500 text-sm mt-1 block">{{ $message }}</span>
-                        @enderror
-                    </div>
+                    
 
 
                     <!-- Status -->

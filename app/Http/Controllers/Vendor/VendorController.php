@@ -93,18 +93,22 @@ class VendorController extends Controller
             'email' => 'required|email|unique:vendor,email,' . $vendor->id,
         ]);
 
-        $image = $request->hasFile('image') ? ImageHelper::uploadImage($request->file('image')) : null;
+        $logo = $request->hasFile('logo') ? ImageHelper::uploadImage($request->file('logo')) : null;
+        $banner = $request->hasFile('banner') ? ImageHelper::uploadImage($request->file('banner')) : null;
 
-        if ($request->hasFile('image') && $vendor->image) {
-            Storage::disk('public')->delete($vendor->image);
+        if ($request->hasFile('logo') && $vendor->logo) {
+            Storage::disk('public')->delete($vendor->logo);
+        }
+        if ($request->hasFile('banner') && $vendor->banner) {
+            Storage::disk('public')->delete($vendor->banner);
         }
 
-        $vendor->update([
-            'name' => $request->name,
-            'email' => $request->email,
-            'phone' => $request->phone,
-            'image' =>  $image,
-        ]);
+        $input = $request->all();
+
+        $input['logo'] = $logo;
+        $input['banner'] = $banner;
+
+        $vendor->update($input);
 
         return back()->with('success', 'Profile updated successfully.');
     }

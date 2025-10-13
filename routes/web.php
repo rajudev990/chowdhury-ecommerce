@@ -138,7 +138,7 @@ Route::prefix('vendor')->name('vendor.')->group(function () {
 
         Route::get('/dashboard', [VendorController::class, 'dashboard'])->name('dashboard');
         Route::get('/profile/settings', [VendorController::class, 'settings'])->name('profile.settings');
-        Route::put('/profile/settings', [VendorController::class, 'updateSettings'])->name('profile.settings.update');
+        Route::put('/profile/settings', [VendorController::class, 'updateSettings'])->name('profile.update');
         Route::get('/change-password', [VendorController::class, 'changePassword'])->name('change.password');
         Route::put('/change-password', [VendorController::class, 'updatePassword'])->name('change.password.update');
     });

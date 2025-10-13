@@ -86,21 +86,8 @@ $setting = \App\Models\Setting::first();
                 alt="Home" />
         </div>
 
-        <!-- Wishlist Icon -->
-        <div onclick="goToWishlist()" class="relative cursor-pointer">
-            <img src="https://img.icons8.com/ios-filled/24/fa314a/like.png" class="w-6 h-6" />
-            <span class="absolute -top-2 -right-2 bg-red-600 text-white text-xs font-semibold rounded-full w-5 h-5 flex items-center justify-center wishlist-count">
-                {{ $wishlistCount ?? 0 }}
-            </span>
-        </div>
-
-        <!-- Cart Icon -->
-        <div onclick="checkOut()" class="relative cursor-pointer">
-            <img src="https://img.icons8.com/ios-filled/24/1e40af/shopping-cart.png" class="w-6 h-6" />
-            <span class="absolute -top-2 -right-2 bg-red-600 text-white text-xs font-semibold rounded-full w-5 h-5 flex items-center justify-center cart">
-                0
-            </span>
-        </div>
+       
+  
 
         <!-- Profile Dropdown -->
         <div class="relative">
@@ -115,9 +102,9 @@ $setting = \App\Models\Setting::first();
             </button>
 
             <div id="profileDropdown" class="hidden absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-md overflow-hidden z-50">
-                <a href="{{ route('profile.settings') }}" class="flex items-center px-4 py-2 hover:bg-gray-100">Profile</a>
-                <a href="{{ route('change.password') }}" class="flex items-center px-4 py-2 hover:bg-gray-100">Change Password</a>
-                <form method="POST" action="{{ route('logout') }}">
+                <a href="{{ route('vendor.profile.settings') }}" class="flex items-center px-4 py-2 hover:bg-gray-100">Profile</a>
+                <a href="{{ route('vendor.change.password') }}" class="flex items-center px-4 py-2 hover:bg-gray-100">Change Password</a>
+                <form method="POST" action="{{ route('vendor.logout') }}">
                     @csrf
                     <button type="submit" class="flex items-center w-full px-4 py-2 hover:bg-gray-100">
                         Logout

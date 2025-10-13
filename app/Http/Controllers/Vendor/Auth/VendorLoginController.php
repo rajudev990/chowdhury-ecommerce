@@ -15,16 +15,26 @@ class VendorLoginController extends Controller
 
     public function login(Request $request)
     {
-        $credentials = $request->validate([
-            'email' => ['required', 'email'],
-            'password' => ['required'],
+
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
         ]);
 
-        if (Auth::guard('vendor')->attempt($credentials, $request->remember)) {
-            return redirect()->intended(route('vendor.dashboard'));
+        $credentials = $request->only('email', 'password');
+
+        if (Auth::guard('vendor')->attempt($credentials)) {
+            $vendor = Auth::guard('vendor')->user();
+            if ($vendor->status !== 'active') {
+                Auth::guard('vendor')->logout();
+                return redirect()->back()->with('error', 'Your account is not active yet.');
+            }
+            return redirect()->route('vendor.dashboard');
         }
 
-        return back()->withErrors(['email' => 'Invalid credentials.']);
+        return redirect()->back()->with('error', 'Invalid credentials.');
+
+
     }
 
     public function logout(Request $request)
