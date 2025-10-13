@@ -73,22 +73,6 @@
                                         class="w-8 h-8 flex items-center justify-center bg-green-500 hover:bg-green-600 text-white rounded-full shadow-sm transition">
                                         <i class="fas fa-eye text-xs"></i>
                                     </a>
-
-                                    <a href="#"
-                                        class="w-8 h-8 flex items-center justify-center bg-blue-500 hover:bg-blue-600 text-white rounded-full shadow-sm transition">
-                                        <i class="fa fa-edit text-xs"></i>
-                                    </a>
-
-                                    <form id="delete-form-{{ $order->id }}"
-                                        action="#" method="POST"
-                                        class="hidden">
-                                        @csrf
-                                        @method('DELETE')
-                                    </form>
-                                    <button type="button" data-id="{{ $order->id }}"
-                                        class="w-8 h-8 flex items-center justify-center bg-red-500 hover:bg-red-600 text-white rounded-full shadow-sm transition delete-btn">
-                                        <i class="fa fa-trash text-xs"></i>
-                                    </button>
                                 </div>
                             </td>
                         </tr>
@@ -114,14 +98,6 @@
                                 class="w-8 h-8 flex items-center justify-center bg-green-500 hover:bg-green-600 text-white rounded-full">
                                 <i class="fas fa-eye text-xs"></i>
                             </a>
-                            <a href="#"
-                                class="w-8 h-8 flex items-center justify-center bg-blue-500 hover:bg-blue-600 text-white rounded-full">
-                                <i class="fa fa-edit text-xs"></i>
-                            </a>
-                            <button type="button" data-id="{{ $order->id }}"
-                                class="w-8 h-8 flex items-center justify-center bg-red-500 hover:bg-red-600 text-white rounded-full delete-btn">
-                                <i class="fa fa-trash text-xs"></i>
-                            </button>
                         </div>
                     </div>
 

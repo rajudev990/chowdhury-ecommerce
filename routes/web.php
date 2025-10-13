@@ -18,6 +18,8 @@ use App\Http\Controllers\Admin\SmtpController;
 use App\Http\Controllers\Admin\SubCategoryController;
 use App\Http\Controllers\Admin\SubSubCategoryController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\VendorOrderController;
+use App\Http\Controllers\Admin\VendorProductController;
 use App\Http\Controllers\Admin\VendorsController;
 use App\Http\Controllers\Admin\WebController;
 use App\Http\Controllers\Affiliate\AffiliateAuthController;
@@ -142,6 +144,27 @@ Route::prefix('vendor')->name('vendor.')->group(function () {
         Route::get('/change-password', [VendorController::class, 'changePassword'])->name('change.password');
         Route::put('/change-password', [VendorController::class, 'updatePassword'])->name('change.password.update');
     });
+
+
+    //  <<< Product & Orders >>>
+
+      Route::resource('products',VendorProductController::class);
+      Route::get('/products/remove-image/{id}', [VendorProductController::class, 'removeImage'])->name('products.removeImage');
+
+      //orders
+        Route::get('all-orders', [VendorOrderController::class, 'allOrders'])->name('all-orders');
+
+       
+        Route::get('pending-orders', [VendorOrderController::class, 'pendingOrders'])->name('pending-orders');
+        Route::get('processing-orders', [VendorOrderController::class, 'processingOrders'])->name('processing-orders');
+        Route::get('on-the-way-orders', [VendorOrderController::class, 'onTheWayOrders'])->name('on-the-way-orders');
+        Route::get('hold-orders', [VendorOrderController::class, 'holdOrders'])->name('hold-orders');
+        Route::get('courier-orders', [VendorOrderController::class, 'courierOrders'])->name('courier-orders');
+        Route::get('complete-orders', [VendorOrderController::class, 'completeOrders'])->name('complete-orders');
+        Route::get('cancelled-orders', [VendorOrderController::class, 'cancelledOrders'])->name('cancelled-orders');
+
+        Route::get('orders/{id}', [VendorOrderController::class, 'show'])->name('orders.show');
+        Route::post('/orders/{order}/update-status', [VendorOrderController::class, 'updateStatus'])->name('orders.updateStatus');
 });
 
 
@@ -225,9 +248,7 @@ Route::prefix('admin')
         Route::resource('bannars', BannarController::class);
 
         // <<<<<--Orders-->>>>>
-
-        Route::get('all-orders', [OrderController::class, 'allOrders'])->name('all-orders');
-        Route::get('/orders/{order}', [OrderController::class, 'show'])->name('admin.orders.show');
+         //Pending Orders
         Route::get('pending-orders', [OrderController::class, 'pendingOrders'])->name('pending-orders');
         Route::get('processing-orders', [OrderController::class, 'processingOrders'])->name('processing-orders');
         Route::get('on-the-way-orders', [OrderController::class, 'onTheWayOrders'])->name('on-the-way-orders');
@@ -235,15 +256,20 @@ Route::prefix('admin')
         Route::get('courier-orders', [OrderController::class, 'courierOrders'])->name('courier-orders');
         Route::get('complete-orders', [OrderController::class, 'completeOrders'])->name('complete-orders');
         Route::get('cancelled-orders', [OrderController::class, 'cancelledOrders'])->name('cancelled-orders');
-
+        //orders
+        Route::get('all-orders', [OrderController::class, 'allOrders'])->name('all-orders');
         Route::get('orders/{id}', [OrderController::class, 'show'])->name('orders.show');
         Route::post('/orders/{order}/update-status', [OrderController::class, 'updateStatus'])->name('orders.updateStatus');
+       
+   
+
         
         // <<<<<--Affiliate-->>>>>
         Route::resource('all-users',AffiliatesController::class);
 
         // <<<<<--Vendor-->>>>>
          Route::resource('all-sellers',VendorsController::class);
+       
 
     });
 

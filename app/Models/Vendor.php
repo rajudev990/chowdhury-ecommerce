@@ -4,13 +4,13 @@ namespace App\Models;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Spatie\Permission\Traits\HasRoles;
 
 class Vendor extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use Notifiable, HasRoles;
 
-    protected $guard = 'vendor'; // important
+    protected $guard_name = 'vendor';
 
     protected $fillable = [
         'name',
@@ -30,16 +30,7 @@ class Vendor extends Authenticatable
         'status',
     ];
 
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
-
-    // 🔐 Hash password automatically
-    protected function setPasswordAttribute($value)
-    {
-        $this->attributes['password'] = bcrypt($value);
-    }
+    protected $hidden = ['password', 'remember_token'];
 
     // 🧭 Relationships
     public function products()

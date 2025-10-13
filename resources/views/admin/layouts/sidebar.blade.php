@@ -218,7 +218,7 @@
 
         {{-- Sellers --}}
         @php
-        $VendorActive = request()->is('admin/all-sellers*');
+        $VendorActive = request()->is('admin/all-sellers*')|| request()->is('admin/vendor-product*')|| request()->is('admin/vendor-order*');
         @endphp
 
         <div class="dropdown">
@@ -231,10 +231,11 @@
             </button>
 
             <div class="dropdown-menu {{ $VendorActive ? 'block' : 'hidden' }} ml-4 mt-1 space-y-1">
-                <a href="{{ route('admin.all-sellers.index') }}"
+               <a href="{{ route('admin.all-sellers.index') }}"
                     class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 text-sm {{ request()->is('admin/all-sellers*') ? 'bg-gray-700 font-semibold' : '' }}">
                     <i class="fas fa-store-alt w-3"></i> Sellers
                 </a>
+
             </div>
         </div>
 

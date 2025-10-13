@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Vendor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Hash;
 
 class VendorsController extends Controller
 {
@@ -39,7 +40,7 @@ class VendorsController extends Controller
         $data['logo'] = $logo;
         $data['banner'] = $banner;
 
-        $data['password'] = bcrypt($request->password);
+        $data['password'] = Hash::make($request->password);
 
         Vendor::create($data);
         return redirect()->route('admin.all-sellers.index')->with('success', 'Sellers Create Successfully');
@@ -89,7 +90,7 @@ class VendorsController extends Controller
 
         if($request->password)
         {
-            $input['password'] = bcrypt($request->password);
+            $input['password'] = Hash::make($request->password);
             $data->update($input);
         }else{
             $data->update($input);
