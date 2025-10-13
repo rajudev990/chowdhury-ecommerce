@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Affiliate;
 use App\Models\Bannar;
 use App\Models\Category;
 use App\Models\Coupon;
@@ -46,9 +47,26 @@ class WebsiteController extends Controller
     {
         $item = Product::where('slug', $slug)->firstOrFail(); // not found হলে automatic 404
         $setting = Setting::first();
+
+        $affiliate ='';
         // Related products fetch
         $relatedProducts = $item->relatedProducts();
-        return view('frontend.product-single', compact('item', 'setting', 'relatedProducts'));
+        return view('frontend.product-single', compact('item', 'setting', 'relatedProducts','affiliate'));
+    }
+
+    public function productSingleAffiliate($slug, $affiliate_id)
+    {
+        $item = Product::where('slug', $slug)->firstOrFail(); // If not found, it will automatically throw a 404
+        $setting = Setting::first();
+
+        // Retrieve the affiliate details
+        $affiliate = Affiliate::findOrFail($affiliate_id);
+
+        // Fetch related products
+        $relatedProducts = $item->relatedProducts();
+
+        // Return the view with the necessary data
+        return view('frontend.product-single', compact('item', 'setting', 'relatedProducts', 'affiliate'));
     }
     
     
@@ -152,6 +170,8 @@ class WebsiteController extends Controller
                 'product_variant_id' => $item['variantId'] ?? null,
                 'quantity' => $item['quantity'],
                 'price' => $item['price'],
+                'affiliate_id' => $item['affiliateId'] ?? null, // Ensure affiliate_id is passed
+
             ]);
         }
 

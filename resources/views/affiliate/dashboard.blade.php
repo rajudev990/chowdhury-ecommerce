@@ -30,7 +30,7 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-sm font-medium uppercase">Total Orders</p>
-                        <h3 class="text-2xl font-bold mt-2">{{ $orders }}</h3>
+                        <h3 class="text-2xl font-bold mt-2">{{ $totalOrderCount }}</h3>
                     </div>
                     <div class="bg-purple-700 p-3 rounded-full">
                         <i class="fas fa-shopping-cart text-white text-xl"></i>
@@ -43,7 +43,7 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-sm font-medium uppercase">Pending Orders</p>
-                        <h3 class="text-2xl font-bold mt-2">{{ $pending_orders }}</h3>
+                        <h3 class="text-2xl font-bold mt-2">{{ number_format($totalPendingCommission, 2) }} {{ currency() }}</h3>
                     </div>
                     <div class="bg-yellow-600 p-3 rounded-full">
                         <i class="fas fa-hourglass-half text-white text-xl"></i>
@@ -56,7 +56,7 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-sm font-medium uppercase">Completed Orders</p>
-                        <h3 class="text-2xl font-bold mt-2">{{ $complete_orders }}</h3>
+                        <h3 class="text-2xl font-bold mt-2">{{ number_format($totalCompletedCommission, 2) }} {{ currency() }}</h3>
                     </div>
                     <div class="bg-green-700 p-3 rounded-full">
                         <i class="fas fa-check-circle text-white text-xl"></i>
@@ -69,10 +69,35 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-sm font-medium uppercase">Revenue</p>
-                        <h3 class="text-2xl font-bold mt-2">${{ number_format($revenue, 2) }}</h3>
+                        <h3 class="text-2xl font-bold mt-2">{{ number_format($totalPendingCommission + $totalCompletedCommission, 2) }} {{ currency() }}</h3>
                     </div>
                     <div class="bg-blue-700 p-3 rounded-full">
                         <i class="fas fa-dollar-sign text-white text-xl"></i>
+                    </div>
+                </div>
+            </div>
+            <!-- Revenue -->
+            <div class="bg-gradient-to-r from-blue-600 to-blue-500 text-white p-5 rounded-2xl shadow hover:scale-105 transform transition">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm font-medium uppercase">Widthdraw</p>
+                        <h3 class="text-2xl font-bold mt-2">{{ number_format($withdraw, 2) }} {{ currency() }}</h3>
+                    </div>
+                    <div class="bg-blue-700 p-3 rounded-full">
+                        <i class="fas fa-dollar-sign text-white text-xl"></i>
+                    </div>
+                </div>
+            </div>
+
+             <!-- Completed Orders -->
+            <div class="bg-gradient-to-r from-green-600 to-green-500 text-white p-5 rounded-2xl shadow hover:scale-105 transform transition">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm font-medium uppercase">Balance</p>
+                        <h3 class="text-2xl font-bold mt-2">{{ number_format($balance, 2) }} {{ currency() }}</h3>
+                    </div>
+                    <div class="bg-green-700 p-3 rounded-full">
+                        <i class="fas fa-check-circle text-white text-xl"></i>
                     </div>
                 </div>
             </div>

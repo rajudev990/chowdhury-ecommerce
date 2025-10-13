@@ -206,11 +206,25 @@
                 <i class="fas fa-chevron-down transition-transform {{ $AffiliateActive ? 'rotate-180' : '' }}"></i>
             </button>
 
+
+
             <div class="dropdown-menu {{ $AffiliateActive ? 'block' : 'hidden' }} ml-4 mt-1 space-y-1">
+                <a href="{{ route('admin.product-commission.index') }}"
+                    class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 text-sm {{ request()->is('admin/product-commission*') ? 'bg-gray-700 font-semibold' : '' }}">
+                    <i class="fas fa-user-tie w-3"></i> Affiliate Configuration
+                </a>
+
                 <a href="{{ route('admin.all-users.index') }}"
                     class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 text-sm {{ request()->is('admin/all-users*') ? 'bg-gray-700 font-semibold' : '' }}">
-                    <i class="fas fa-user-tie w-3"></i> Users
+                    <i class="fas fa-user-tie w-3"></i>Affiliate Users
                 </a>
+
+                <a href="{{ route('admin.marketer-withdraw.index') }}"
+                    class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 text-sm {{ request()->is('admin/marketer-withdraw*') ? 'bg-gray-700 font-semibold' : '' }}">
+                    <i class="fas fa-user-tie w-3"></i>Withdraw Request
+                </a>
+
+
             </div>
         </div>
 
@@ -225,13 +239,13 @@
             <button
                 class="dropdown-btn flex justify-between items-center w-full p-2 rounded hover:bg-gray-700 focus:outline-none {{ $VendorActive ? 'bg-gray-700 font-semibold' : '' }}">
                 <span class="flex items-center gap-2">
-                    <i class="fas fa-store w-4"></i> Vendor
+                    <i class="fas fa-store w-4"></i> Seller System
                 </span>
                 <i class="fas fa-chevron-down transition-transform {{ $VendorActive ? 'rotate-180' : '' }}"></i>
             </button>
 
             <div class="dropdown-menu {{ $VendorActive ? 'block' : 'hidden' }} ml-4 mt-1 space-y-1">
-               <a href="{{ route('admin.all-sellers.index') }}"
+                <a href="{{ route('admin.all-sellers.index') }}"
                     class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 text-sm {{ request()->is('admin/all-sellers*') ? 'bg-gray-700 font-semibold' : '' }}">
                     <i class="fas fa-store-alt w-3"></i> Sellers
                 </a>

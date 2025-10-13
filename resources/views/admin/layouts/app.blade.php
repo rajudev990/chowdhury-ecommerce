@@ -91,29 +91,42 @@ $setting = \App\Models\Setting::first();
                 </div>
 
 
-                <!-- Profile Dropdown -->
-                <div class="relative">
-                    <button id="profileBtn" class="flex items-center space-x-2 focus:outline-none">
-                        @if(Auth::guard('admin')->user()->image)
-                        <img class="w-8 h-8 rounded-full border-2 border-gray-300" src="{{ Storage::url(Auth::guard('admin')->user()->image) }}" alt="Profile">
-                        @else
-                        <img class="w-8 h-8 rounded-full border-2 border-gray-300" src="https://i.pravatar.cc/40" alt="Profile">
-                        @endif
-                        <span class="hidden md:block font-medium">{{ Auth::guard('admin')->user()->name ?? 'Admin' }}</span>
-                        <i class="fas fa-chevron-down"></i>
-                    </button>
+               <div class="flex">
+                    <form method="POST" action="{{ route('admin.currency.update') }}">
+                        @csrf
+                        <select name="currency" class="form-select block w-full px-4 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-gray-700" onchange="this.form.submit()">
+                            <option value="৳" {{ \App\Models\Setting::first()->currency == '৳' ? 'selected' : '' }}>BDT (৳)</option>
+                            <option value="$" {{ \App\Models\Setting::first()->currency == '$' ? 'selected' : '' }}>USD ($)</option>
 
-                    <div id="profileDropdown" class="hidden absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-md overflow-hidden z-50">
-                        <a href="{{ route('admin.profile.settings') }}" class="flex items-center px-4 py-2 hover:bg-gray-100">Profile</a>
-                        <a href="{{ route('admin.change.password') }}" class="flex items-center px-4 py-2 hover:bg-gray-100">Change Password</a>
-                        <form method="POST" action="{{ route('admin.logout') }}">
-                            @csrf
-                            <button type="submit" class="flex items-center w-full px-4 py-2 hover:bg-gray-100">
-                                Logout
-                            </button>
-                        </form>
+                        </select>
+                    </form>
+                    <!-- Profile Dropdown -->
+                    <div class="relative ms-3">
+                        <button id="profileBtn" class="flex items-center space-x-2 focus:outline-none">
+                            @if(Auth::guard('admin')->user()->image)
+                            <img class="w-8 h-8 rounded-full border-2 border-gray-300" src="{{ Storage::url(Auth::guard('admin')->user()->image) }}" alt="Profile">
+                            @else
+                            <img class="w-8 h-8 rounded-full border-2 border-gray-300" src="https://i.pravatar.cc/40" alt="Profile">
+                            @endif
+                            <span class="hidden md:block font-medium">{{ Auth::guard('admin')->user()->name ?? 'Admin' }}</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+
+                        <div id="profileDropdown" class="hidden absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-md overflow-hidden z-50">
+                            <a href="{{ route('admin.profile.settings') }}" class="flex items-center px-4 py-2 hover:bg-gray-100">Profile</a>
+                            <a href="{{ route('admin.change.password') }}" class="flex items-center px-4 py-2 hover:bg-gray-100">Change Password</a>
+                            <form method="POST" action="{{ route('admin.logout') }}">
+                                @csrf
+                                <button type="submit" class="flex items-center w-full px-4 py-2 hover:bg-gray-100">
+                                    Logout
+                                </button>
+                            </form>
+                        </div>
                     </div>
-                </div>
+               </div>
+
+                
+                
             </header>
 
             <!-- Main Content -->

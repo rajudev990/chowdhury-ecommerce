@@ -14,6 +14,13 @@ class Product extends Model
         return $this->belongsTo(Vendor::class, 'vendor_id');
 
     }
+
+    // Define the relationship with ProductCommision model
+    public function commission()
+    {
+        return $this->hasOne(ProductCommision::class);
+    }
+
     
     public function brand()
     {

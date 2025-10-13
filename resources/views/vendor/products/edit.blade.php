@@ -1,5 +1,5 @@
 @extends('vendor.layouts.app')
-@section('title','Edit Vendor Product')
+@section('title','Edit Product')
 
 @section('content')
 <section class="p-5 bg-gray-100 min-h-screen">
@@ -64,7 +64,7 @@
                             <div class="flex gap-2 items-center existing-image">
                                 <img src="{{ Storage::url($img->image) }}" class="w-20 h-20 object-cover rounded">
                                 <input type="file" name="images[]" class="w-full border rounded px-3 py-2">
-                                <a href="{{ route('vendor.products.removeImage', $img->id) }}" class="bg-red-500 text-white px-2 py-1 rounded remove-existing-image">X</a>
+                                <a href="{{ route('admin.products.removeImage', $img->id) }}" class="bg-red-500 text-white px-2 py-1 rounded remove-existing-image">X</a>
                             </div>
                             @endforeach
                         </div>
@@ -254,7 +254,7 @@
             let id = $(this).data('id');
             let parent = $(this).closest('.existing-image');
             $.ajax({
-                url: '/admin/products/remove-image/' + id,
+                url: '/vendor/products/remove-image/' + id,
                 type: 'DELETE',
                 data: {
                     _token: '{{ csrf_token() }}'
@@ -272,7 +272,7 @@
             $('#sub_category_id').html('<option>Loading...</option>');
             $('#sub_sub_category_id').html('<option value="">Select Sub-SubCategory</option>');
             if (id) {
-                $.get('/admin/ajax/subcategories/' + id, function(data) {
+                $.get('/vendor/ajax/subcategories/' + id, function(data) {
                     let html = '<option value="">Select SubCategory</option>';
                     data.forEach(d => html += `<option value="${d.id}">${d.name}</option>`);
                     $('#sub_category_id').html(html);
@@ -285,7 +285,7 @@
             let id = $(this).val();
             $('#sub_sub_category_id').html('<option>Loading...</option>');
             if (id) {
-                $.get('/admin/ajax/subsubcategories/' + id, function(data) {
+                $.get('/vendor/ajax/subsubcategories/' + id, function(data) {
                     let html = '<option value="">Select Sub-SubCategory</option>';
                     data.forEach(d => html += `<option value="${d.id}">${d.name}</option>`);
                     $('#sub_sub_category_id').html(html);

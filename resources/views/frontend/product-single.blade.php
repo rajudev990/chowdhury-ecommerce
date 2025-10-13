@@ -90,6 +90,7 @@
                             data-product-id="{{ $item->id }}"
                             data-name="{{ $item->name }}"
                             data-slug="{{ $item->slug }}"
+                            data-affiliate-id="{{ $affiliate ? $affiliate->id : '' }}"
                             data-price="{{ $item->variants->first()?->price ?? $item->sale_price ?? $item->regular_price }}"
                             data-image="{{ Storage::url($item->featured_image_1) }}">
                             <i class="fas fa-shopping-cart me-2"></i> Order Now

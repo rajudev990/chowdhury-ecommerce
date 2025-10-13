@@ -9,6 +9,7 @@ use App\Models\CustomerReview;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
+use App\Models\Setting;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -108,5 +109,20 @@ class AdminProfileController extends Controller
         ]);
 
         return back()->with('success', 'Password changed successfully.');
+    }
+
+    public function updateCurrency(Request $request)
+    {
+        $setting = Setting::first();
+
+        $request->validate([
+            'currency' => 'required|string'
+        ]);
+
+        $setting->currency = $request->currency;
+        $setting->save();
+
+       return back()->with('success', 'Currency updated successfully.');
+
     }
 }

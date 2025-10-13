@@ -1,6 +1,6 @@
 @extends('vendor.layouts.app')
 
-@section('title','Vendor Products')
+@section('title','Products')
 
 @section('content')
 <section class="p-5 bg-gray-100 min-h-screen">
@@ -8,7 +8,7 @@
 
         <!-- Header -->
         <div class="bg-gradient-to-r from-cyan-600 to-cyan-500 px-6 py-4 flex justify-between items-center">
-            <h2 class="text-xl font-semibold text-white">Vendor Products</h2>
+            <h2 class="text-xl font-semibold text-white">Products</h2>
             <a href="{{ route('vendor.products.create') }}" class="bg-white/20 hover:bg-white/30 text-white px-4 py-1.5 rounded-lg transition flex items-center gap-1">
                 <i class="fa fa-plus"></i> Add Product
             </a>

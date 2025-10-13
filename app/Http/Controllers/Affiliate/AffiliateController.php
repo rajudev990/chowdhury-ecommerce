@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Affiliate;
 
 use App\Http\Controllers\Controller;
+use App\Models\AffiliateWithdraw;
 use App\Models\Order;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -19,41 +21,67 @@ class AffiliateController extends Controller
     }
 
 
-     // Dashboard
+    // Dashboard
     public function dashboard()
     {
 
-         $userId = Auth::guard('affiliate')->id();
+        // Get orders where the affiliate_id in orderItems matches the authenticated user's ID
+        $orders = Order::with(['orderItems' => function ($query) {
+            // Only load order items where the affiliate_id matches the authenticated affiliate
+            $query->where('affiliate_id', Auth::guard('affiliate')->user()->id);
+        }])
+            ->latest()
+            ->get();
 
-        // Total Orders
-        $orders = Order::where('user_id', $userId)->count();
+        // Get the total count of orders for the authenticated affiliate
+        $totalOrderCount = Order::whereHas('orderItems', function ($query) {
+            $query->where('affiliate_id', Auth::guard('affiliate')->user()->id);
+        })->count();
 
-        // Pending Orders
-        $pending_orders = Order::where('user_id', $userId)
-            ->where('status', 'pending')
-            ->count();
 
-        // Completed Orders
-        $complete_orders = Order::where('user_id', $userId)
-            ->where('status', 'completed')
-            ->count();
+        $totalCompletedCommission = 0;
+        $totalPendingCommission = 0;
 
-        // Revenue (sum of paid amounts)
-        $revenue = Order::where('user_id', $userId)
-            ->where('status', 'completed')
-            ->sum('paid');
+        // Calculate total commission for completed and pending orders
+        foreach ($orders as $order) {
+            foreach ($order->orderItems as $orderItem) {
+                // Calculate commission only if the product has a commission associated with it
+                $productCommission = $orderItem->product->commission;
 
+                if ($productCommission) {
+                    $commissionAmount = $productCommission->amount; // Get commission amount from ProductCommission model
+                    $price = $orderItem->price * $orderItem->quantity; // OrderItem price
+
+                    // Calculate the commission percentage for this order item
+                    $commissionForItem = ($commissionAmount / 100) * $price;
+
+
+                    // Accumulate the total commission based on the order status
+                    if ($order->status == 'completed') {
+                        $totalCompletedCommission += $commissionForItem;
+                    } elseif ($order->status == 'pending') {
+                        $totalPendingCommission += $commissionForItem;
+                    }
+                }
+            }
+        }
+
+
+        $withdraw = AffiliateWithdraw::where('affiliate_id', Auth::guard('affiliate')->user()->id)->sum('amount');
+
+        $balance = $totalCompletedCommission - $withdraw;
 
         return view('affiliate.dashboard', compact(
             'orders',
-            'pending_orders',
-            'complete_orders',
-            'revenue',
+            'totalOrderCount',
+            'totalCompletedCommission',
+            'totalPendingCommission',
+            'withdraw',
+            'balance'
         ));
-
     }
 
-     public function settings()
+    public function settings()
     {
         return view('affiliate.settings');
     }
@@ -74,7 +102,7 @@ class AffiliateController extends Controller
         return view('affiliate.auth.change-password');
     }
 
-     public function update(Request $request)
+    public function update(Request $request)
     {
         $affilitae = Auth::guard('affiliate')->user();
 
@@ -82,7 +110,7 @@ class AffiliateController extends Controller
             'fname' => 'required|string|max:255',
             'username' => 'required|string|max:255|unique:affiliates,username,' . $affilitae->id,
             'email' => 'required|email|max:255|unique:affiliates,email,' . $affilitae->id,
-            'phone' => ['required','unique:affiliates,phone,' . $affilitae->id,],
+            'phone' => ['required', 'unique:affiliates,phone,' . $affilitae->id,],
         ]);
 
         $data = $request->all();
@@ -113,7 +141,7 @@ class AffiliateController extends Controller
     }
 
 
-     public function updatePassword(Request $request)
+    public function updatePassword(Request $request)
     {
         $request->validate([
             'current_password' => ['required', 'current_password'],
@@ -130,5 +158,130 @@ class AffiliateController extends Controller
         $user->save();
 
         return back()->with('success', 'Password has been updated successfully.');
+    }
+
+
+    // Offer
+    public function offers()
+    {
+        $data = Product::where('status', 1)
+            ->whereHas('commission') // Fetch products with a commission
+            ->with('commission')    // Eager load the commission relationship
+            ->get();
+
+        return view('affiliate.offers', compact('data'));
+    }
+
+    // Earnings
+    public function earnings()
+    {
+        // Get orders where the affiliate_id in orderItems matches the authenticated user's ID
+        $orders = Order::with(['orderItems' => function ($query) {
+            // Only load order items where the affiliate_id matches the authenticated affiliate
+            $query->where('affiliate_id', Auth::guard('affiliate')->user()->id);
+        }])
+            ->latest()
+            ->get();
+
+
+        $totalCompletedCommission = 0;
+        $totalPendingCommission = 0;
+
+        // Calculate total commission for completed and pending orders
+        foreach ($orders as $order) {
+            foreach ($order->orderItems as $orderItem) {
+                // Calculate commission only if the product has a commission associated with it
+                $productCommission = $orderItem->product->commission;
+
+                if ($productCommission) {
+                    $commissionAmount = $productCommission->amount; // Get commission amount from ProductCommission model
+                    $price = $orderItem->price * $orderItem->quantity; // OrderItem price
+
+                    // Calculate the commission percentage for this order item
+                    $commissionForItem = ($commissionAmount / 100) * $price;
+
+
+                    // Accumulate the total commission based on the order status
+                    if ($order->status == 'completed') {
+                        $totalCompletedCommission += $commissionForItem;
+                    } elseif ($order->status == 'pending') {
+                        $totalPendingCommission += $commissionForItem;
+                    }
+                }
+            }
+        }
+
+        return view('affiliate.earnings', compact('orders', 'totalCompletedCommission', 'totalPendingCommission'));
+    }
+
+    // withdraw
+    public function withdraw()
+    {
+        $data = AffiliateWithdraw::where('affiliate_id', Auth::guard('affiliate')->user()->id)->get();
+        return view('affiliate.withdraw', compact('data'));
+    }
+    public function showWithdrawPage()
+    {
+        // Get orders where the affiliate_id in orderItems matches the authenticated user's ID
+        $orders = Order::with(['orderItems' => function ($query) {
+            // Only load order items where the affiliate_id matches the authenticated affiliate
+            $query->where('affiliate_id', Auth::guard('affiliate')->user()->id);
+        }])
+            ->latest()
+            ->get();
+
+
+        $totalCompletedCommission = 0;
+        $totalPendingCommission = 0;
+
+        // Calculate total commission for completed and pending orders
+        foreach ($orders as $order) {
+            foreach ($order->orderItems as $orderItem) {
+                // Calculate commission only if the product has a commission associated with it
+                $productCommission = $orderItem->product->commission;
+
+                if ($productCommission) {
+                    $commissionAmount = $productCommission->amount; // Get commission amount from ProductCommission model
+                    $price = $orderItem->price * $orderItem->quantity; // OrderItem price
+
+                    // Calculate the commission percentage for this order item
+                    $commissionForItem = ($commissionAmount / 100) * $price;
+
+
+                    // Accumulate the total commission based on the order status
+                    if ($order->status == 'completed') {
+                        $totalCompletedCommission += $commissionForItem;
+                    } elseif ($order->status == 'pending') {
+                        $totalPendingCommission += $commissionForItem;
+                    }
+                }
+            }
+        }
+
+        $withdraw = AffiliateWithdraw::where('affiliate_id', Auth::guard('affiliate')->user()->id)->sum('amount');
+
+        $balance = $totalCompletedCommission - $withdraw;
+
+        return view('affiliate.withdraw-request',compact('balance'));
+    }
+
+    public function storeWithdraw(Request $request)
+    {
+        $request->validate([
+            'amount' => 'required|numeric|min:1',
+            'payment_method' => 'required|string',
+            'payment_info' => 'required|string',
+        ]);
+
+        // Store the withdrawal request
+        AffiliateWithdraw::create([
+            'affiliate_id' => Auth::guard('affiliate')->user()->id,
+            'amount' => $request->amount,
+            'payment_method' => $request->payment_method,
+            'payment_info' => $request->payment_info,
+            'status' => 'pending', // Default status is 'pending'
+        ]);
+
+        return redirect()->route('affiliate.withdraw')->with('success', 'Withdrawal request submitted successfully.');
     }
 }

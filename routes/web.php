@@ -3,6 +3,7 @@
 
 use App\Http\Controllers\Admin\AdminProfileController;
 use App\Http\Controllers\Admin\AffiliatesController;
+use App\Http\Controllers\Admin\AffiliateWithdrawController;
 use App\Http\Controllers\Admin\Auth\LoginController;
 use App\Http\Controllers\Admin\BannarController;
 use App\Http\Controllers\Admin\BrandController;
@@ -10,6 +11,7 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ColorController;
 use App\Http\Controllers\Admin\CouponController;
 use App\Http\Controllers\Admin\OrderController;
+use App\Http\Controllers\Admin\ProductCommisionController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\SettingController;
@@ -69,6 +71,9 @@ Route::post('/ipn', [SslCommerzPaymentController::class, 'ipn']);
 Route::get('/', [WebsiteController::class, 'index'])->name('index');
 Route::get('/products', [WebsiteController::class, 'products'])->name('products');
 Route::get('/product/{slug}', [WebsiteController::class, 'productSingle'])->name('product.single');
+
+Route::get('/product/{slug}/{affiliate_id}', [WebsiteController::class, 'productSingleAffiliate'])->name('product.show');
+
 Route::get('/checkout', [WebsiteController::class, 'checkout'])->name('checkout');
 Route::post('/order-store', [WebsiteController::class, 'orderStore'])->name('order.store');
 Route::get('categories/{slug}', [WebsiteController::class, 'categories'])->name('categories');
@@ -125,6 +130,14 @@ Route::prefix('affiliate')->name('affiliate.')->group(function () {
         Route::get('/change-password', [AffiliateController::class, 'passwordEdit'])->name('password.edit');
         Route::post('/password-update', [AffiliateController::class, 'updatePassword'])->name('password.update');
 
+        Route::get('offers', [AffiliateController::class, 'offers'])->name('offers');
+        Route::get('earnings', [AffiliateController::class, 'earnings'])->name('earnings');
+        Route::get('withdraw', [AffiliateController::class, 'withdraw'])->name('withdraw');
+        // Route to show the withdrawal request page
+        Route::get('/withdraw-create', [AffiliateController::class, 'showWithdrawPage'])->name('withdraw.create');
+        Route::post('/withdraw-store', [AffiliateController::class, 'storeWithdraw'])->name('withdraw.store');
+
+
     });
 });
 
@@ -146,12 +159,22 @@ Route::prefix('vendor')->name('vendor.')->group(function () {
     });
 
         //  <<< Product & Orders >>>
+
         Route::resource('products',VendorProductController::class);
-        Route::get('/products/remove-image/{id}', [VendorProductController::class, 'removeImage'])->name('products.removeImage');     
+        Route::get('/products/remove-image/{id}', [VendorProductController::class, 'removeImage'])->name('products.removeImage');
+        
+        Route::get('/product/commissions', [VendorProductController::class, 'productCommissions'])->name('products.commissions');
+        Route::post('product-commission-store', [VendorProductController::class, 'productCommissionsStore'])->name('product-commission.store');
+
         // AJAX routes
-        Route::get('ajax/subcategories/{category}', [VendorProductController::class, 'getSubCategories']);
+         Route::get('ajax/subcategories/{category}', [VendorProductController::class, 'getSubCategories'])->name('ajax.subcategories');
         Route::get('ajax/subsubcategories/{subcategory}', [VendorProductController::class, 'getSubSubCategories']);
 
+       
+        
+        
+        
+        
 
       //orders
         Route::get('all-orders', [VendorOrderController::class, 'allOrders'])->name('all-orders');
@@ -194,6 +217,8 @@ Route::prefix('admin')
         Route::get('/change-password', [AdminProfileController::class, 'changePassword'])->name('change.password');
         Route::put('/change-password', [AdminProfileController::class, 'updatePassword'])->name('change.password.update');
 
+        Route::post('/currency-update', [AdminProfileController::class, 'updateCurrency'])->name('currency.update');
+
 
         Route::resource('settings', SettingController::class);
         Route::resource('roles', RoleController::class);
@@ -202,14 +227,14 @@ Route::prefix('admin')
         Route::resource('products', ProductController::class);
         Route::get('/products/remove-image/{id}', [ProductController::class, 'removeImage'])->name('products.removeImage');
 
-        // AJAX routes
+        // AJAX routes Category Subcategory Sub Sub Category
         Route::get('ajax/subcategories/{category}', [ProductController::class, 'getSubCategories']);
         Route::get('ajax/subsubcategories/{subcategory}', [ProductController::class, 'getSubSubCategories']);
 
         Route::resource('categories', CategoryController::class);
         Route::resource('subcategories', SubCategoryController::class);
         Route::resource('subsubcategories', SubSubCategoryController::class)->parameters(['subsubcategories' => 'subSubCategory']);
-        // Ajax for dynamic subcategories
+        // Ajax for dynamic Product Subcategory
         Route::get('ajax/subcategories/{category}', [SubSubCategoryController::class, 'getSubCategories'])->name('ajax.subcategories');
         Route::get('ajax/subsubcategories/{subcategory}', [SubSubCategoryController::class, 'getSubSubCategories']);
 
@@ -270,7 +295,15 @@ Route::prefix('admin')
         Route::resource('all-users',AffiliatesController::class);
 
         // <<<<<--Vendor-->>>>>
-         Route::resource('all-sellers',VendorsController::class);
+        Route::resource('all-sellers',VendorsController::class);
+        
+        // product commision
+        Route::resource('product-commission',ProductCommisionController::class);
+        Route::resource('marketer-withdraw', AffiliateWithdrawController::class);
+        Route::post('marketer-withdraw/{id}/status', [AffiliateWithdrawController::class, 'updateStatus'])->name('marketer-withdraw.updateStatus');
+
+
+
        
 
     });

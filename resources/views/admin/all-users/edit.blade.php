@@ -80,11 +80,11 @@
                     <!-- Password -->
                     <div>
                         <label class="block text-gray-700 font-medium mb-1">
-                            Password <span class="text-red-500">*</span>
+                            Password
                         </label>
                         <input type="text" name="password"
                             class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:border-cyan-500 focus:ring-0 outline-none"
-                            placeholder="Enter password" required>
+                            placeholder="Enter password">
                     </div>
 
                     <!-- Website URL -->

@@ -25,6 +25,11 @@
             <i class="fas fa-box-open w-3"></i> Product
         </a>
 
+        <a href="{{ route('vendor.products.commissions') }}"
+            class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 text-sm {{ request()->is('vendor/product/commissions') ? 'bg-gray-700 font-semibold' : '' }}">
+            <i class="fas fa-box-open w-3"></i> Product Commissions
+        </a>
+
          {{-- Orders Dropdown --}}
         @php
         $orderActive = request()->is('vendor/all-orders*') || request()->is('vendor/pending-orders*') || request()->is('vendor/processing-orders*') || request()->is('vendor/on-the-way*') || request()->is('vendor/hold-orders*') || request()->is('vendor/courier-orders*') || request()->is('vendor/complete-orders*') || request()->is('vendor/cancelled-orders*') || request()->is('vendor/orders*');

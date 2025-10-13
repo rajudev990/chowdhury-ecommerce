@@ -74,8 +74,14 @@ class AffiliatesController extends Controller
             $data['image'] = $image;
         }
 
-        $input = $request->all();
+        $input = $request->except('password');
+
+        if ($request->password) {
+            $input['password'] = bcrypt($request->password);
+        }
+        
         $data->update($input);
+        
         return redirect()->route('admin.all-users.index')->with('success', 'Users Update Successfully');
     }
 

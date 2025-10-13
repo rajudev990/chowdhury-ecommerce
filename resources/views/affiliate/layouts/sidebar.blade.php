@@ -14,10 +14,28 @@
     <nav class="flex-1 p-2 space-y-2 overflow-y-auto">
 
         
-        <a href="{{ route('dashboard') }}"
-            class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 {{ request()->is('dashboard') ? 'bg-gray-700 font-semibold' : '' }}">
+        <a href="{{ route('affiliate.dashboard') }}"
+            class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 {{ request()->is('affiliate.dashboard') ? 'bg-gray-700 font-semibold' : '' }}">
             <i class="fas fa-home w-4"></i>
             <span>Dashboard</span>
+        </a>
+
+        <a href="{{ route('affiliate.offers') }}"
+            class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 {{ request()->is('affiliate.offers') ? 'bg-gray-700 font-semibold' : '' }}">
+            <i class="fas fa-home w-4"></i>
+            <span>My Offers</span>
+        </a>
+        
+        <a href="{{ route('affiliate.earnings') }}"
+            class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 {{ request()->is('affiliate.earnings') ? 'bg-gray-700 font-semibold' : '' }}">
+            <i class="fas fa-home w-4"></i>
+            <span>My Earnings</span>
+        </a>
+        
+        <a href="{{ route('affiliate.withdraw') }}"
+            class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 {{ request()->is('affiliate.withdraw') ? 'bg-gray-700 font-semibold' : '' }}">
+            <i class="fas fa-home w-4"></i>
+            <span>Withdraw</span>
         </a>
        
 

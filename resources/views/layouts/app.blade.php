@@ -146,6 +146,8 @@ $categories = \App\Models\Category::all();
                 var productSlug = $(this).data('slug'); // Blade থেকে pass
                 var image = $(this).data('image'); // fallback image
                 var quantity = parseInt($('#qty').val()) || 1;
+                var affiliateId = $(this).data('affiliate-id'); // Affiliate ID from the button
+
 
                 // Variant info
                 var colorOpt = $('#variant-color option:selected');
@@ -186,7 +188,8 @@ $categories = \App\Models\Category::all();
                         color: color,
                         size: size,
                         price: price,
-                        quantity: quantity
+                        quantity: quantity,
+                        affiliateId: affiliateId // Add affiliate ID to the cart item
                     });
                 }
 

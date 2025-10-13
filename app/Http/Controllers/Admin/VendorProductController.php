@@ -2,28 +2,29 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Helpers\ImageHelper;
 use App\Http\Controllers\Controller;
-use App\Models\Brand;
-use App\Models\Category;
-use App\Models\Color;
 use App\Models\Product;
 use App\Models\ProductImage;
 use App\Models\ProductVariant;
-use App\Models\Size;
+use App\Models\Category;
 use App\Models\SubCategory;
 use App\Models\SubSubCategory;
+use App\Models\Brand;
+use App\Models\Color;
+use App\Models\Size;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use App\Helpers\ImageHelper;
+use App\Models\ProductCommision;
 
 class VendorProductController extends Controller
 {
-     public function index()
+    public function index()
     {
         $vendorId = auth()->guard('vendor')->user()->id;
         $products = Product::with(['category', 'subCategory', 'subSubCategory', 'brand'])->where('vendor_id',$vendorId)->latest()->paginate(10);
-        return view('admin.vendor.products.index', compact('products'));
+        return view('vendor.products.index', compact('products'));
     }
 
     public function create()
@@ -32,12 +33,11 @@ class VendorProductController extends Controller
         $brands = Brand::where('status', 1)->get();
         $colors = Color::where('status', 1)->get();
         $sizes = Size::where('status', 1)->get();
-        return view('admin.vendor.products.create', compact('categories', 'brands', 'colors', 'sizes'));
+        return view('vendor.products.create', compact('categories', 'brands', 'colors', 'sizes'));
     }
 
     public function store(Request $request)
     {
-
         $request->validate([
             'category_id' => 'required|exists:categories,id',
             'sub_category_id' => 'nullable|exists:sub_categories,id',
@@ -115,6 +115,10 @@ class VendorProductController extends Controller
         return redirect()->route('vendor.products.index')->with('success', 'Product created successfully!');
     }
 
+     public function show(Product $product)
+    {
+
+    }
 
 
     public function edit(Product $product)
@@ -126,7 +130,7 @@ class VendorProductController extends Controller
         $subcategories = SubCategory::where('category_id', $product->category_id)->get();
         $subsubcategories = SubSubCategory::where('sub_category_id', $product->sub_category_id)->get();
 
-        return view('admin.vendor.products.edit', compact(
+        return view('vendor.products.edit', compact(
             'product',
             'categories',
             'brands',
@@ -244,15 +248,19 @@ class VendorProductController extends Controller
         return redirect()->route('vendor.products.index')->with('success', 'Product deleted successfully!');
     }
 
-    // AJAX
+   
+    // Ajax function to get subcategories by category
     public function getSubCategories(Category $category)
     {
-        return response()->json($category->subCategories()->where('status', 1)->get());
+        $subcategories = $category->subCategories()->where('status',1)->get();
+        return response()->json($subcategories);
     }
 
-    public function getSubSubCategories(SubCategory $subCategory)
+    // SubSubCategories by SubCategory
+    public function getSubSubCategories(SubCategory $subcategory)
     {
-        return response()->json($subCategory->subSubCategories()->where('status', 1)->get());
+        $subSubCategories = $subcategory->subSubCategories()->where('status',1)->get();
+        return response()->json($subSubCategories);
     }
 
     public function removeImage($id)
@@ -269,4 +277,32 @@ class VendorProductController extends Controller
 
         return back()->with('success', 'Image removed successfully!');
     }
+
+    // Commissions
+    public function productCommissions()
+    {
+        $vendorId = auth()->guard('vendor')->user()->id;
+        $data = Product::with('commission')->where('status', 1)->where('vendor_id',$vendorId)->get();
+        return view('vendor.products.commission.index', compact('data'));
+    }
+
+    public function productCommissionsStore(Request $request)
+    {
+        // Validate the incoming data
+        $request->validate([
+            'product_id' => 'required|exists:products,id',
+            'commission' => 'required|numeric|min:0|max:100', // Commission should be between 0% and 100%
+        ]);
+
+        // Update or Create a new ProductCommission entry for the given product
+        $commission = ProductCommision::updateOrCreate(
+            ['product_id' => $request->product_id], // If the product_id exists, it will update, otherwise create
+            ['amount' => $request->commission]      // Set the new commission value
+        );
+
+        // Redirect back with success message
+        return back()->with('success', 'Commission updated successfully!');
+    }
+
+    
 }

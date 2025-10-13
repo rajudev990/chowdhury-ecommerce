@@ -263,7 +263,7 @@
     $('#category_id').on('change', function() {
         let id = $(this).val();
         if (id) {
-            $.get('/admin/ajax/subcategories/' + id, function(data) {
+            $.get('/vendor/ajax/subcategories/' + id, function(data) {
                 let options = '<option value="">Select SubCategory</option>';
                 data.forEach(d => options += `<option value="${d.id}">${d.name}</option>`);
                 $('#sub_category_id').html(options);
@@ -282,7 +282,7 @@
     $('#sub_category_id').on('change', function() {
         let id = $(this).val();
         if (id) {
-            $.get('/admin/ajax/subsubcategories/' + id, function(data) {
+            $.get('/vendor/ajax/subsubcategories/' + id, function(data) {
                 let options = '<option value="">Select Sub-SubCategory</option>';
                 data.forEach(d => options += `<option value="${d.id}">${d.name}</option>`);
                 $('#sub_sub_category_id').html(options);
