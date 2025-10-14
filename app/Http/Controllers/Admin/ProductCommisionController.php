@@ -9,6 +9,14 @@ use Illuminate\Http\Request;
 
 class ProductCommisionController extends Controller
 {
+
+     public function __construct()
+    {
+        $this->middleware('permission:view configuration')->only('index');
+        $this->middleware('permission:create configuration')->only(['create', 'store']);
+        $this->middleware('permission:edit configuration')->only(['edit', 'update']);
+        $this->middleware('permission:delete configuration')->only('destroy');
+    }
     /**
      * Display a listing of the resource.
      */

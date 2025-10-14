@@ -17,11 +17,11 @@
             <div class="flex justify-between">
                 <div>
                     <h4 class="font-semibold">Completed Orders</h4>
-                    <p class="text-green-500">{{ number_format($totalCompletedCommission, 2) }}</p>
+                    <p class="text-green-500">{{ currency() }}{{ number_format($totalCompletedCommission, 2) }}</p>
                 </div>
                 <div>
                     <h4 class="font-semibold">Pending Orders</h4>
-                    <p class="text-yellow-500">{{ number_format($totalPendingCommission, 2) }}</p>
+                    <p class="text-yellow-500">{{ currency() }}{{ number_format($totalPendingCommission, 2) }}</p>
                 </div>
             </div>
 
@@ -31,10 +31,10 @@
                         <th class="px-4 py-2 border">Order ID</th>
                         <th class="px-4 py-2 border">Product</th>
                         <th class="px-4 py-2 border">Quantity</th>
-                        <th class="px-4 py-2 border">Price</th>
+                        <th class="px-4 py-2 border">Price({{ currency() }})</th>
                         <!-- <th class="px-4 py-2 border">Payment Status</th> -->
-                        <th class="px-4 py-2 border">Commissions</th>
-                        <th class="px-4 py-2 border">Earning</th>
+                        <th class="px-4 py-2 border">Commissions({{ currency() }})</th>
+                        <th class="px-4 py-2 border">Earning({{ currency() }})</th>
                         <th class="px-4 py-2 border">Order Status</th>
                         
                     </tr>
@@ -46,9 +46,9 @@
                                 <td class="px-4 py-2 border">{{ $order->order_id }}</td>
                                 <td class="px-4 py-2 border">{{ $orderItem->product->name }}</td>
                                 <td class="px-4 py-2 border">{{ $orderItem->quantity }}</td>
-                                <td class="px-4 py-2 border">{{ number_format($orderItem->price, 2) }}</td>
+                                <td class="px-4 py-2 border">{{ currency() }}{{ number_format($orderItem->price, 2) }}</td>
                                 <td class="px-4 py-2 border">
-                                    {{ $orderItem->product->commission->amount }}%
+                                    {{ currency() }}{{ $orderItem->product->commission->amount }}%
                                 </td>
                                 <td class="px-4 py-2 border">
                                     @php 
@@ -56,7 +56,7 @@
                                     $price = $orderItem->price * $orderItem->quantity;
                                     $profit = ($commision / 100) * $price;
                                     @endphp
-                                    {{ number_format($profit,2) }}
+                                    {{ currency() }}{{ number_format($profit,2) }}
                                 </td>
                                 <!-- <td class="px-4 py-2 border">
                                     <span class="inline-block px-3 py-1 rounded-full text-white text-sm

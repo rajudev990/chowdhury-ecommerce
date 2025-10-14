@@ -34,7 +34,7 @@
                     <tr>
                         <th class="px-4 py-2 border">#</th>
                         <th class="px-4 py-2 border">Date</th>
-                        <th class="px-4 py-2 border">Amount</th>
+                        <th class="px-4 py-2 border">Amount({{currency()}})</th>
                         <th class="px-4 py-2 border">Payment Method</th>
                         <th class="px-4 py-2 border">Payment Info</th>
                         <th class="px-4 py-2 border">Status</th>
@@ -46,7 +46,7 @@
                     <tr class="hover:bg-gray-50">
                         <td class="px-4 py-2 border">{{ $loop->iteration }}</td>
                         <td class="px-4 py-2 border">{{ $withdraw->created_at->format('d M Y') }}</td>
-                        <td class="px-4 py-2 border">{{ number_format($withdraw->amount, 2) }} {{currency()}}</td>
+                        <td class="px-4 py-2 border">{{currency()}}{{ number_format($withdraw->amount, 2) }}</td>
                         <td class="px-4 py-2 border">{{ $withdraw->payment_method }}</td>
                         <td class="px-4 py-2 border">{{ $withdraw->payment_info }}</td>
                         <td class="px-4 py-2 border">

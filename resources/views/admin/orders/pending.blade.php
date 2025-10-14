@@ -33,7 +33,7 @@
                             <td class="px-5 py-3 text-gray-700 font-medium">{{ $loop->iteration }}</td>
                             <td class="px-5 py-3 font-semibold text-gray-800 uppercase">{{ $order->order_id }}</td>
                             <td class="px-5 py-3 text-gray-700">{{ $order->user->name ?? 'Guest' }}</td>
-                            <td class="px-5 py-3 text-gray-800 font-semibold">{{ number_format($order->total, 2) }}</td>
+                            <td class="px-5 py-3 text-gray-800 font-semibold">{{currency()}}{{ number_format($order->total, 2) }}</td>
                             <td class="px-5 py-3 text-gray-600 capitalize">{{ $order->payment_method ?? 'N/A' }}</td>
 
                             <!-- Order Status -->
@@ -69,7 +69,7 @@
                             <!-- Action -->
                             <td class="px-5 py-3 text-center">
                                 <div class="flex justify-center items-center gap-2">
-                                    <a href="#"
+                                    <a href="{{ route('admin.orders.show', $order->id) }}"
                                         class="w-8 h-8 flex items-center justify-center bg-green-500 hover:bg-green-600 text-white rounded-full shadow-sm transition">
                                         <i class="fas fa-eye text-xs"></i>
                                     </a>
@@ -94,7 +94,7 @@
                     <div class="flex justify-between items-center mb-2">
                         <h4 class="text-gray-800 font-semibold text-base">#{{ $order->order_id }}</h4>
                         <div class="flex gap-2">
-                            <a href="#"
+                            <a href="{{ route('admin.orders.show', $order->id) }}"
                                 class="w-8 h-8 flex items-center justify-center bg-green-500 hover:bg-green-600 text-white rounded-full">
                                 <i class="fas fa-eye text-xs"></i>
                             </a>
@@ -102,7 +102,7 @@
                     </div>
 
                     <p class="text-gray-600 text-sm mb-1"><span class="font-medium">Customer:</span> {{ $order->user->name ?? 'Guest' }}</p>
-                    <p class="text-gray-600 text-sm mb-1"><span class="font-medium">Total:</span> ৳{{ number_format($order->total, 2) }}</p>
+                    <p class="text-gray-600 text-sm mb-1"><span class="font-medium">Total:</span> {{currency()}}{{ number_format($order->total, 2) }}</p>
                     <p class="text-gray-600 text-sm mb-1"><span class="font-medium">Payment:</span> {{ ucfirst($order->payment_method ?? 'N/A') }}</p>
                     <p class="text-gray-600 text-sm mb-1">
                         <span class="font-medium">Status:</span>

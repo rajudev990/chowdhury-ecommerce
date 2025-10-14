@@ -17,12 +17,12 @@
                 @csrf
 
                 <div class="mb-4">
-                    <label for="amount" class="block text-sm font-semibold text-gray-700">Current Balance ({{ currency() }})</label>
+                    <label for="amount" class="block text-sm font-semibold text-gray-700">Current Balance({{ currency() }})</label>
                     <input type="text" value="{{ number_format($balance,2) }}" name="balance"  class="w-full px-4 py-2 border border-gray-300 rounded-lg" readonly>
                 </div>
 
                 <div class="mb-4">
-                    <label for="amount" class="block text-sm font-semibold text-gray-700">Amount</label>
+                    <label for="amount" class="block text-sm font-semibold text-gray-700">Amount({{ currency() }})</label>
                     <input type="number" name="amount" id="amount" class="w-full px-4 py-2 border border-gray-300 rounded-lg" placeholder="Enter amount" required>
                 </div>
                 <div class="mb-4">

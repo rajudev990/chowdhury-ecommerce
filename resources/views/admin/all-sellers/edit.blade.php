@@ -26,11 +26,21 @@
 
                 <div class="grid md:grid-cols-2 gap-5">
                     <!-- Name -->
-                    <div>
+                    <!-- <div>
                         <label class="block text-gray-700 font-medium mb-1">Name</label>
                         <input type="text" name="name" value="{{$data->name }}"
                             class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:border-cyan-500 focus:ring-0 outline-none">
                         @error('name')
+                        <span class="text-red-500 text-sm mt-1 block">{{ $message }}</span>
+                        @enderror
+                    </div> -->
+
+                      <!-- Shop Name -->
+                    <div>
+                        <label class="block text-gray-700 font-medium mb-1">Shop Name</label>
+                        <input type="text" name="shop_name" value="{{ $data->shop_name  }}"
+                            class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:border-cyan-500 focus:ring-0 outline-none">
+                        @error('shop_name')
                         <span class="text-red-500 text-sm mt-1 block">{{ $message }}</span>
                         @enderror
                     </div>
@@ -45,6 +55,17 @@
                         @enderror
                     </div>
 
+                    
+                    <!-- Phone -->
+                    <div>
+                        <label class="block text-gray-700 font-medium mb-1">Phone</label>
+                        <input type="text" name="phone" value="{{ $data->phone }}"
+                            class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:border-cyan-500 focus:ring-0 outline-none">
+                        @error('phone')
+                        <span class="text-red-500 text-sm mt-1 block">{{ $message }}</span>
+                        @enderror
+                    </div>
+
                     <!-- Password -->
                     <div>
                         <label class="block text-gray-700 font-medium mb-1">Password</label>
@@ -55,35 +76,18 @@
                         @enderror
                     </div>
 
-                    <!-- Shop Name -->
-                    <div>
-                        <label class="block text-gray-700 font-medium mb-1">Shop Name</label>
-                        <input type="text" name="shop_name" value="{{ $data->shop_name  }}"
-                            class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:border-cyan-500 focus:ring-0 outline-none">
-                        @error('shop_name')
-                        <span class="text-red-500 text-sm mt-1 block">{{ $message }}</span>
-                        @enderror
-                    </div>
+                  
 
                     <!-- Shop Slug -->
-                    <div>
+                    <!-- <div>
                         <label class="block text-gray-700 font-medium mb-1">Shop Slug</label>
                         <input type="text" name="shop_slug" value="{{ $data->shop_slug  }}"
                             class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:border-cyan-500 focus:ring-0 outline-none">
                         @error('shop_slug')
                         <span class="text-red-500 text-sm mt-1 block">{{ $message }}</span>
                         @enderror
-                    </div>
+                    </div> -->
 
-                    <!-- Phone -->
-                    <div>
-                        <label class="block text-gray-700 font-medium mb-1">Phone</label>
-                        <input type="text" name="phone" value="{{ $data->phone }}"
-                            class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:border-cyan-500 focus:ring-0 outline-none">
-                        @error('phone')
-                        <span class="text-red-500 text-sm mt-1 block">{{ $message }}</span>
-                        @enderror
-                    </div>
 
                     <!-- Address -->
                     <div>

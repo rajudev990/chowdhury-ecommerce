@@ -34,6 +34,8 @@ return new class extends Migration
             $table->longText('meta_keyword')->nullable();
             $table->string('meta_image')->nullable();
             $table->string('status')->default(1);
+            $table->string('currency')->nullable();
+            $table->decimal('vendor_commission',10,2)->nullable();
             $table->timestamps();
         });
     }

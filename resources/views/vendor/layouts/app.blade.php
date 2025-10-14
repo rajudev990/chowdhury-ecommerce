@@ -9,7 +9,7 @@ $setting = \App\Models\Setting::first();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Vendor Dashboard')</title>
-    <link rel="icon" href="{{ Storage::url($setting->favicon) }}" type="image/x-icon">
+    <link rel="icon" type="image/png" href="{{ $setting->favicon ? Storage::url($setting->favicon) : asset('/assets/img/null.png') }}">
 
 
     <!-- Tailwind CSS CDN -->

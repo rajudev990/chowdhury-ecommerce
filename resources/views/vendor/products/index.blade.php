@@ -37,7 +37,7 @@
                         <td class="px-4 py-2 border">{{ $product->category->name ?? 'N/A' }}</td>
                         <td class="px-4 py-2 border">{{ $product->subCategory->name ?? 'N/A' }}</td>
                         <td class="px-4 py-2 border">{{ $product->brand->name ?? 'N/A' }}</td>
-                        <td class="px-4 py-2 border">${{ number_format($product->regular_price,2) }}</td>
+                        <td class="px-4 py-2 border">{{currency()}}{{ number_format($product->regular_price,2) }}</td>
                         <td class="px-4 py-2 border text-center">
                             @if($product->status)
                             <span class="text-green-600 font-semibold">Active</span>

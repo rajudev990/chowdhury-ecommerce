@@ -82,6 +82,8 @@ Route::post('/coupon/validate', [WebsiteController::class, 'validateCoupon'])->n
 
 // Track Order
 Route::get('/track-order', [WebsiteController::class, 'trackorder'])->name('track.order');
+Route::get('/success/{order_id}', [WebsiteController::class, 'orderSuccess'])->name('order.success');
+
 
 
 Route::get('/reviews', [WebsiteController::class, 'reviews'])->name('reviews');
@@ -188,8 +190,18 @@ Route::prefix('vendor')->name('vendor.')->group(function () {
         Route::get('complete-orders', [VendorOrderController::class, 'completeOrders'])->name('complete-orders');
         Route::get('cancelled-orders', [VendorOrderController::class, 'cancelledOrders'])->name('cancelled-orders');
 
+        Route::get('revenue', [VendorOrderController::class, 'revenue'])->name('revenue');
+
         Route::get('orders/{id}', [VendorOrderController::class, 'show'])->name('orders.show');
         Route::post('/orders/{order}/update-status', [VendorOrderController::class, 'updateStatus'])->name('orders.updateStatus');
+
+
+        Route::get('withdrawal', [VendorOrderController::class, 'withdraw'])->name('withdrawal');
+        // Route to show the withdrawal request page
+        Route::get('/withdrawal-create', [VendorOrderController::class, 'showWithdrawPage'])->name('withdrawal.create');
+        Route::post('/withdrawal-store', [VendorOrderController::class, 'storeWithdraw'])->name('withdrawal.store');
+
+
 });
 
 
@@ -226,6 +238,7 @@ Route::prefix('admin')
 
         Route::resource('products', ProductController::class);
         Route::get('/products/remove-image/{id}', [ProductController::class, 'removeImage'])->name('products.removeImage');
+        Route::get('/seller/product', [ProductController::class, 'sellerProduct'])->name('seller.product');
 
         // AJAX routes Category Subcategory Sub Sub Category
         Route::get('ajax/subcategories/{category}', [ProductController::class, 'getSubCategories']);
@@ -275,6 +288,10 @@ Route::prefix('admin')
         Route::resource('bannars', BannarController::class);
 
         // <<<<<--Orders-->>>>>
+         //orders
+        Route::get('all-orders', [OrderController::class, 'allOrders'])->name('all-orders');
+        Route::get('orders/{id}', [OrderController::class, 'show'])->name('orders.show');
+        Route::post('/orders/{order}/update-status', [OrderController::class, 'updateStatus'])->name('orders.updateStatus');
          //Pending Orders
         Route::get('pending-orders', [OrderController::class, 'pendingOrders'])->name('pending-orders');
         Route::get('processing-orders', [OrderController::class, 'processingOrders'])->name('processing-orders');
@@ -283,10 +300,7 @@ Route::prefix('admin')
         Route::get('courier-orders', [OrderController::class, 'courierOrders'])->name('courier-orders');
         Route::get('complete-orders', [OrderController::class, 'completeOrders'])->name('complete-orders');
         Route::get('cancelled-orders', [OrderController::class, 'cancelledOrders'])->name('cancelled-orders');
-        //orders
-        Route::get('all-orders', [OrderController::class, 'allOrders'])->name('all-orders');
-        Route::get('orders/{id}', [OrderController::class, 'show'])->name('orders.show');
-        Route::post('/orders/{order}/update-status', [OrderController::class, 'updateStatus'])->name('orders.updateStatus');
+       
        
    
 

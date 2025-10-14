@@ -13,6 +13,13 @@ use Illuminate\Support\Facades\Storage;
 
 class SubSubCategoryController extends Controller
 {
+      public function __construct()
+    {
+        $this->middleware('permission:view subsubcategory')->only('index');
+        $this->middleware('permission:create subsubcategory')->only(['create', 'store']);
+        $this->middleware('permission:edit subsubcategory')->only(['edit', 'update']);
+        $this->middleware('permission:delete subsubcategory')->only('destroy');
+    }
     public function index()
     {
         $subSubCategories = SubSubCategory::with(['category', 'subCategory'])->latest()->paginate(10);

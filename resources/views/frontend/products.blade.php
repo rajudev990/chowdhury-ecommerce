@@ -52,8 +52,8 @@
                         <div class="card-body text-center">
                             <h5 class="card-title"><a class="text-decoration-none text-dark" href="{{ route('product.single',$item->slug) }}">{{ $item->name }}</a></h5>
                             <div class="price mb-2">
-                                <span class="text-muted text-decoration-line-through me-2">${{ $item->regular_price }}</span>
-                                <span class="fw-bold text-primary">${{ $item->sale_price }}</span>
+                                <span class="text-muted text-decoration-line-through me-2">{{currency()}}{{ $item->regular_price }}</span>
+                                <span class="fw-bold text-primary">{{currency()}}{{ $item->sale_price }}</span>
                             </div>
                             <div class="mb-2">
                                 <i class="fas fa-star text-warning"></i>

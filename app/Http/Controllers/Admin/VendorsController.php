@@ -8,9 +8,18 @@ use App\Models\Vendor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
+
 
 class VendorsController extends Controller
 {
+     public function __construct()
+    {
+        $this->middleware('permission:view sellers')->only('index');
+        $this->middleware('permission:create sellers')->only(['create', 'store']);
+        $this->middleware('permission:edit sellers')->only(['edit', 'update']);
+        $this->middleware('permission:delete sellers')->only('destroy');
+    }
     /**
      * Display a listing of the resource.
      */
@@ -33,6 +42,17 @@ class VendorsController extends Controller
      */
     public function store(Request $request)
     {
+
+        // Validation
+        $request->validate([
+            'email' => 'required|email|unique:vendors,email',
+            'phone' => 'required|string|max:20',
+            'country' => 'nullable|string|max:100',
+            'shop_name' => 'required|string|max:255|unique:vendors,shop_name',
+            'password' => 'required|string|min:3|',
+    
+        ]);
+
         $data = $request->all();
 
         $logo = $request->hasFile('logo') ? ImageHelper::uploadImage($request->file('logo')) : null;
@@ -40,7 +60,12 @@ class VendorsController extends Controller
         $data['logo'] = $logo;
         $data['banner'] = $banner;
 
-        $data['password'] = Hash::make($request->password);
+        $data['password'] = bcrypt($request->password);
+
+        // Generate Shop Slug
+        $data['shop_slug'] = Str::slug($request->shop_name);
+        $data['name'] = $request->shop_name;
+
 
         Vendor::create($data);
         return redirect()->route('admin.all-sellers.index')->with('success', 'Sellers Create Successfully');
@@ -69,6 +94,17 @@ class VendorsController extends Controller
     public function update(Request $request, string $id)
     {
         $data = Vendor::findOrFail($id);
+
+        // Validation
+        $request->validate([
+            'email' => 'required|email|unique:vendors,email,' . $data->id,
+            'phone' => 'required|string|max:20',
+            'country' => 'nullable|string|max:100',
+            'shop_name' => 'required|string|max:255|unique:vendors,shop_name,' . $data->id,
+            'password' => 'nullable|string|min:3|', // optional, only if changing
+        ]);
+
+
         $logo = $request->hasFile('logo') ? ImageHelper::uploadImage($request->file('logo')) : null;
         $banner = $request->hasFile('banner') ? ImageHelper::uploadImage($request->file('banner')) : null;
 
@@ -79,7 +115,7 @@ class VendorsController extends Controller
             Storage::disk('public')->delete($data->banner);
         }
 
-        $input = $request->all();
+        $input = $request->except('password');
 
         if ($logo) {
             $input['logo'] = $logo;
@@ -88,13 +124,19 @@ class VendorsController extends Controller
             $input['banner'] = $banner;
         }
 
-        if($request->password)
-        {
-            $input['password'] = Hash::make($request->password);
-            $data->update($input);
-        }else{
-            $data->update($input);
+      
+
+        if ($request->password) {
+            $input['password'] = bcrypt($request->password);
         }
+
+         // Generate Shop Slug
+        $data['shop_slug'] = Str::slug($request->shop_name);
+        $data['name'] = $request->shop_name;
+
+        $data->update($input);
+
+    
         return redirect()->route('admin.all-sellers.index')->with('success', 'Sellers Update Successfully');
     }
 

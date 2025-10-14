@@ -32,8 +32,8 @@
                 <div class="text-right">
                     <h4 class="font-semibold mb-2">Order Info</h4>
                     <p><strong>Invoice ID:</strong> {{ $order->order_id }}</p>
-                    <p><strong>Total:</strong> {{ number_format($order->total,2) }}</p>
-                    <p><strong>Paid:</strong> {{ number_format($order->paid ?? 0,2) }}</p>
+                    <p><strong>Total:</strong> {{currency()}}{{ number_format($order->total,2) }}</p>
+                    <p><strong>Paid:</strong> {{currency()}}{{ number_format($order->paid ?? 0,2) }}</p>
                     <p><strong>Payment Status:</strong> 
                         <select id="payment_status" class="border border-gray-300 rounded px-3 py-1 text-sm focus:ring-1 focus:ring-blue-500 focus:outline-none">
                             <option value="">Select Status</option>
@@ -74,8 +74,8 @@
                             <td class="border px-3 py-2">{{ $loop->iteration }}</td>
                             <td class="border px-3 py-2">{{ $item->product->name ?? 'Product Name' }}</td>
                             <td class="border px-3 py-2">{{ $item->quantity }}</td>
-                            <td class="border px-3 py-2">{{ number_format($item->price,2) }}</td>
-                            <td class="border px-3 py-2">{{ number_format($item->quantity * $item->price,2) }}</td>
+                            <td class="border px-3 py-2">{{currency()}}{{ number_format($item->price,2) }}</td>
+                            <td class="border px-3 py-2">{{currency()}}{{ number_format($item->quantity * $item->price,2) }}</td>
                         </tr>
                         @endforeach
                     </tbody>
@@ -89,23 +89,23 @@
                         <tbody>
                             <tr>
                                 <th class="border px-3 py-2 text-left">Total</th>
-                                <td class="border px-3 py-2 text-right">{{ number_format($order->total,2) }}</td>
+                                <td class="border px-3 py-2 text-right">{{currency()}}{{ number_format($order->total,2) }}</td>
                             </tr>
                             <tr>
                                 <th class="border px-3 py-2 text-left">Paid</th>
-                                <td class="border px-3 py-2 text-right">{{ number_format($order->paid ?? 0,2) }}</td>
+                                <td class="border px-3 py-2 text-right">{{currency()}}{{ number_format($order->paid ?? 0,2) }}</td>
                             </tr>
                             <tr>
                                 <th class="border px-3 py-2 text-left">Due</th>
-                                <td class="border px-3 py-2 text-right">{{ number_format($order->total - ($order->paid ?? 0),2) }}</td>
+                                <td class="border px-3 py-2 text-right">{{currency()}}{{ number_format($order->total - ($order->paid ?? 0),2) }}</td>
                             </tr>
                             <tr>
                                 <th class="border px-3 py-2 text-left">Delivery Charge</th>
-                                <td class="border px-3 py-2 text-right">{{ number_format($order->delivery_charge,2) }}</td>
+                                <td class="border px-3 py-2 text-right">{{currency()}}{{ number_format($order->delivery_charge,2) }}</td>
                             </tr>
                             <tr>
                                 <th class="border px-3 py-2 text-left">Coupon</th>
-                                <td class="border px-3 py-2 text-right">{{ number_format($order->coupon ?? 0,2) }}</td>
+                                <td class="border px-3 py-2 text-right">{{currency()}}{{ number_format($order->coupon ?? 0,2) }}</td>
                             </tr>
                         </tbody>
                     </table>

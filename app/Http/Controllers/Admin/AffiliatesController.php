@@ -11,6 +11,14 @@ use Illuminate\Support\Facades\Storage;
 class AffiliatesController extends Controller
 {
 
+     public function __construct()
+    {
+        $this->middleware('permission:view affiliate-user')->only('index');
+        $this->middleware('permission:create affiliate-user')->only(['create', 'store']);
+        $this->middleware('permission:edit affiliate-user')->only(['edit', 'update']);
+        $this->middleware('permission:delete affiliate-user')->only('destroy');
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -37,6 +45,8 @@ class AffiliatesController extends Controller
 
         $image = $request->hasFile('image') ? ImageHelper::uploadImage($request->file('image')) : null;
         $data['image'] = $image;
+
+        $data['password'] = bcrypt($request->password);
 
         Affiliate::create($data);
         return redirect()->route('admin.all-users.index')->with('success', 'Users Create Successfully');

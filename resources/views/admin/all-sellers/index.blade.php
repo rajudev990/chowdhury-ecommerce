@@ -16,34 +16,31 @@
             </div>
 
             <!-- Table -->
-            <div class="hidden md:block overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200 text-sm">
+            <div class="w-full">
+                <table class="table-fixed w-full border-collapse text-sm">
                     <thead class="bg-gray-50">
                         <tr class="text-left text-gray-600 font-semibold uppercase tracking-wider text-xs">
-                            <th class="px-5 py-3">Sl</th>
-                            <th class="px-5 py-3">Name</th>
-                            <th class="px-5 py-3">Email</th>
-                            <th class="px-5 py-3">Phone</th>
-                            <th class="px-5 py-3">Country</th>
-                            <th class="px-5 py-3">Shop Name</th>
-                            <th class="px-5 py-3">Shop Slug</th>
-                            <th class="px-5 py-3">Status</th>
-                            <th class="px-5 py-3 text-center">Action</th>
+                            <th class="px-5 py-3 w-12">Sl</th>
+                            <!-- <th class="px-5 py-3 w-40">Name</th> -->
+                            <th class="px-5 py-3 w-40">Shop Name</th>
+                            <th class="px-5 py-3 w-40">Shop Slug</th>
+                            <th class="px-5 py-3 w-48">Email</th>
+                            <th class="px-5 py-3 w-32">Phone</th>
+                            <th class="px-5 py-3 w-28">Status</th>
+                            <th class="px-5 py-3 w-28 text-center">Action</th>
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-100">
                         @foreach($data as $item)
                         <tr class="hover:bg-gray-50 transition-colors duration-150">
-                            <td class="px-5 py-3 text-gray-700 font-medium">{{ $loop->iteration }}</td>
-
-                            <td class="px-5 py-3 text-gray-800 font-medium">
-                                {{ $item->name }}
-                            </td>
-                            <td class="px-5 py-3 text-gray-800 font-medium">{{$item->email}}</td>
+                            <td class="px-5 py-3 text-gray-700 font-medium text-center">{{ $loop->iteration }}</td>
+                            <!-- <td class="px-5 py-3 text-gray-800 font-medium truncate">{{ $item->name }}</td> -->
+                            <td class="px-5 py-3 text-gray-800 font-medium truncate">{{$item->shop_name}}</td>
+                            <td class="px-5 py-3 text-gray-800 font-medium truncate">{{$item->shop_slug}}</td>
+                            <td class="px-5 py-3 text-gray-800 font-medium truncate">{{$item->email}}</td>
                             <td class="px-5 py-3 text-gray-800 font-medium">{{$item->phone}}</td>
-                            <td class="px-5 py-3 text-gray-800 font-medium">{{$item->country}}</td>
-                            <td class="px-5 py-3 text-gray-800 font-medium">{{$item->shop_name}}</td>
-                            <td class="px-5 py-3 text-gray-800 font-medium">{{$item->shop_slug}}</td>
+                            <!-- <td class="px-5 py-3 text-gray-800 font-medium">{{$item->country}}</td> -->
+                      
                             <td class="px-5 py-3">
                                 @if ($item->status === 'active')
                                 <span class="px-3 py-1 text-sm font-medium text-green-700 bg-green-100 rounded-full">
@@ -75,14 +72,18 @@
                             </td>
                         </tr>
                         @endforeach
+
                         @if($data->isEmpty())
                         <tr>
-                            <td colspan="5" class="px-5 py-6 text-center text-gray-500">No brands found.</td>
+                            <td colspan="9" class="px-5 py-6 text-center text-gray-500">No sellers found.</td>
                         </tr>
                         @endif
                     </tbody>
                 </table>
             </div>
+
+
+
         </div>
     </div>
 </section>

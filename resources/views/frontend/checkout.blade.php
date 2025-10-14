@@ -241,14 +241,21 @@ $(document).ready(function(){
         _token: '{{ csrf_token() }}'
     };
 
-    if(payment_method === 'cod'){
-        // Normal AJAX order for COD
+    if(orderData.payment_method === 'cod'){
         $.post("{{ route('order.store') }}", orderData, function(res){
             localStorage.removeItem('cart');
-            alert('Order placed successfully with COD!');
-            window.location.href = "{{ url('/') }}";
+
+            if(res.success && res.id){
+                // redirect to success page with order_id
+                window.location.href = "{{ url('success') }}/" + res.id;
+            } else {
+                alert('Something went wrong!');
+            }
+        }).fail(function(err){
+            console.log(err);
+            alert('Order could not be placed!');
         });
-    } else if(payment_method === 'sslcommerz'){
+    }else if(payment_method === 'sslcommerz'){
         // Redirect to /pay with form submission (no AJAX)
         // Dynamically create a form
         var form = $('<form>', {

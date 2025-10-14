@@ -32,8 +32,8 @@
                             <img src="{{ Storage::url($product->featured_image_1) }}" alt="Product Image" style="width: 50px; height: 50px; object-fit: cover;">
                         </td>
                         <td class="px-4 py-2 border">
-                            <del>{{ number_format($product->regular_price, 2) }}</del>
-                            <span>{{ number_format($product->sale_price, 2) }}</span>
+                            <del>{{currency()}}{{ number_format($product->regular_price, 2) }}</del>
+                            <span>{{currency()}}{{ number_format($product->sale_price, 2) }}</span>
                         </td>
                         <td class="px-4 py-2 border">
                             <form action="{{ route('admin.product-commission.store') }}" method="POST">

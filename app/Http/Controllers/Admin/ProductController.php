@@ -19,9 +19,30 @@ use App\Helpers\ImageHelper;
 
 class ProductController extends Controller
 {
+     public function __construct()
+{
+    // Product permissions
+    $this->middleware('permission:view product')->only('index');
+    $this->middleware('permission:create product')->only(['create', 'store']);
+    $this->middleware('permission:edit product')->only(['edit', 'update']);
+    $this->middleware('permission:delete product')->only('destroy');
+
+    $this->middleware('permission:view seller-product')->only('indexSeller');
+    $this->middleware('permission:create seller-product')->only(['createSeller', 'storeSeller']);
+    $this->middleware('permission:edit seller-product')->only(['editSeller', 'updateSeller']);
+    $this->middleware('permission:delete seller-product')->only('destroySeller');
+}
+
+
     public function index()
     {
-        $products = Product::with(['category', 'subCategory', 'subSubCategory', 'brand'])->latest()->paginate(10);
+        $products = Product::with(['category', 'subCategory', 'subSubCategory', 'brand'])->whereNull('vendor_id')->latest()->paginate(10);
+        return view('admin.products.index', compact('products'));
+    }
+
+    public function sellerProduct()
+    {
+        $products = Product::with(['category', 'subCategory', 'subSubCategory', 'brand'])->whereNotNull('vendor_id')->latest()->paginate(10);
         return view('admin.products.index', compact('products'));
     }
 

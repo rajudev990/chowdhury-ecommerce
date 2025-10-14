@@ -74,6 +74,13 @@
                             @error($social)<span class="text-red-500 text-sm">{{ $message }}</span>@enderror
                         </div>
                     @endforeach
+                    <div>
+                        <label for="vendor_commission" class="block font-medium text-gray-700 capitalize">Vendor Commission(%)</label>
+                        <input type="text" id="vendor_commission" name="vendor_commission" value="{{ $data->vendor_commission }}"
+                            class="w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 focus:border-cyan-500 focus:ring-0 outline-none"
+                            placeholder="">
+                        @error('vendor_commission')<span class="text-red-500 text-sm">{{ $message }}</span>@enderror
+                    </div>
                 </div>
             </div>
 

@@ -106,6 +106,17 @@
                         <button type="submit" class="btn btn-primary w-100 py-2">
                             <i class="fas fa-user-plus me-2"></i> Register as Affiliate
                         </button>
+
+                        <!-- Already Registered -->
+                        <div class="text-center mt-3">
+                            <p class="text-dark">
+                                Already registered?
+                                <a href="{{ route('affiliate.login') }}" class="text-decoration-none fw-semibold">
+                                    Login here
+                                </a>
+                            </p>
+                        </div>
+
                     </form>
                 </div>
             </div>

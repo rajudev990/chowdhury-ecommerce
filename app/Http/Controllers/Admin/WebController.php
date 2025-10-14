@@ -19,6 +19,28 @@ use Illuminate\Http\Request;
 
 class WebController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:view smtp')->only('index');
+        $this->middleware('permission:create smtp')->only(['create', 'store']);
+        $this->middleware('permission:edit smtp')->only(['edit', 'update']);
+        $this->middleware('permission:delete smtp')->only('destroy');
+
+        $this->middleware('permission:view courier')->only('index');
+        $this->middleware('permission:create courier')->only(['create', 'store']);
+        $this->middleware('permission:edit courier')->only(['edit', 'update']);
+        $this->middleware('permission:delete courier')->only('destroy');
+
+        $this->middleware('permission:view marketing')->only('index');
+        $this->middleware('permission:create marketing')->only(['create', 'store']);
+        $this->middleware('permission:edit marketing')->only(['edit', 'update']);
+        $this->middleware('permission:delete marketing')->only('destroy');
+
+        $this->middleware('permission:view payment')->only('index');
+        $this->middleware('permission:create payment')->only(['create', 'store']);
+        $this->middleware('permission:edit payment')->only(['edit', 'update']);
+        $this->middleware('permission:delete payment')->only('destroy');
+    }
 
     // SMTP...............>>
 

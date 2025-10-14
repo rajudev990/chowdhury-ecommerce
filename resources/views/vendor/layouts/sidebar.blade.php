@@ -13,24 +13,24 @@
     <!-- Navigation -->
     <nav class="flex-1 p-2 space-y-2 overflow-y-auto">
 
-        
-        <a href="{{ route('dashboard') }}"
-            class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 {{ request()->is('dashboard') ? 'bg-gray-700 font-semibold' : '' }}">
+
+        <a href="{{ route('vendor.dashboard') }}"
+            class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 {{ request()->is('vendor.dashboard') ? 'bg-gray-700 font-semibold' : '' }}">
             <i class="fas fa-home w-4"></i>
             <span>Dashboard</span>
         </a>
 
         <a href="{{ route('vendor.products.index') }}"
             class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 text-sm {{ request()->is('vendor/products*') ? 'bg-gray-700 font-semibold' : '' }}">
-            <i class="fas fa-box-open w-3"></i> Product
+            <i class="fas fa-cogs w-3"></i> Product
         </a>
 
         <a href="{{ route('vendor.products.commissions') }}"
             class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 text-sm {{ request()->is('vendor/product/commissions') ? 'bg-gray-700 font-semibold' : '' }}">
-            <i class="fas fa-box-open w-3"></i> Product Commissions
+            <i class="fas fa-percent w-3"></i> Product Commissions
         </a>
 
-         {{-- Orders Dropdown --}}
+        {{-- Orders Dropdown --}}
         @php
         $orderActive = request()->is('vendor/all-orders*') || request()->is('vendor/pending-orders*') || request()->is('vendor/processing-orders*') || request()->is('vendor/on-the-way*') || request()->is('vendor/hold-orders*') || request()->is('vendor/courier-orders*') || request()->is('vendor/complete-orders*') || request()->is('vendor/cancelled-orders*') || request()->is('vendor/orders*');
         @endphp
@@ -75,7 +75,16 @@
                 </a>
             </div>
         </div>
-       
+
+        <a href="{{ route('vendor.revenue') }}"
+            class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 text-sm {{ request()->is('vendor/product/revenue') ? 'bg-gray-700 font-semibold' : '' }}">
+            <i class="fas fa-dollar-sign w-3"></i> Revenue
+        </a>
+
+         <a href="{{ route('vendor.withdrawal') }}"
+            class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 text-sm {{ request()->is('vendor/withdrawal') ? 'bg-gray-700 font-semibold' : '' }}">
+            <i class="fas fa-money-check w-4 h-4"></i> Withdrawal
+        </a>
 
 
     </nav>

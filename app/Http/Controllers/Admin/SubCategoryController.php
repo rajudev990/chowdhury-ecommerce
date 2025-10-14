@@ -12,6 +12,13 @@ use Illuminate\Support\Facades\Storage;
 
 class SubCategoryController extends Controller
 {
+      public function __construct()
+    {
+        $this->middleware('permission:view subcategory')->only('index');
+        $this->middleware('permission:create subcategory')->only(['create', 'store']);
+        $this->middleware('permission:edit subcategory')->only(['edit', 'update']);
+        $this->middleware('permission:delete subcategory')->only('destroy');
+    }
     /**
      * Display a listing of the resource.
      */

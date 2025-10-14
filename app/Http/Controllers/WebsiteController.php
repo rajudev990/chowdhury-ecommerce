@@ -177,7 +177,11 @@ class WebsiteController extends Controller
 
         // Clear cart after successful order
         session()->flash('success', 'Order Created Successfully');
-        return redirect()->route('index');
+        // Return JSON with order ID for AJAX
+        return response()->json([
+            'success' => true,
+            'id' => $order->order_id, // Use order_id field (not primary key)
+        ]);
     }
 
 
@@ -300,4 +304,11 @@ class WebsiteController extends Controller
 
         return view('frontend.track-order', compact('order'));
     }
+
+    public function orderSuccess($order_id)
+    {
+        $data = Order::where('order_id', $order_id)->firstOrFail();
+        return view('frontend.success', compact('data'));
+    }
+
 }

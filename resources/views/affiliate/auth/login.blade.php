@@ -1,3 +1,6 @@
+@php
+$setting = \App\Models\Setting::first();
+@endphp
 <!DOCTYPE html>
 <html lang="en">
 
@@ -5,6 +8,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Affiliate Login</title>
+    <link rel="icon" type="image/png" href="{{ $setting->favicon ? Storage::url($setting->favicon) : asset('/assets/img/null.png') }}">
 
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -53,7 +57,7 @@
 
     <div class="w-full max-w-md bg-gray-900 rounded-lg shadow-lg p-8">
         <div class="text-center mb-6">
-            <h1 class="text-3xl font-bold text-white">{{ config('app.name') }}</h1>
+            <h1 class="text-3xl font-bold text-white">Affiliate Login</h1>
             <p class="text-gray-400 mt-1">Sign in to start your session</p>
         </div>
 

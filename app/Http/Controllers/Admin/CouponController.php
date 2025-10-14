@@ -8,6 +8,14 @@ use Illuminate\Http\Request;
 
 class CouponController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('permission:view coupon')->only('index');
+        $this->middleware('permission:create coupon')->only(['create', 'store']);
+        $this->middleware('permission:edit coupon')->only(['edit', 'update']);
+        $this->middleware('permission:delete coupon')->only('destroy');
+    }
     /**
      * Display a listing of the resource.
      */

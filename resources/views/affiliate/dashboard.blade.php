@@ -43,7 +43,7 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-sm font-medium uppercase">Pending Orders</p>
-                        <h3 class="text-2xl font-bold mt-2">{{ number_format($totalPendingCommission, 2) }} {{ currency() }}</h3>
+                        <h3 class="text-2xl font-bold mt-2">{{ currency() }}{{ number_format($totalPendingCommission, 2) }}</h3>
                     </div>
                     <div class="bg-yellow-600 p-3 rounded-full">
                         <i class="fas fa-hourglass-half text-white text-xl"></i>
@@ -56,7 +56,7 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-sm font-medium uppercase">Completed Orders</p>
-                        <h3 class="text-2xl font-bold mt-2">{{ number_format($totalCompletedCommission, 2) }} {{ currency() }}</h3>
+                        <h3 class="text-2xl font-bold mt-2">{{ currency() }}{{ number_format($totalCompletedCommission, 2) }}</h3>
                     </div>
                     <div class="bg-green-700 p-3 rounded-full">
                         <i class="fas fa-check-circle text-white text-xl"></i>
@@ -69,7 +69,7 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-sm font-medium uppercase">Revenue</p>
-                        <h3 class="text-2xl font-bold mt-2">{{ number_format($totalPendingCommission + $totalCompletedCommission, 2) }} {{ currency() }}</h3>
+                        <h3 class="text-2xl font-bold mt-2">{{ currency() }}{{ number_format($totalPendingCommission + $totalCompletedCommission, 2) }}</h3>
                     </div>
                     <div class="bg-blue-700 p-3 rounded-full">
                         <i class="fas fa-dollar-sign text-white text-xl"></i>
@@ -81,7 +81,7 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-sm font-medium uppercase">Widthdraw</p>
-                        <h3 class="text-2xl font-bold mt-2">{{ number_format($withdraw, 2) }} {{ currency() }}</h3>
+                        <h3 class="text-2xl font-bold mt-2">{{ currency() }}{{ number_format($withdraw, 2) }}</h3>
                     </div>
                     <div class="bg-blue-700 p-3 rounded-full">
                         <i class="fas fa-dollar-sign text-white text-xl"></i>
@@ -94,7 +94,7 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-sm font-medium uppercase">Balance</p>
-                        <h3 class="text-2xl font-bold mt-2">{{ number_format($balance, 2) }} {{ currency() }}</h3>
+                        <h3 class="text-2xl font-bold mt-2">{{ currency() }}{{ number_format($balance, 2) }}</h3>
                     </div>
                     <div class="bg-green-700 p-3 rounded-full">
                         <i class="fas fa-check-circle text-white text-xl"></i>

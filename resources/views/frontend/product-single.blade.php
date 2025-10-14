@@ -29,16 +29,19 @@
                     <h2 class="product-title mb-1">{{ $item->name }}</h2>
 
                     <div class="price mb-3">
-                        <span class="text-muted text-decoration-line-through me-2">${{ $item->regular_price }}</span>
+                        <span class="text-muted text-decoration-line-through me-2">{{currency()}}{{ $item->regular_price }}</span>
                         @if($item->sale_price)
-                        <span class="fw-bold text-primary">${{ $item->sale_price }}</span>
+                        <span class="fw-bold text-primary">{{currency()}}{{ $item->sale_price }}</span>
                         @else
-                        <span class="fw-bold text-primary">${{ $item->regular_price }}</span>
+                        <span class="fw-bold text-primary">{{currency()}}{{ $item->regular_price }}</span>
                         @endif
                     </div>
 
                     <div class="mb-3">Category: <span class="badge bg-secondary me-2">{{ $item->category->name ?? '-' }}</span></div>
                     <div class="mb-3">Brand: <span class="badge bg-secondary">{{ $item->brand->name ?? '-' }}</span></div>
+                    @if($item->vendor_id)
+                    <div class="mb-3">Seller: <span class="badge bg-secondary">{{ $item->vendor->name ?? '-' }}</span></div>
+                    @endif
 
                     {{-- Variants --}}
                     @php
@@ -72,7 +75,7 @@
                         </div>
                         @endif
 
-                        <div class="mb-2">Price: $<span id="variant-price">{{ $firstVariant->price ?? $item->sale_price ?? $item->regular_price }}</span></div>
+                        <div class="mb-2">Price: {{currency()}}<span id="variant-price">{{ $firstVariant->price ?? $item->sale_price ?? $item->regular_price }}</span></div>
                         <div class="mb-2">Stock: <span id="variant-stock">{{ $firstVariant->stock ?? 100 }}</span></div>
                     </div>
                     @endif
@@ -155,8 +158,8 @@
                         <div class="card-body text-center">
                             <h5 class="card-title"><a class="text-decoration-none text-dark" href="{{ route('product.single',$item->slug) }}">{{ $item->name }}</a></h5>
                             <div class="price mb-2">
-                                <span class="text-muted text-decoration-line-through me-2">${{ $item->regular_price }}</span>
-                                <span class="fw-bold text-primary">${{ $item->sale_price }}</span>
+                                <span class="text-muted text-decoration-line-through me-2">{{currency()}}{{ $item->regular_price }}</span>
+                                <span class="fw-bold text-primary">{{currency()}}{{ $item->sale_price }}</span>
                             </div>
                             <div class="mb-2">
                                 <i class="fas fa-star text-warning"></i>

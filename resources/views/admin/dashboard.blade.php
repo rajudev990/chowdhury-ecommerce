@@ -66,7 +66,7 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-sm font-medium uppercase">Revenue</p>
-                        <h3 class="text-2xl font-bold mt-2">{{ $revenue }}</h3>
+                        <h3 class="text-2xl font-bold mt-2">{{ currency() }}{{ $revenue }}</h3>
                     </div>
                     <div class="bg-blue-700 p-3 rounded-full">
                         <i class="fas fa-dollar-sign text-white text-xl"></i>

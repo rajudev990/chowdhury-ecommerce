@@ -9,7 +9,51 @@ use Illuminate\Http\Request;
 
 class OrderController extends Controller
 {
-     public function allOrders()
+    public function __construct()
+    {
+        $this->middleware('permission:view order')->only('index');
+        $this->middleware('permission:create order')->only(['create', 'store']);
+        $this->middleware('permission:edit order')->only(['edit', 'update']);
+        $this->middleware('permission:delete order')->only('destroy');
+
+        $this->middleware('permission:view pending-order')->only('index');
+        $this->middleware('permission:create pending-order')->only(['create', 'store']);
+        $this->middleware('permission:edit pending-order')->only(['edit', 'update']);
+        $this->middleware('permission:delete pending-order')->only('destroy');
+
+        $this->middleware('permission:view processing-order')->only('index');
+        $this->middleware('permission:create processing-order')->only(['create', 'store']);
+        $this->middleware('permission:edit processing-order')->only(['edit', 'update']);
+        $this->middleware('permission:delete processing-order')->only('destroy');
+
+        $this->middleware('permission:view on-the-way')->only('index');
+        $this->middleware('permission:create on-the-way')->only(['create', 'store']);
+        $this->middleware('permission:edit on-the-way')->only(['edit', 'update']);
+        $this->middleware('permission:delete on-the-way')->only('destroy');
+
+        $this->middleware('permission:view hold')->only('index');
+        $this->middleware('permission:create hold')->only(['create', 'store']);
+        $this->middleware('permission:edit hold')->only(['edit', 'update']);
+        $this->middleware('permission:delete hold')->only('destroy');
+
+        $this->middleware('permission:view couriers')->only('index');
+        $this->middleware('permission:create couriers')->only(['create', 'store']);
+        $this->middleware('permission:edit couriers')->only(['edit', 'update']);
+        $this->middleware('permission:delete couriers')->only('destroy');
+
+        $this->middleware('permission:view complete')->only('index');
+        $this->middleware('permission:create complete')->only(['create', 'store']);
+        $this->middleware('permission:edit complete')->only(['edit', 'update']);
+        $this->middleware('permission:delete complete')->only('destroy');
+
+        $this->middleware('permission:view cancelled')->only('index');
+        $this->middleware('permission:create cancelled')->only(['create', 'store']);
+        $this->middleware('permission:edit cancelled')->only(['edit', 'update']);
+        $this->middleware('permission:delete cancelled')->only('destroy');
+    }
+
+
+    public function allOrders()
     {
         $orders = Order::latest()->get();
         return view('admin.orders.all', compact('orders'));
@@ -19,9 +63,9 @@ class OrderController extends Controller
     {
         $order = Order::with('orderItems.product', 'user')->findOrFail($id);
         $setting = Setting::first();
-        return view('admin.orders.show', compact('order','setting'));
+        return view('admin.orders.show', compact('order', 'setting'));
     }
-   public function updateStatus(Request $request, Order $order)
+    public function updateStatus(Request $request, Order $order)
     {
         $field = $request->field;
         $value = $request->value;

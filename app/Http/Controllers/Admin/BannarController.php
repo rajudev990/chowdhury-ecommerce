@@ -10,6 +10,13 @@ use Illuminate\Support\Facades\Storage;
 
 class BannarController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:view banner')->only('index');
+        $this->middleware('permission:create banner')->only(['create', 'store']);
+        $this->middleware('permission:edit banner')->only(['edit', 'update']);
+        $this->middleware('permission:delete banner')->only('destroy');
+    }
     /**
      * Display a listing of the resource.
      */

@@ -10,6 +10,15 @@ use Illuminate\Support\Facades\Storage;
 
 class BrandController extends Controller
 {
+    
+      public function __construct()
+    {
+        $this->middleware('permission:view product')->only('index');
+        $this->middleware('permission:create product')->only(['create', 'store']);
+        $this->middleware('permission:edit product')->only(['edit', 'update']);
+        $this->middleware('permission:delete product')->only('destroy');
+    }
+    
     public function index()
     {
         $brands = Brand::latest()->paginate(10);

@@ -8,6 +8,13 @@ use Illuminate\Http\Request;
 
 class AffiliateWithdrawController extends Controller
 {
+     public function __construct()
+    {
+        $this->middleware('permission:view affiliate-withdraw')->only('index');
+        $this->middleware('permission:create affiliate-withdraw')->only(['create', 'store']);
+        $this->middleware('permission:edit affiliate-withdraw')->only(['edit', 'update']);
+        $this->middleware('permission:delete affiliate-withdraw')->only('destroy');
+    }
     /**
      * Display a listing of the resource.
      */
