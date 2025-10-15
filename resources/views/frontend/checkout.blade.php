@@ -255,24 +255,19 @@ $(document).ready(function(){
             console.log(err);
             alert('Order could not be placed!');
         });
-    }else if(payment_method === 'sslcommerz'){
-        // Redirect to /pay with form submission (no AJAX)
-        // Dynamically create a form
+    }else if(orderData.payment_method === 'sslcommerz'){
         var form = $('<form>', {
             'method': 'POST',
             'action': '{{ route("pay") }}'
         });
 
-        // Add CSRF token
         form.append($('<input>', {
             'type': 'hidden',
             'name': '_token',
             'value': '{{ csrf_token() }}'
         }));
 
-        // Add all order data
         $.each(orderData, function(key, value){
-            // Convert items array to JSON string
             if(key === 'items'){
                 value = JSON.stringify(value);
             }
@@ -283,7 +278,11 @@ $(document).ready(function(){
             }));
         });
 
-        // Append form to body and submit
+        // Success, Fail, Cancel URLs
+        form.append($('<input>', {type:'hidden', name:'success_url', value:'{{ route("order.success", ["order_id" => "ORDER_ID_PLACEHOLDER"]) }}'}));
+        form.append($('<input>', {type:'hidden', name:'fail_url', value:'{{ url("/fail") }}'}));
+        form.append($('<input>', {type:'hidden', name:'cancel_url', value:'{{ url("/cancel") }}'}));
+
         form.appendTo('body').submit();
     }
 });

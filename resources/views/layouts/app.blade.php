@@ -105,6 +105,7 @@ $categories = \App\Models\Category::all();
     </script>
     <script>
         $(document).ready(function() {
+
             var $qty = $('#qty');
             var stock = parseInt($('#variant-stock').text()) || 100;
 
@@ -194,6 +195,11 @@ $categories = \App\Models\Category::all();
                 }
 
                 localStorage.setItem('cart', JSON.stringify(cart));
+
+                // Toastr success message দেখাও
+                toastr.success(name + " added to cart successfully!");
+
+
                 window.location.href = "{{ route('checkout') }}";
             });
 
@@ -229,7 +235,7 @@ $categories = \App\Models\Category::all();
                     <h6 class="mb-1 text-white">${item.name}${item.color ? ' - '+item.color : ''}${item.size ? ' - '+item.size : ''}</h6>
                     <small class="text-light">Qty: ${item.quantity}</small>
                 </div>
-                <span class="price fw-bold me-2">৳ ${subtotal}</span>
+                <span class="price fw-bold me-2">${subtotal}</span>
                 <i class="bi bi-trash text-danger" style="cursor:pointer; font-size:18px;" data-index="${index}"></i>
             </div>
             `;
@@ -237,7 +243,7 @@ $categories = \App\Models\Category::all();
                 });
             }
 
-            $cartTotal.text('৳ ' + total);
+            $cartTotal.text(total);
             $badge.text(cart.length);
             $fcart.text('Cart (' + cart.length + ')');
         }
@@ -259,6 +265,7 @@ $categories = \App\Models\Category::all();
 
     <script>
         $(document).ready(function() {
+
             $(document).on('click', '.order-now', function(e) {
                 e.preventDefault();
 
@@ -295,6 +302,9 @@ $categories = \App\Models\Category::all();
                 }
 
                 localStorage.setItem('cart', JSON.stringify(cart));
+
+                // Toastr success message দেখাও
+                toastr.success(name + " added to cart successfully!");
 
                 // Checkout এ নিয়ে যাও
                 window.location.href = "{{ url('checkout') }}";

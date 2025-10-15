@@ -343,7 +343,7 @@
 
         {{-- Sellers --}}
         @php
-        $VendorActive = request()->is('admin/all-sellers*')|| request()->is('admin/vendor-product*')|| request()->is('admin/vendor-order*');
+        $VendorActive = request()->is('admin/all-sellers*')|| request()->is('admin/vendor-product*') || request()->is('admin/vendor-order*') || request()->is('admin/sellers-withdrawal');
         @endphp
 
         @canany(['create sellers','edit sellers','view sellers','delete sellers'])
@@ -362,6 +362,10 @@
                 <a href="{{ route('admin.all-sellers.index') }}"
                     class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 text-sm {{ request()->is('admin/all-sellers*') ? 'bg-gray-700 font-semibold' : '' }}">
                     <i class="fas fa-users w-3"></i> Sellers
+                </a>
+                <a href="{{ route('admin.sellers-withdrawal') }}"
+                    class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 text-sm {{ request()->is('admin/sellers-withdrawal') ? 'bg-gray-700 font-semibold' : '' }}">
+                    <i class="fas fa-money-bill-wave w-3"></i> Withdrawal Request
                 </a>
                 @endcanany
             </div>

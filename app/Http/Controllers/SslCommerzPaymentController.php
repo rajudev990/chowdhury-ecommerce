@@ -24,100 +24,130 @@ class SslCommerzPaymentController extends Controller
         return view('exampleHosted');
     }
 
-   public function index(Request $request)
+    public function index(Request $request)
+    {
+        $request->validate([
+            'customer_name' => 'required|string',
+            'phone' => 'required|string',
+            'address' => 'required|string',
+            'delivery_area' => 'required|string',
+            'payment_method' => 'required|string',
+            'items' => 'required|string',
+            'total' => 'required|numeric',
+        ]);
+
+        $items = json_decode($request->items, true);
+        $tran_id = uniqid('TRX_');
+
+        if (Auth::check()) {
+            $userId = Auth::id();
+            $email = Auth::user()->email;
+        } else {
+            $unique = time() . Str::random(4);
+            $email = 'guest_' . $unique . '@example.com';
+            $guest = User::create([
+                'name' => $request->customer_name,
+                'email' => $email,
+                'phone' => $request->phone,
+                'address' => $request->address,
+                'username' => 'guest_' . $unique,
+                'password' => bcrypt(Str::random(8)),
+            ]);
+            $userId = $guest->id;
+        }
+
+        $order = Order::create([
+            'user_id' => $userId,
+            'total' => $request->total,
+            'delivery_charge' => $request->delivery_charge ?? 0,
+            'coupon' => $request->coupon_amount ?? 0,
+            'coupon_code' => $request->coupon_code ?? null,
+            'status' => 'pending',
+            'payment_status' => 'unpaid', // ❗️Start as unpaid
+            'payment_method' => 'sslcommerz',
+            'transaction_id' => $tran_id,
+            'delivery_area' => $request->delivery_area,
+            'currency' => 'BDT',
+            'notes' => $request->notes ?? null,
+        ]);
+
+        foreach ($items as $item) {
+            OrderItem::create([
+                'order_id' => $order->id,
+                'product_id' => $item['productId'],
+                'product_variant_id' => $item['variantId'] ?? null,
+                'quantity' => $item['quantity'],
+                'price' => $item['price'],
+            ]);
+        }
+
+
+        $post_data = [
+            'total_amount' => $order->total,
+            'currency' => 'BDT',
+            'tran_id' => $tran_id,
+            'cus_name' => $request->customer_name,
+            'cus_email' => $email,
+            'cus_add1' => $request->address,
+            'cus_country' => 'Bangladesh',
+            'cus_phone' => $request->phone,
+            'shipping_method' => 'NO',
+            'ship_name' => $request->customer_name,
+            'ship_add1' => $request->address,
+            'ship_country' => 'Bangladesh',
+            'product_name' => 'Order #' . $order->id,
+            'product_category' => 'Goods',
+            'product_profile' => 'physical-goods',
+            'value_a' => $order->id,
+            'order_id' => $order->order_id,
+            'value_b' => $request->coupon_code ?? null,
+
+
+        ];
+
+
+        $sslc = new SslCommerzNotification();
+        $payment_options = $sslc->makePayment($post_data, 'hosted');
+
+        if (!is_array($payment_options)) {
+            \Log::error('SSLCommerz Payment Error', ['response' => $payment_options]);
+            return back()->with('error', 'SSLCommerz payment initiation failed.');
+        }
+
+        // hosted payment auto redirect করবে
+    }
+
+
+   public function success(Request $request)
 {
-    $request->validate([
-        'customer_name' => 'required|string',
-        'phone' => 'required|string',
-        'address' => 'required|string',
-        'delivery_area' => 'required|string',
-        'payment_method' => 'required|string',
-        'items' => 'required|string', // items sent as JSON string
-        'total' => 'required|numeric',
-    ]);
+    dd(12);
+    $order_id = $request->input('value_a'); // SSLCommerz sends order id here
 
-    // Decode items JSON
-    $items = json_decode($request->items, true);
-
-    // Create unique transaction
-    $tran_id = uniqid('TRX_');
-
-    // If user logged in, use user_id, otherwise create guest
-    if (Auth::check()) {
-        $userId = Auth::id();
-        $email = Auth::user()->email;
-    } else {
-        $unique = time() . Str::random(4);
-        $email = 'guest_' . $unique . '@example.com';
-        $guest = User::create([
-            'name' => $request->customer_name,
-            'email' => $email,
-            'phone' => $request->phone,
-            'address' => $request->address,
-            'username' => 'guest_' . $unique,
-            'password' => bcrypt(Str::random(8)),
-        ]);
-        $userId = $guest->id;
+    if (!$order_id) {
+        return redirect('/')->with('error', 'Order ID not found!');
     }
 
-    // Save order
-    $order = Order::create([
-        'user_id' => $userId,
-        'total' => $request->total,
-        'delivery_charge' => $request->delivery_charge ?? 0,
-        'coupon' => $request->coupon_amount ?? 0,
-        'coupon_code' => $request->coupon_code ?? null,
-        'status' => 'pending',
-        'payment_status' => 'pending',
-        'payment_method' => 'sslcommerz',
-        'transaction_id' => $tran_id,
-        'delivery_area' => $request->delivery_area,
-        'currency' => 'BDT',
-        'notes' => $request->notes ?? null,
-    ]);
-
-    // Save order items
-    foreach ($items as $item) {
-        OrderItem::create([
-            'order_id' => $order->id,
-            'product_id' => $item['productId'],
-            'product_variant_id' => $item['variantId'] ?? null,
-            'quantity' => $item['quantity'],
-            'price' => $item['price'],
-        ]);
-    }
-
-    // Prepare SSLCommerz payment data
-    $post_data = [
-        'total_amount' => $order->total,
-        'currency' => 'BDT',
-        'tran_id' => $tran_id,
-        'cus_name' => $request->customer_name,
-        'cus_email' => $email,
-        'cus_add1' => $request->address,
-        'cus_country' => 'Bangladesh',
-        'cus_phone' => $request->phone,
-        'shipping_method' => 'NO',
-        'ship_name' => $request->customer_name,
-        'ship_add1' => $request->address,
-        'ship_country' => 'Bangladesh',
-        'product_name' => 'Order #' . $order->id,
-        'product_category' => 'Goods',
-        'product_profile' => 'physical-goods',
-        'value_a' => $order->id,
-        'value_b' => $request->coupon_code ?? null,
-    ];
+    $tran_id = $request->input('tran_id');
+    $amount = $request->input('amount');
+    $currency = $request->input('currency');
 
     $sslc = new SslCommerzNotification();
-    $payment_options = $sslc->makePayment($post_data, 'hosted');
+    $order = Order::find($order_id);
 
-    if (!is_array($payment_options)) {
-        \Log::error('SSLCommerz Payment Error', ['response' => $payment_options]);
-        return back()->with('error', 'SSLCommerz payment initiation failed.');
+    if ($order && $order->status == 'pending') {
+        $validation = $sslc->orderValidate($request->all(), $tran_id, $amount, $currency);
+        if ($validation) {
+            $order->update([
+                'status' => 'processing',
+                'payment_status' => 'paid'
+            ]);
+        }
     }
 
-    // SSLCommerz hosted redirect will automatically happen
+    return redirect()->route('order.success', ['order_id' => $order_id]);
 }
+
+
 
 
     public function payViaAjax(Request $request)
@@ -188,51 +218,64 @@ class SslCommerzPaymentController extends Controller
             print_r($payment_options);
             $payment_options = array();
         }
-
     }
 
-    public function success(Request $request)
-    {
-        echo "Transaction is Successful";
+    // public function success()
+    // {
 
-        $tran_id = $request->input('tran_id');
-        $amount = $request->input('amount');
-        $currency = $request->input('currency');
+    //     // SSLCommerz থেকে order_id pathanor jonno value_a use koro
+    //     $order_id = $request->input('order_id'); // value_a contains order id
 
-        $sslc = new SslCommerzNotification();
+    //     if (!$order_id) {
+    //         return redirect('/')->with('error', 'Order ID not found!');
+    //     }
 
-        #Check order status in order tabel against the transaction id or order id.
-        $order_details = DB::table('orders')
-            ->where('transaction_id', $tran_id)
-            ->select('transaction_id', 'status', 'currency', 'amount')->first();
-
-        if ($order_details->status == 'Pending') {
-            $validation = $sslc->orderValidate($request->all(), $tran_id, $amount, $currency);
-
-            if ($validation) {
-                /*
-                That means IPN did not work or IPN URL was not set in your merchant panel. Here you need to update order status
-                in order table as Processing or Complete.
-                Here you can also sent sms or email for successfull transaction to customer
-                */
-                $update_product = DB::table('orders')
-                    ->where('transaction_id', $tran_id)
-                    ->update(['status' => 'Processing']);
-
-                echo "<br >Transaction is successfully Completed";
-            }
-        } else if ($order_details->status == 'Processing' || $order_details->status == 'Complete') {
-            /*
-             That means through IPN Order status already updated. Now you can just show the customer that transaction is completed. No need to udate database.
-             */
-            echo "Transaction is successfully Completed";
-        } else {
-            #That means something wrong happened. You can redirect customer to your product page.
-            echo "Invalid Transaction";
-        }
+    //     session()->flash('success', 'Order Created Successfully');
 
 
-    }
+
+    //     // এখন /success/{order_id} route এ redirect করো
+    //     return redirect()->route('order.success', ['order_id' => $order_id]);
+
+
+    //     return "Transaction is Successful";
+
+    //     $tran_id = $request->input('tran_id');
+    //     $amount = $request->input('amount');
+    //     $currency = $request->input('currency');
+
+    //     $sslc = new SslCommerzNotification();
+
+    //     #Check order status in order tabel against the transaction id or order id.
+    //     $order_details = DB::table('orders')
+    //         ->where('transaction_id', $tran_id)
+    //         ->select('transaction_id', 'status', 'currency', 'amount')->first();
+
+    //     if ($order_details->status == 'Pending') {
+    //         $validation = $sslc->orderValidate($request->all(), $tran_id, $amount, $currency);
+
+    //         if ($validation) {
+    //             /*
+    //             That means IPN did not work or IPN URL was not set in your merchant panel. Here you need to update order status
+    //             in order table as Processing or Complete.
+    //             Here you can also sent sms or email for successfull transaction to customer
+    //             */
+    //             $update_product = DB::table('orders')
+    //                 ->where('transaction_id', $tran_id)
+    //                 ->update(['status' => 'Processing']);
+
+    //             echo "<br >Transaction is successfully Completed";
+    //         }
+    //     } else if ($order_details->status == 'Processing' || $order_details->status == 'Complete') {
+    //         /*
+    //          That means through IPN Order status already updated. Now you can just show the customer that transaction is completed. No need to udate database.
+    //          */
+    //         echo "Transaction is successfully Completed";
+    //     } else {
+    //         #That means something wrong happened. You can redirect customer to your product page.
+    //         echo "Invalid Transaction";
+    //     }
+    // }
 
     public function fail(Request $request)
     {
@@ -252,7 +295,6 @@ class SslCommerzPaymentController extends Controller
         } else {
             echo "Transaction is Invalid";
         }
-
     }
 
     public function cancel(Request $request)
@@ -273,8 +315,6 @@ class SslCommerzPaymentController extends Controller
         } else {
             echo "Transaction is Invalid";
         }
-
-
     }
 
     public function ipn(Request $request)
@@ -319,5 +359,4 @@ class SslCommerzPaymentController extends Controller
             echo "Invalid Data";
         }
     }
-
 }

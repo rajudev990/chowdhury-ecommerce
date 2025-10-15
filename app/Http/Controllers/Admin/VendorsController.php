@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Helpers\ImageHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Vendor;
+use App\Models\VendorWithdraw;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Hash;
@@ -156,5 +157,25 @@ class VendorsController extends Controller
 
         $data->delete();
         return redirect()->back()->with('success', 'Sellers Delete Successfully');
+    }
+
+    // Withdrawal
+    public function sellersWithdrawal(Request $request)
+    {
+        $status = $request->query('status', 'pending'); // ডিফল্ট pending
+
+        $withdrawals = VendorWithdraw::where('status', $status)->get();
+
+        return view('admin.all-sellers.withdraw.index', compact('withdrawals', 'status'));
+    }
+
+    // Update the status of the withdrawal request
+    public function updateStatus(Request $request, $id)
+    {
+        $withdraw = VendorWithdraw::findOrFail($id);
+        $withdraw->status = $request->status;
+        $withdraw->save();
+
+        return response()->json(['success' => true]);
     }
 }
