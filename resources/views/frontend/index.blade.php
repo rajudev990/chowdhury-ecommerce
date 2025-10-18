@@ -5,16 +5,17 @@
 @section('content')
 
 
-@if(empty($banner->title))
-@else
+@if($banner->title || $banner->image)
 <!-- Banner -->
 <section class="banner" style="background-image: url({{Storage::url($banner->image ?? '')}});">
     <div class="banner-content">
         <h1>{{$banner->title ?? ''}}</h1>
         <p>{{$banner->description ?? ''}}</p>
+        @if($banner->product_link)
         <a href="{{$banner->product_link ?? '#'}}" class="btn btn-primary">
             <i class="fas fa-shopping-cart me-2"></i> Shop Now
         </a>
+        @endif
     </div>
 </section>
 @endif

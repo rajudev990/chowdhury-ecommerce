@@ -20,28 +20,28 @@
             <div class="grid md:grid-cols-2 gap-6">
                 <div>
                     <label for="title" class="block font-medium text-gray-700">
-                        Title <span class="text-red-500">*</span>
+                        Title
                     </label>
                     <input type="text" id="title" name="title" value="{{ old('title', $data->title) }}"
-                        class="w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 focus:border-cyan-500 focus:ring-0 outline-none" required>
+                        class="w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 focus:border-cyan-500 focus:ring-0 outline-none">
                     @error('title')<span class="text-red-500 text-sm">{{ $message }}</span>@enderror
                 </div>
 
                 <div>
                     <label for="description" class="block font-medium text-gray-700">
-                        Description <span class="text-red-500">*</span>
+                        Description
                     </label>
                     <input type="text" id="description" name="description" value="{{ old('description', $data->description) }}"
-                        class="w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 focus:border-cyan-500 focus:ring-0 outline-none" required>
+                        class="w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 focus:border-cyan-500 focus:ring-0 outline-none">
                     @error('description')<span class="text-red-500 text-sm">{{ $message }}</span>@enderror
                 </div>
 
                 <div>
                     <label for="product_link" class="block font-medium text-gray-700">
-                        Button Link <span class="text-red-500">*</span>
+                        Button Link
                     </label>
                     <input type="text" id="product_link" name="product_link" value="{{ old('product_link', $data->product_link) }}"
-                        class="w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 focus:border-cyan-500 focus:ring-0 outline-none" required>
+                        class="w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 focus:border-cyan-500 focus:ring-0 outline-none">
                     @error('product_link')<span class="text-red-500 text-sm">{{ $message }}</span>@enderror
                 </div>
 

@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Admin;
+use App\Models\Bannar;
 use App\Models\Bkash;
 use App\Models\Couriore;
 use App\Models\Marketing;
@@ -57,6 +58,10 @@ class DatabaseSeeder extends Seeder
         
         Bkash::firstOrCreate([
             'bkash_app_key'=>''
+        ]);
+        
+        Bannar::firstOrCreate([
+            'title'=>''
         ]);
 
 
@@ -252,6 +257,13 @@ class DatabaseSeeder extends Seeder
             'edit sellers',
             'view sellers',
             'delete sellers',
+
+            // report permissions
+            'create report',
+            'edit report',
+            'view report',
+            'delete report',
+
 
 
 

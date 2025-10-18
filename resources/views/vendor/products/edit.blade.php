@@ -38,12 +38,20 @@
                         </div>
                         <div class="grid grid-cols-3 gap-4">
                             <div>
+                                <label class="block text-gray-700 mb-1">Purchases Price({{currency()}})<span class="text-red-500">*</span></label>
+                                <input type="number" name="purchase_price" step="0.01" class="w-full border rounded px-3 py-2" value="{{ $product->purchase_price }}" required>
+                            </div>
+                            <div>
                                 <label class="block text-gray-700 mb-1">Regular Price({{currency()}})<span class="text-red-500">*</span></label>
                                 <input type="number" name="regular_price" step="0.01" value="{{ $product->regular_price }}" class="w-full border rounded px-3 py-2" required>
                             </div>
                             <div>
                                 <label class="block text-gray-700 mb-1">Sales Price({{currency()}})<span class="text-red-500">*</span></label>
                                 <input type="number" name="sale_price" step="0.01" value="{{ $product->sale_price }}" class="w-full border rounded px-3 py-2" required>
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 mb-1">Units</label>
+                                <input type="text" name="unit" step="0.01" class="w-full border rounded px-3 py-2" value="{{ $product->unit }}" placeholder="pcs,kg etc">
                             </div>
                             <div>
                                 <label class="block text-gray-700 mb-1">Stock</label>

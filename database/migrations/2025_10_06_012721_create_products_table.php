@@ -21,9 +21,11 @@ return new class extends Migration
             $table->string('name');
             $table->string('slug')->unique();
             $table->text('description')->nullable();
+            $table->decimal('purchase_price', 10, 2);
             $table->decimal('regular_price', 10, 2);
             $table->decimal('sale_price', 10, 2)->nullable();
             $table->string('sku')->unique();
+            $table->string('unit')->nullable();
             $table->integer('stock')->default(0);
             $table->string('featured_image_1')->nullable();
             $table->string('featured_image_2')->nullable();

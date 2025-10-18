@@ -373,7 +373,36 @@
         @endcanany
 
 
+        {{-- Reports --}}
+        @php
+        $ReportActive = request()->is('admin/stock-report')|| request()->is('admin/order-report');
+        @endphp
 
+        @canany(['create report','edit report','view report','delete report'])
+        <div class="dropdown">
+            <button
+                class="dropdown-btn flex justify-between items-center w-full p-2 rounded hover:bg-gray-700 focus:outline-none {{ $ReportActive ? 'bg-gray-700 font-semibold' : '' }}">
+                <span class="flex items-center gap-2">
+                    <i class="fas fa-folder-open w-4"></i> Reports
+                </span>
+                <i class="fas fa-chevron-down transition-transform {{ $ReportActive ? 'rotate-180' : '' }}"></i>
+            </button>
+
+            <div class="dropdown-menu {{ $ReportActive ? 'block' : 'hidden' }} ml-4 mt-1 space-y-1">
+
+               
+                <a href="{{ route('admin.stock_report') }}"
+                    class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 text-sm {{ request()->is('admin/stock report') ? 'bg-gray-700 font-semibold' : '' }}">
+                    <i class="fas fa-chart-bar w-3"></i> Stock Report
+                </a>
+                <a href="{{ route('admin.order_report') }}"
+                    class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 text-sm {{ request()->is('admin/order-report') ? 'bg-gray-700 font-semibold' : '' }}">
+                    <i class="fas fa-file-alt w-3"></i> Order Report
+                </a>
+                
+            </div>
+        </div>
+        @endcanany
 
 
 

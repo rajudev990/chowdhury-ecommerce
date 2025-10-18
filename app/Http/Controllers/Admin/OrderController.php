@@ -3,8 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use App\Models\Order;
+use App\Models\OrderItem;
+use App\Models\Product;
 use App\Models\Setting;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
@@ -129,4 +133,75 @@ class OrderController extends Controller
         $orders = Order::where('status', 'cancelled')->latest()->get();
         return view('admin.orders.cancelled', compact('orders'));
     }
+
+    // Report
+    public function stock_report(Request $request){
+        $products = Product::select('id', 'name','sale_price','stock')
+            ->where('status', 1);
+        if ($request->keyword) {
+            $products = $products->where('name', 'LIKE', '%' . $request->keyword . "%");
+        }
+        if ($request->category_id) {
+            $products = $products->where('category_id', $request->category_id);
+        }
+        if ($request->start_date && $request->end_date) {
+            $products =$products->whereBetween('updated_at', [$request->start_date,$request->end_date]);
+        }
+        $total_purchase = $products->sum(\DB::raw('purchase_price * stock'));
+        $total_stock = $products->sum('stock');
+        $total_price = $products->sum(\DB::raw('sale_price * stock'));
+        $products = $products->paginate(10);
+        $categories = Category::where('status',1)->get();
+        return view('admin.reports.stock',compact('products','categories','total_purchase','total_stock','total_price'));
+    }
+
+
+    public function order_report(Request $request)
+    {
+        $users = User::where('status', 1)->get();
+
+        // Base query
+        $ordersQuery = OrderItem::with(['order', 'order.user', 'product'])
+            ->whereHas('order', function ($query) {
+                $query->where('status', 'completed');
+            });
+
+        // Filter by keyword
+        if ($request->keyword) {
+            $ordersQuery->where('order_id', 'LIKE', '%' . $request->keyword . '%');
+        }
+
+        // Filter by assigned user
+        if ($request->user_id) {
+            $ordersQuery->whereHas('order', function ($query) use ($request) {
+                $query->where('user_id', $request->user_id);
+            });
+        }
+
+        // Filter by date range
+        if ($request->start_date && $request->end_date) {
+            $ordersQuery->whereBetween('updated_at', [$request->start_date, $request->end_date]);
+        }
+
+        // Clone query to calculate totals before pagination
+        $allOrders = (clone $ordersQuery)->get();
+
+        // Product থেকে purchase_price দিয়ে total_purchase হিসাব
+        $total_purchase = 0;
+        foreach ($allOrders as $item) {
+            $total_purchase += ($item->product->purchase_price ?? 0) * $item->quantity;
+        }
+
+        // Total quantity ও sales হিসাব
+        $total_item = $allOrders->sum('quantity');
+        $total_sales = $allOrders->sum(function ($item) {
+            return ($item->price ?? 0) * $item->quantity;
+        });
+
+        // Pagination for table
+        $orders = $ordersQuery->paginate(10);
+
+        return view('admin.reports.order', compact('orders', 'users', 'total_purchase', 'total_item', 'total_sales'));
+    }
+
 }
