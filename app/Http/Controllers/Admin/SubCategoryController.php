@@ -9,10 +9,11 @@ use Illuminate\Support\Str;
 use App\Models\SubCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 
 class SubCategoryController extends Controller
 {
-      public function __construct()
+    public function __construct()
     {
         $this->middleware('permission:view subcategory')->only('index');
         $this->middleware('permission:create subcategory')->only(['create', 'store']);
@@ -44,7 +45,14 @@ class SubCategoryController extends Controller
     {
         $request->validate([
             'category_id' => 'required|exists:categories,id',
-            'name' => 'required|string|max:255',
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('sub_categories')->where(function ($query) use ($request) {
+                    return $query->where('category_id', $request->category_id);
+                })->ignore($subcategory->id ?? null), // edit এর জন্য ignore
+            ],
             'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
             'status' => 'required|in:0,1',
         ]);
@@ -78,7 +86,14 @@ class SubCategoryController extends Controller
     {
         $request->validate([
             'category_id' => 'required|exists:categories,id',
-            'name' => 'required|string|max:255',
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('sub_categories')->where(function ($query) use ($request) {
+                    return $query->where('category_id', $request->category_id);
+                })->ignore($subcategory->id),
+            ],
             'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
             'status' => 'required|in:0,1',
         ]);
