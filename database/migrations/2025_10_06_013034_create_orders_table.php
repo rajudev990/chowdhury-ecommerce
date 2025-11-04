@@ -28,6 +28,17 @@ return new class extends Migration
             $table->string('delivery_area')->nullable();
             $table->string('currency')->nullable();
             $table->string('notes')->nullable();
+            
+             // courier information
+            $table->string('courier')->nullable(); // pathao, redx, steadfast
+            $table->string('courier_status')->nullable(); // created, picked, in_transit, delivered
+            $table->string('courier_tracking_id')->nullable();
+            $table->json('courier_response')->nullable();
+
+            // fraud and admin flags
+            $table->boolean('is_fraud')->default(false);
+            $table->boolean('is_blocked')->default(false); // admin blocked flag
+
             $table->timestamps();
         });
     }

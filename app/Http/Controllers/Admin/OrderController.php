@@ -10,6 +10,9 @@ use App\Models\Product;
 use App\Models\Setting;
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Services\Couriers\PathaoService;
+use App\Services\Couriers\RedxService;
+use App\Services\Couriers\SteadfastService;
 
 class OrderController extends Controller
 {
@@ -62,6 +65,102 @@ class OrderController extends Controller
         $orders = Order::latest()->get();
         return view('admin.orders.all', compact('orders'));
     }
+
+    public function assignCourier(Request $request, $orderId, $courier)
+{
+    $order = Order::findOrFail($orderId);
+
+    $request->validate([
+        'courier' => 'nullable|string'
+    ]);
+
+    // map courier param
+    $courier = strtolower($courier);
+
+    // Prepare payload from $order
+    $payload = [
+        'store_id' => env('PATHAO_STORE_ID'),
+        'receiver_name' => $order->user->name ?? $order->shipping_name ?? 'Customer',
+        'receiver_phone' => $order->user->phone ?? $order->mobile ?? '01700000000',
+        'receiver_address' => $order->address ?? $order->delivery_area ?? 'Not provided',
+        'full_address' => $order->address ?? null,
+        'amount_to_collect' => $order->payment_method === 'cod' ? $order->total : 0,
+        'item_description' => 'Order#' . $order->order_id,
+    ];
+
+    // decide which service to use
+    if ($courier === 'pathao') {
+        $svc = new PathaoService();
+    } elseif ($courier === 'redx') {
+        $svc = new RedxService();
+    } elseif ($courier === 'steadfast') {
+        $svc = new SteadfastService();
+    } else {
+        return back()->with('error','Unknown courier');
+    }
+
+    $result = $svc->createShipment($payload);
+
+    if ($result['success']) {
+        $order->courier = $courier;
+        $order->courier_status = 'created';
+        $order->courier_tracking_id = $result['tracking_id'] ?? null;
+        $order->courier_response = $result['raw'] ?? null;
+        $order->save();
+
+        return back()->with('success', ucfirst($courier).' booked successfully.');
+    } else {
+        // save response for debugging
+        $order->courier_response = $result['raw'] ?? $result;
+        $order->save();
+        return back()->with('error', 'Booking failed: ' . ($result['message'] ?? 'See order courier_response'));
+    }
+}
+
+public function fraudCheck(Request $request, $orderId)
+{
+    $order = Order::findOrFail($orderId);
+
+    $suspicious = false;
+    $reasons = [];
+
+    // Example fraud checks — customize as you need
+    // 1) High order amount + new user
+    if ($order->total > 5000 && !$order->user_id) {
+        $suspicious = true;
+        $reasons[] = 'High amount by guest';
+    }
+
+    // 2) Frequent orders from same phone in short time
+    if ($order->user_id) {
+        $count = Order::where('user_id', $order->user_id)->where('created_at', '>=', now()->subDay())->count();
+        if ($count > 5) {
+            $suspicious = true;
+            $reasons[] = 'Multiple orders in short time';
+        }
+    }
+
+    // 3) Blacklisted email/phone check (you can maintain a table)
+    // if (in_array($order->user->email, config('fraud.blacklisted_emails', []))) { ... }
+
+    if ($suspicious) {
+        $order->is_fraud = true;
+        $order->save();
+
+        // Optionally block IP
+        if ($request->ip()) {
+            BlockedIp::create([
+                'ip' => $request->ip(),
+                'reason' => implode('; ', $reasons),
+                'expires_at' => now()->addDays(30),
+            ]);
+        }
+
+        return back()->with('warning', 'Fraud suspicion flagged: '.implode(', ', $reasons));
+    }
+
+    return back()->with('success', 'Fraud check passed.');
+}
 
     public function show($id)
     {

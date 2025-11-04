@@ -116,6 +116,10 @@ Route::prefix('admin')
         Route::get('courier-orders', [OrderController::class, 'courierOrders'])->name('courier-orders');
         Route::get('complete-orders', [OrderController::class, 'completeOrders'])->name('complete-orders');
         Route::get('cancelled-orders', [OrderController::class, 'cancelledOrders'])->name('cancelled-orders');
+
+
+        Route::post('/orders/{order}/{courier}', [App\Http\Controllers\Admin\OrderController::class, 'assignCourier'])->name('orders.courier');
+    Route::post('/orders/{order}/fraud-check', [App\Http\Controllers\Admin\OrderController::class, 'fraudCheck'])->name('orders.fraudCheck');
        
        Route::get('stock-report', [OrderController::class,'stock_report'])->name('stock_report');
        Route::get('order-report', [OrderController::class,'order_report'])->name('order_report');
