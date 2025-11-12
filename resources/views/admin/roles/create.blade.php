@@ -3,76 +3,73 @@
 @section('title', 'Add Role')
 
 @section('content')
-<section class="p-5 bg-gray-100 min-h-screen">
-    <div class="mx-auto bg-white rounded-2xl shadow-lg overflow-hidden">
+<section class="py-5 bg-light min-vh-100">
+    <div class="container">
+        <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
 
-        <!-- Header -->
-        <div class="bg-gradient-to-r from-cyan-600 to-cyan-500 px-6 py-4 flex justify-between items-center">
-            <h2 class="text-xl font-semibold text-white">Add Role</h2>
+            {{-- Header --}}
+            <div class="card-header bg-gradient-purple text-white d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Add Role</h5>
+                @can('view role')
+                <a href="{{ route('admin.roles.index') }}" class="btn btn-light btn-sm">
+                    <i class="fa fa-angle-left me-1"></i> Back
+                </a>
+                @endcan
+            </div>
 
-            @can('view role')
-            <a href="{{ route('admin.roles.index') }}"
-                class="bg-white/20 hover:bg-white/30 text-white px-4 py-1.5 rounded-lg transition flex items-center gap-1">
-                <i class="fa fa-angle-left"></i> Back
-            </a>
-            @endcan
-        </div>
+            {{-- Form --}}
+            <div class="card-body p-4">
+                <form action="{{ route('admin.roles.store') }}" method="POST">
+                    @csrf
 
-        <!-- Form Body -->
-        <div class="p-8">
-            <form action="{{ route('admin.roles.store') }}" method="POST" class="space-y-6">
-                @csrf
+                    {{-- Role Name --}}
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold">Role Name <span class="text-danger">*</span></label>
+                        <input type="text" name="name" value="{{ old('name') }}" class="form-control rounded-3"
+                            placeholder="Enter role name" required>
+                        @error('name')
+                        <div class="text-danger small mt-1">{{ $message }}</div>
+                        @enderror
+                    </div>
 
-                <!-- Role Name -->
-                <div>
-                    <label class="block text-gray-700 font-medium mb-1">
-                        Role Name <span class="text-red-500">*</span>
-                    </label>
-                    <input type="text" name="name" value="{{ old('name') }}"
-                        class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:border-cyan-500 focus:ring-0 outline-none"
-                        placeholder="Enter role name" required>
-                    @error('name')
-                    <span class="text-red-500 text-sm mt-1 block">{{ $message }}</span>
-                    @enderror
-                </div>
-
-                <!-- Permissions -->
-                <div>
-                    <div class="flex items-center gap-2 mb-2">
-                        <input type="checkbox" id="select-all-permissions"
-                            class="h-4 w-4 text-cyan-600 border-gray-300 rounded focus:ring-0">
-                        <label for="select-all-permissions" class="text-gray-700 font-medium">
-                            Select All Permissions <span class="text-gray-500 text-sm">(optional)</span>
+                    {{-- Select All --}}
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="select-all-permissions">
+                        <label class="form-check-label fw-semibold" for="select-all-permissions">
+                            Select All Permissions <span class="text-muted small">(optional)</span>
                         </label>
                     </div>
 
-                    <div class="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
-                        @foreach($permissions as $permission)
-                        <label
-                            class="flex items-center space-x-2 border border-gray-200 rounded-lg px-3 py-2 hover:bg-gray-50 transition">
-                            <input type="checkbox" name="permissions[]" value="{{ $permission->name }}"
-                                id="permission_{{ $permission->id }}"
-                                class="permission-checkbox text-cyan-600 focus:ring-0 rounded">
-                            <span class="text-gray-700 text-sm">
-                                {{ ucwords(str_replace('-', ' ', $permission->name)) }}
-                            </span>
-                        </label>
-                        @endforeach
-                    </div>
+                    {{-- Permissions List --}}
+                        <div class="row g-2">
+                            @foreach($permissions as $permission)
+                            <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                                <div class="form-check d-flex align-items-center border rounded-3 px-3 py-2 h-100 transition shadow-sm hover-shadow-sm">
+                                    <input class="form-check-input permission-checkbox me-2 ms-0 mt-0" type="checkbox"
+                                        name="permissions[]" value="{{ $permission->name }}"
+                                        id="permission_{{ $permission->id }}">
+                                    <label class="form-check-label text-capitalize mb-0 flex-grow-1" for="permission_{{ $permission->id }}">
+                                        {{ str_replace('-', ' ', $permission->name) }}
+                                    </label>
+                                </div>
+                            </div>
+                            @endforeach
+                        </div>
+
 
                     @error('permissions')
-                    <span class="text-red-500 text-sm mt-1 block">{{ $message }}</span>
+                    <div class="text-danger small mt-2">{{ $message }}</div>
                     @enderror
-                </div>
 
-                <!-- Submit Button -->
-                <div class="flex justify-end pt-4 border-t">
-                    <button type="submit"
-                        class="bg-cyan-600 hover:bg-cyan-700 text-white px-6 py-2 rounded-lg transition flex items-center gap-2">
-                        <i class="fa fa-save"></i> Save
-                    </button>
-                </div>
-            </form>
+                    {{-- Submit --}}
+                    <div class="text-end pt-4 border-top mt-4">
+                        <button type="submit" class="btn bg-gradient-purple text-white px-4 rounded-3">
+                            <i class="fa fa-save me-1"></i> Save
+                        </button>
+                    </div>
+                </form>
+            </div>
+
         </div>
     </div>
 </section>

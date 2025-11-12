@@ -1,45 +1,34 @@
-<aside id="sidebar"
-    class="bg-gray-900 text-white flex flex-col fixed h-full w-64 sidebar-transition z-40 
-           -translate-x-full md:translate-x-0">
+<nav id="sidebar">
+    <div class="p-3 text-center border-bottom fw-bold">{{ Auth::guard('affiliate')->user()->name ?? 'Admin' }}</div>
 
-    <!-- Logo / Title -->
-    <div class="p-4 flex items-center justify-between border-b border-gray-700">
-        <span class="text-xl font-bold">{{ Auth::guard('affiliate')->user()->name ?? 'Admin' }}</span>
-        <button id="closeSidebar" class="md:hidden text-gray-300">
-            <i class="fas fa-times"></i>
-        </button>
-    </div>
+    <ul class="nav flex-column mt-3">
 
-    <!-- Navigation -->
-    <nav class="flex-1 p-2 space-y-2 overflow-y-auto">
+        {{-- Dashboard --}}
 
+        <li class="nav-item">
+            <a class="nav-link {{ request()->routeIs('affiliate.dashboard') ? 'active' : '' }}" href="{{ route('affiliate.dashboard') }}">
+                <i class="fas fa-home me-2"></i> Dashboard
+            </a>
+        </li>
 
-        <a href="{{ route('affiliate.dashboard') }}"
-            class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 {{ request()->is('affiliate.dashboard') ? 'bg-gray-700 font-semibold' : '' }}">
-            <i class="fas fa-home w-4"></i>
-            <span>Dashboard</span>
-        </a>
-
-        <a href="{{ route('affiliate.offers') }}"
-            class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 {{ request()->is('affiliate.offers') ? 'bg-gray-700 font-semibold' : '' }}">
-            <i class="fas fa-gift w-4"></i>
-            <span>My Offers</span>
-        </a>
-
-        <a href="{{ route('affiliate.earnings') }}"
-            class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 {{ request()->is('affiliate.earnings') ? 'bg-gray-700 font-semibold' : '' }}">
-            <i class="fas fa-dollar-sign w-4"></i>
-            <span>My Earnings</span>
-        </a>
-
-        <a href="{{ route('affiliate.withdraw') }}"
-            class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 {{ request()->is('affiliate.withdraw') ? 'bg-gray-700 font-semibold' : '' }}">
-            <i class="fas fa-credit-card w-4"></i>
-            <span>Withdraw</span>
-        </a>
+         <li class="nav-item">
+            <a class="nav-link {{ request()->routeIs('affiliate.offers') ? 'active' : '' }}" href="{{ route('affiliate.offers') }}">
+                <i class="fas fa-gift me-2"></i> My Offers
+            </a>
+        </li>
 
 
+         <li class="nav-item">
+            <a class="nav-link {{ request()->routeIs('affiliate.earnings') ? 'active' : '' }}" href="{{ route('affiliate.earnings') }}">
+                <i class="fas fa-home me-2"></i> My Earnings
+            </a>
+        </li>
 
+         <li class="nav-item">
+            <a class="nav-link {{ request()->routeIs('affiliate.withdraw') ? 'active' : '' }}" href="{{ route('affiliate.withdraw') }}">
+                <i class="fas fa-credit-card me-2"></i> Withdraw
+            </a>
+        </li>
 
-    </nav>
-</aside>
+    </ul>
+</nav>

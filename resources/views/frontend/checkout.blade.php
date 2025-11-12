@@ -223,6 +223,29 @@ $(document).ready(function(){
 
     renderCart();
 
+
+      // ✅ Purchase Tracking Function
+    function pushPurchaseToDataLayer(orderId, orderData) {
+        window.dataLayer = window.dataLayer || [];
+        dataLayer.push({
+            event: "purchase",
+            ecommerce: {
+                transaction_id: orderId,
+                value: orderData.total,
+                currency: "BDT",
+                payment_type: orderData.payment_method,
+                shipping: orderData.delivery_charge,
+                items: orderData.items.map(item => ({
+                    item_id: item.id || "",
+                    item_name: item.name,
+                    price: item.price,
+                    quantity: item.quantity
+                }))
+            }
+        });
+        console.log("✅ Purchase event pushed to dataLayer");
+    }
+
     // Place Order
     $('#place-order').click(function(e){
     e.preventDefault(); // prevent default button action
@@ -243,6 +266,10 @@ $(document).ready(function(){
 
     if(orderData.payment_method === 'cod'){
         $.post("{{ route('order.store') }}", orderData, function(res){
+
+            // ✅ Push purchase data to DataLayer
+            pushPurchaseToDataLayer(res.id, orderData);
+
             localStorage.removeItem('cart');
 
             if(res.success && res.id){

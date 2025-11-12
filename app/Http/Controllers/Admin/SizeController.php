@@ -29,7 +29,7 @@ class SizeController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|unique:sizes,name|max:255',
             'status' => 'required|in:0,1',
         ]);
 
@@ -46,7 +46,7 @@ class SizeController extends Controller
     public function update(Request $request, Size $size)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
+             'name' => 'required|string|unique:sizes,name,' . $size->id . '|max:255',
             'status' => 'required|in:0,1',
         ]);
 

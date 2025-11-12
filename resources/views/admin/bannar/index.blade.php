@@ -3,75 +3,70 @@
 @section('title', 'Banner Update')
 
 @section('content')
-<section class="p-6 bg-gray-100 min-h-screen">
-    <div class="mx-auto bg-white rounded-2xl shadow-lg overflow-hidden">
+<div class="container py-5">
+
+    <div class="card shadow-lg border-0 rounded-4">
 
         <!-- Header -->
-        <div class="bg-gradient-to-r from-cyan-600 to-cyan-500 px-6 py-4 flex justify-between items-center">
-            <h2 class="text-xl font-semibold text-white">Banner Update</h2>
+        <div class="card-header bg-gradient-purple text-white d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Banner Update</h5>
         </div>
 
         <!-- Form -->
-        <form action="{{ route('admin.bannars.update', $data->id) }}" method="POST" enctype="multipart/form-data" class="p-8 space-y-8">
-            @csrf
-            @method('PUT')
+        <div class="card-body">
+            <form action="{{ route('admin.bannars.update', $data->id) }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                @method('PUT')
 
-            <!-- Basic Info -->
-            <div class="grid md:grid-cols-2 gap-6">
-                <div>
-                    <label for="title" class="block font-medium text-gray-700">
-                        Title
-                    </label>
-                    <input type="text" id="title" name="title" value="{{ old('title', $data->title) }}"
-                        class="w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 focus:border-cyan-500 focus:ring-0 outline-none">
-                    @error('title')<span class="text-red-500 text-sm">{{ $message }}</span>@enderror
-                </div>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label for="title" class="form-label">Title</label>
+                        <input type="text" id="title" name="title" value="{{ old('title', $data->title) }}"
+                            class="form-control @error('title') is-invalid @enderror">
+                        @error('title')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                    </div>
 
-                <div>
-                    <label for="description" class="block font-medium text-gray-700">
-                        Description
-                    </label>
-                    <input type="text" id="description" name="description" value="{{ old('description', $data->description) }}"
-                        class="w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 focus:border-cyan-500 focus:ring-0 outline-none">
-                    @error('description')<span class="text-red-500 text-sm">{{ $message }}</span>@enderror
-                </div>
+                    <div class="col-md-6">
+                        <label for="description" class="form-label">Description</label>
+                        <input type="text" id="description" name="description" value="{{ old('description', $data->description) }}"
+                            class="form-control @error('description') is-invalid @enderror">
+                        @error('description')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                    </div>
 
-                <div>
-                    <label for="product_link" class="block font-medium text-gray-700">
-                        Button Link
-                    </label>
-                    <input type="text" id="product_link" name="product_link" value="{{ old('product_link', $data->product_link) }}"
-                        class="w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 focus:border-cyan-500 focus:ring-0 outline-none">
-                    @error('product_link')<span class="text-red-500 text-sm">{{ $message }}</span>@enderror
-                </div>
+                    <div class="col-md-6">
+                        <label for="product_link" class="form-label">Button Link</label>
+                        <input type="text" id="product_link" name="product_link" value="{{ old('product_link', $data->product_link) }}"
+                            class="form-control @error('product_link') is-invalid @enderror">
+                        @error('product_link')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                    </div>
 
-                <div>
-                    <label for="image" class="block font-medium text-gray-700">Banner Image</label>
-                    <input type="file" name="image" id="image"
-                        class="mt-1 block w-full text-sm text-gray-700 border border-gray-300 rounded-lg p-1.5 focus:border-cyan-500 focus:ring-0">
-                    @error('image')<span class="text-red-500 text-sm">{{ $message }}</span>@enderror
+                    <div class="col-md-6">
+                        <label for="image" class="form-label">Banner Image</label>
+                        <input type="file" name="image" id="image" class="form-control @error('image') is-invalid @enderror">
+                        @error('image')<div class="invalid-feedback">{{ $message }}</div>@enderror
 
-                    <div class="mt-3">
-                        @if($data->image)
-                            <img id="preview-image" src="{{ Storage::url($data->image) }}"
-                                class="rounded-lg border w-24 h-24 object-cover" alt="Banner Image Preview">
-                        @else
-                            <img id="preview-image" class="hidden rounded-lg border w-24 h-24 object-cover" alt="Preview">
-                        @endif
+                        <div class="mt-3">
+                            @if($data->image)
+                                <img id="preview-image" src="{{ Storage::url($data->image) }}"
+                                    class="rounded border w-100" style="max-width:150px; height:auto;" alt="Banner Preview">
+                            @else
+                                <img id="preview-image" class="d-none rounded border w-100" style="max-width:150px; height:auto;" alt="Preview">
+                            @endif
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Submit -->
-            <div class="flex justify-end pt-6 border-t">
-                <button type="submit"
-                    class="bg-cyan-600 hover:bg-cyan-700 text-white px-6 py-2 rounded-lg transition flex items-center gap-2">
-                    <i class="fa fa-edit"></i> Update
-                </button>
-            </div>
-        </form>
+                <!-- Submit -->
+                <div class="text-end mt-4">
+                    <button type="submit" class="btn bg-gradient-purple text-white">
+                        <i class="fa fa-edit me-1"></i> Update
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
-</section>
+
+</div>
 @endsection
 
 @section('script')
@@ -87,12 +82,12 @@ document.addEventListener("DOMContentLoaded", function () {
             const reader = new FileReader();
             reader.onload = e => {
                 preview.src = e.target.result;
-                preview.classList.remove('hidden');
+                preview.classList.remove('d-none');
             };
             reader.readAsDataURL(file);
         } else {
             preview.src = '';
-            preview.classList.add('hidden');
+            preview.classList.add('d-none');
         }
     });
 });

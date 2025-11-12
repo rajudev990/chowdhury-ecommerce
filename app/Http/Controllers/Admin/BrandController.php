@@ -33,7 +33,7 @@ class BrandController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|unique:brands,name|max:255',
             'logo' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
             'status' => 'required|in:0,1',
         ]);
@@ -57,7 +57,7 @@ class BrandController extends Controller
     public function update(Request $request, Brand $brand)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|unique:brands,name,' . $brand->id . '|max:255',
             'logo' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
             'status' => 'required|in:0,1',
         ]);

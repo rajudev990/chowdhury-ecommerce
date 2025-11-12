@@ -1,179 +1,184 @@
 @php
-
 $setting = \App\Models\Setting::first();
 @endphp
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'Vendor Dashboard')</title>
-    <link rel="icon" type="image/png" href="{{ $setting->favicon ? Storage::url($setting->favicon) : asset('/assets/img/null.png') }}">
+    <title>@yield('title','Vendor Dashboard')</title>
+    <link rel="icon" href="{{ Storage::url($setting->favicon) }}" type="image/x-icon">
 
-
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-
-    <!-- Font Awesome -->
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
-    <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <style>
-        /* Sidebar scrollbar styling */
-        nav::-webkit-scrollbar {
+        body {
+            background-color: #f5f5f5;
+        }
+
+        /* Sidebar */
+        /* #sidebar { width: 250px; min-height: 100vh; background-color: #212529; position: fixed; left: 0; top: 0; transition: all 0.3s; z-index:1040; color:#fff; } */
+        #sidebar { width: 250px; height: 100vh; background-color: #212529; position: fixed; left: 0; top: 0; z-index: 1040; color: #fff; overflow-y: auto; overflow-x: hidden; transition: all 0.3s; display: flex; flex-direction: column;
+        }
+
+        #sidebar::-webkit-scrollbar {
             width: 6px;
         }
 
-        nav::-webkit-scrollbar-thumb {
+        #sidebar::-webkit-scrollbar-thumb {
             background-color: rgba(255, 255, 255, 0.3);
             border-radius: 3px;
         }
 
-        .sidebar-transition {
-            transition: all 0.3s ease;
+        #sidebar::-webkit-scrollbar-thumb:hover {
+            background-color: rgba(255, 255, 255, 0.5);
         }
-        /* Print */
-        /* Hide everything except invoice section when printing */
-        @media print {
-            body * {
-                visibility: hidden;
-            }
-            #printSection, #printSection * {
-                visibility: visible;
-            }
-            #printSection {
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
+
+        #sidebar.collapsed {
+            left: -250px;
+        }
+
+        #mainContent {
+            margin-left: 250px;
+            transition: all 0.3s;
+        }
+
+        #mainContent.expanded {
+            margin-left: 0;
+        }
+
+        .nav-link {
+            color: #adb5bd;
+            transition: 0.2s;
+        }
+
+        .nav-link:hover {
+            color: #fff;
+            background-color: #343a40;
+        }
+
+        .nav-link.active {
+            color: #fff;
+            background-color: #495057;
+        }
+
+        .collapse .nav-link {
+            padding-left: 1.5rem;
+            font-size: 0.9rem;
+        }
+
+        #mobileOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 1035;
+            display: none;
+        }
+
+        @media(max-width:768px) {
+            #sidebar {
+                left: -250px;
             }
 
-            /* Hide print button */
-            #printBtn {
-                display: none !important;
+            #sidebar.show {
+                left: 0;
             }
+
+            #mainContent {
+                margin-left: 0;
+            }
+        }
+
+        /* Rotate collapse arrow */
+        .rotate {
+            transition: transform 0.3s;
+        }
+
+        .rotate.show {
+            transform: rotate(90deg);
+        }
+
+        .bg-purple {
+            background: linear-gradient(to right, #6f42c1, #5a33a5);
+        }
+
+        .bg-indigo {
+            background: linear-gradient(to right, #6610f2, #5b0fd1);
+        }
+
+        .bg-pink {
+            background: linear-gradient(to right, #d63384, #c2185b);
+        }
+
+        .bg-teal {
+            background: linear-gradient(to right, #20c997, #198754);
+        }
+
+        .bg-orange {
+            background: linear-gradient(to right, #fd7e14, #f76700);
+        }
+
+        .bg-gradient-purple {
+            background: linear-gradient(to right, #6f42c1, #5a33a5);
         }
     </style>
-    @yield('styles')
+    @yield('style')
 </head>
+<body>
 
+    <!-- Sidebar -->
+    @include('vendor.layouts.sidebar')
 
-<body class="bg-gray-100">
+    <!-- Mobile Overlay -->
+    <div id="mobileOverlay"></div>
 
-    <div class="flex h-screen relative">
+    <!-- Main Content -->
+    <div id="mainContent" class="flex-grow-1 d-flex flex-column">
 
-        <!-- Mobile Overlay -->
-        <div id="mobileOverlay" class="hidden fixed inset-0 bg-black bg-opacity-50 z-30 md:hidden"></div>
+        <!-- Topbar -->
+        <header class="bg-white shadow-sm py-2 px-3 d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center gap-2">
+                <button id="sidebarToggle" class="btn btn-outline-secondary"><i class="fas fa-bars"></i></button>
+            </div>
 
-        <!-- Sidebar -->
-        @include('vendor.layouts.sidebar')
+            <div class="d-flex align-items-center gap-3">
+                
 
-        <!-- Main Content -->
-        <div id="mainContent" class="flex-1 flex flex-col transition-all duration-300 md:ml-64">
-
-            <!-- Topbar -->
-            <header class="bg-white shadow flex items-center justify-between px-4 py-2">
-                <div class="flex items-center space-x-2">
-                    <!-- Mobile toggle -->
-                    <button id="mobileToggle" class="md:hidden text-gray-700 text-2xl focus:outline-none">
-                        <i class="fas fa-bars"></i>
+                <div class="dropdown">
+                    <button class="btn btn-light dropdown-toggle d-flex align-items-center gap-2" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <img class="rounded-circle" src="{{ Auth::guard('vendor')->user()->image ? Storage::url(Auth::guard('vendor')->user()->image) : 'https://i.pravatar.cc/40' }}" width="30" height="30" alt="Profile">
+                        <span class="d-none d-md-inline fw-medium text-dark">{{ Auth::guard('vendor')->user()->name ?? 'vendor' }}</span>
                     </button>
-
-                    <!-- Desktop toggle -->
-                    <button id="sidebarToggle" class="hidden md:inline-flex text-gray-700 text-xl focus:outline-none">
-                        <i class="fas fa-bars"></i>
-                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end shadow-sm">
+                        <li><a class="dropdown-item" href="{{ route('vendor.profile.settings') }}">Profile</a></li>
+                        <li><a class="dropdown-item" href="{{ route('vendor.change.password') }}">Change Password</a></li>
+                        <li>
+                            <form method="POST" action="{{ route('vendor.logout') }}">
+                                @csrf
+                                <button type="submit" class="dropdown-item text-danger">Logout</button>
+                            </form>
+                        </li>
+                    </ul>
                 </div>
+            </div>
+        </header>
 
-
-                <!-- Profile Dropdown -->
-                <div class="relative">
-                    <button id="profileBtn" class="flex items-center space-x-2 focus:outline-none">
-                        @if(Auth::guard('vendor')->user()->image)
-                        <img class="w-8 h-8 rounded-full border-2 border-gray-300" src="{{ Storage::url(Auth::guard('vendor')->user()->image) }}" alt="Profile">
-                        @else
-                        <img class="w-8 h-8 rounded-full border-2 border-gray-300" src="https://i.pravatar.cc/40" alt="Profile">
-                        @endif
-                        <span class="hidden md:block font-medium">{{ Auth::guard('vendor')->user()->name ?? 'Vendor' }}</span>
-                        <i class="fas fa-chevron-down"></i>
-                    </button>
-
-                    <div id="profileDropdown" class="hidden absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-md overflow-hidden z-50">
-                        <a href="{{ route('vendor.profile.settings') }}" class="flex items-center px-4 py-2 hover:bg-gray-100">Profile</a>
-                        <a href="{{ route('vendor.change.password') }}" class="flex items-center px-4 py-2 hover:bg-gray-100">Change Password</a>
-                        <form method="POST" action="{{ route('vendor.logout') }}">
-                            @csrf
-                            <button type="submit" class="flex items-center w-full px-4 py-2 hover:bg-gray-100">
-                                Logout
-                            </button>
-                        </form>
-                    </div>
-                </div>
-            </header>
-
-            <!-- Main Content -->
-            <main class="flex-1">
-                @yield('content')
-            </main>
-
-        </div>
+        <!-- Page Content -->
+        <main class="flex-grow-1 p-3">
+            @yield('content')
+        </main>
     </div>
 
-    <!-- ========== jQuery Script ========== -->
-    <script>
-        $(document).ready(function() {
-            const sidebar = $('#sidebar');
-            const mainContent = $('#mainContent');
-            const mobileOverlay = $('#mobileOverlay');
-
-            // Sidebar toggle (Desktop)
-            $('#sidebarToggle').on('click', function() {
-                if (sidebar.width() > 0) {
-                    sidebar.width(0).addClass('overflow-hidden');
-                    mainContent.removeClass('md:ml-64').addClass('md:ml-0');
-                } else {
-                    sidebar.width(256).removeClass('overflow-hidden');
-                    mainContent.removeClass('md:ml-0').addClass('md:ml-64');
-                }
-            });
-
-            // Mobile Sidebar
-            $('#mobileToggle').on('click', function() {
-                sidebar.css('transform', 'translateX(0)');
-                mobileOverlay.removeClass('hidden');
-            });
-
-            $('#closeSidebar, #mobileOverlay').on('click', function() {
-                sidebar.css('transform', 'translateX(-100%)');
-                mobileOverlay.addClass('hidden');
-            });
-
-            // Dropdown toggle
-            $('.dropdown-btn').on('click', function() {
-                const menu = $(this).next('.dropdown-menu');
-                menu.slideToggle(200);
-                $(this).find('i').toggleClass('rotate-180');
-            });
-
-            // Profile dropdown
-            $('#profileBtn').on('click', function(e) {
-                e.stopPropagation();
-                $('#profileDropdown').toggle();
-            });
-
-            $(document).on('click', function(e) {
-                if (!$(e.target).closest('#profileDropdown, #profileBtn').length) {
-                    $('#profileDropdown').hide();
-                }
-            });
-        });
-    </script>
-
+    <!-- Bootstrap Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
     @if(session('success'))
     <script>
@@ -184,91 +189,30 @@ $setting = \App\Models\Setting::first();
             title: "{{ session('success') }}",
             showConfirmButton: false,
             timer: 3000,
-            timerProgressBar: true,
-            didOpen: (toast) => {
-                toast.addEventListener('mouseenter', Swal.stopTimer)
-                toast.addEventListener('mouseleave', Swal.resumeTimer)
-            }
+            timerProgressBar: true
         });
     </script>
     @endif
-    @if(session('error'))
-    <script>
-        Swal.fire({
-            toast: true,
-            position: 'top-end',
-            icon: 'error',
-            title: "{{ session('error') }}",
-            showConfirmButton: false,
-            timer: 3000,
-            timerProgressBar: true,
-            didOpen: (toast) => {
-                toast.addEventListener('mouseenter', Swal.stopTimer)
-                toast.addEventListener('mouseleave', Swal.resumeTimer)
-            }
-        });
-    </script>
-    @endif
-    <script>
-        $(document).ready(function() {
-            $('.delete-btn').on('click', function(e) {
-                e.preventDefault();
-                var itemId = $(this).data('id');
-                Swal.fire({
-                    title: 'Are you sure?',
-                    text: "Do you really want to delete this item?",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonText: 'Yes, delete it!',
-                    cancelButtonText: 'No, cancel',
-                    reverseButtons: true
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        $('#delete-form-' + itemId).submit();
-                    } else {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Not Deleted!',
-                            text: 'You have cancelled the deletion.'
-                        });
-                    }
-                });
 
+    
+    <script>
+        $(document).ready(function(){
+            const sidebar = $('#sidebar'), overlay = $('#mobileOverlay'), main = $('#mainContent');
 
+            $('#sidebarToggle').click(function(){
+                if($(window).width() < 768){ sidebar.toggleClass('show'); overlay.toggle(); } 
+                else { sidebar.toggleClass('collapsed'); main.toggleClass('expanded'); }
+            });
+
+            overlay.click(function(){ sidebar.removeClass('show'); overlay.hide(); });
+
+            // Rotate arrow for collapse
+            document.querySelectorAll('.collapse').forEach(function(collapseEl){
+                collapseEl.addEventListener('show.bs.collapse', function(){ this.previousElementSibling.querySelector('.rotate').classList.add('show'); });
+                collapseEl.addEventListener('hide.bs.collapse', function(){ this.previousElementSibling.querySelector('.rotate').classList.remove('show'); });
             });
         });
     </script>
-    <script>
-        document.getElementById('printBtn').addEventListener('click', function() {
-            // Save original page content
-            const originalContent = document.body.innerHTML;
-
-            // Get only the invoice section
-            const printSection = document.getElementById('printSection').cloneNode(true);
-
-            // Replace body content with section content
-            document.body.innerHTML = '';
-            document.body.appendChild(printSection);
-
-            // Remove select box styling and only show selected text
-            const selects = document.querySelectorAll('select');
-            selects.forEach(function(sel) {
-                const span = document.createElement('span');
-                span.textContent = sel.options[sel.selectedIndex].text;
-                sel.parentNode.replaceChild(span, sel);
-            });
-
-            // Trigger print
-            window.print();
-
-            // Restore original content after print
-            document.body.innerHTML = originalContent;
-
-            // Reload JS scripts to make page functional again
-            location.reload();
-        });
-        </script>
-
-
     @yield('script')
 </body>
+</html>

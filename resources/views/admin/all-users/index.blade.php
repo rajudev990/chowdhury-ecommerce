@@ -3,86 +3,92 @@
 @section('title', 'Affiliate Users List')
 
 @section('content')
-<section class="py-6 px-3 bg-gray-100 min-h-screen">
-    <div class="max-w-7xl mx-auto">
-        <div class="bg-white shadow-lg rounded-2xl overflow-hidden border border-gray-100">
+<section class="py-5 bg-light min-vh-100">
+    <div class="container">
+        <div class="card shadow-lg rounded-3 overflow-hidden">
 
             <!-- Header -->
-            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between bg-cyan-600 px-6 py-4 text-white">
-                <h3 class="text-xl font-semibold tracking-wide">Affiliate Users List</h3>
-                <a href="{{ route('admin.all-users.create') }}" class="mt-3 sm:mt-0 inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white font-medium px-4 py-2 rounded-lg transition-all duration-200 shadow-sm">
-                    <i class="fa fa-plus"></i> Add
+            <div class="card-header d-flex flex-column flex-md-row justify-content-between align-items-center text-white bg-gradient-purple">
+                <h5 class="mb-2 mb-md-0">Affiliate Users List</h5>
+                <a href="{{ route('admin.all-users.create') }}" class="btn btn-light text-black btn-sm">
+                    <i class="fa fa-plus me-1"></i> Add Affiliate
                 </a>
             </div>
 
-            <!-- Table -->
-            <div class="hidden md:block overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200 text-sm">
-                    <thead class="bg-gray-50">
-                        <tr class="text-left text-gray-600 font-semibold uppercase tracking-wider text-xs">
-                            <th class="px-5 py-3">Sl</th>
-                            <th class="px-5 py-3">Name</th>
-                            <th class="px-5 py-3">Email</th>
-                            <th class="px-5 py-3">Phone</th>
-                            <th class="px-5 py-3">Username</th>
-                            <th class="px-5 py-3">Referral</th>
-                            <th class="px-5 py-3">Status</th>
-                            <th class="px-5 py-3 text-center">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody class="bg-white divide-y divide-gray-100">
-                        @foreach($data as $item)
-                        <tr class="hover:bg-gray-50 transition-colors duration-150">
-                            <td class="px-5 py-3 text-gray-700 font-medium">{{ $loop->iteration }}</td>
-
-                           <td class="px-5 py-3 text-gray-800 font-medium">
-                                {{ $item->fname }} {{ $item->lname }}
-                            </td>
-
-                            <td class="px-5 py-3 text-gray-800 font-medium">{{$item->email}}</td>
-                            <td class="px-5 py-3 text-gray-800 font-medium">{{$item->phone}}</td>
-                            <td class="px-5 py-3 text-gray-800 font-medium">{{$item->username}}</td>
-                            <td class="px-5 py-3 text-gray-800 font-medium">{{$item->referal_name_id}}</td>
-                            <td class="px-5 py-3">
-                                 @if ($item->status === 'active')
-                                    <span class="px-3 py-1 text-sm font-medium text-green-700 bg-green-100 rounded-full">
-                                        Active
-                                    </span>
-                                @elseif ($item->status === 'pending')
-                                    <span class="px-3 py-1 text-sm font-medium text-yellow-700 bg-yellow-100 rounded-full">
-                                        Pending
-                                    </span>
-                                @elseif ($item->status === 'rejected')
-                                    <span class="px-3 py-1 text-sm font-medium text-red-700 bg-red-100 rounded-full">
-                                        Rejected
-                                    </span>
-                                @endif
-                            </td>
-                            <td class="px-5 py-3 text-center">
-                                <div class="flex justify-center items-center gap-2">
-                                    <a href="{{ route('admin.all-users.edit',$item->id) }}" class="w-8 h-8 flex items-center justify-center bg-blue-500 hover:bg-blue-600 text-white rounded-full shadow-sm transition-all duration-200">
-                                        <i class="fa fa-edit text-xs"></i>
-                                    </a>
-                                    <form id="delete-form-{{$item->id }}" action="{{ route('admin.all-users.destroy',$item->id) }}" method="POST" class="hidden">
+            <div class="card-body p-0">
+                <!-- Table -->
+                <div class=" table-responsive">
+                    <table class="table  table-hover align-middle mb-0">
+                        <thead class="table-light text-uppercase text-muted small">
+                            <tr>
+                                <th>Sl</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Username</th>
+                                <th>Referral</th>
+                                <th>Status</th>
+                                <th class="text-center">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse($data as $item)
+                            <tr>
+                                <td>{{ $loop->iteration }}</td>
+                                <td>{{ $item->fname }} {{ $item->lname }}</td>
+                                <td>{{ $item->email }}</td>
+                                <td>{{ $item->phone }}</td>
+                                <td>{{ $item->username }}</td>
+                                <td>{{ $item->referal_name_id }}</td>
+                                <td>
+                                    @if ($item->status === 'active')
+                                    <span class="badge text-bg-success">Active</span>
+                                    @elseif ($item->status === 'pending')
+                                    <span class="badge text-bg-warning text-dark">Pending</span>
+                                    @elseif ($item->status === 'rejected')
+                                    <span class="badge text-bg-danger">Rejected</span>
+                                    @endif
+                                </td>
+                                <td class="text-center">
+                                    <div class="d-flex justify-content-center gap-2">
+                                        <a href="{{ route('admin.all-users.edit',$item->id) }}" class="btn btn-sm btn-primary p-2 rounded-circle">
+                                            <i class="fa fa-edit text-xs"></i>
+                                        </a>
+                                       
+                                    <form id="delete-form-{{ $item->id }}" action="{{ route('admin.all-users.destroy', $item->id) }}" method="POST" class="d-none">
                                         @csrf
                                         @method('DELETE')
                                     </form>
-                                    <button type="button" data-id="{{$item->id }}" class="w-8 h-8 flex items-center justify-center bg-red-500 hover:bg-red-600 text-white rounded-full shadow-sm transition-all duration-200 delete-btn">
-                                        <i class="fa fa-trash text-xs"></i>
+                                    <button type="button" data-id="{{ $item->id }}" class="btn btn-danger btn-sm delete-btn">
+                                        <i class="fa fa-trash"></i>
                                     </button>
-                                </div>
-                            </td>
-                        </tr>
-                        @endforeach
-                        @if($data->isEmpty())
-                        <tr>
-                            <td colspan="5" class="px-5 py-6 text-center text-gray-500">No brands found.</td>
-                        </tr>
-                        @endif
-                    </tbody>
-                </table>
+                                    </div>
+                                </td>
+                            </tr>
+                            @empty
+                            <tr>
+                                <td colspan="9" class="text-center text-muted py-2">No users found.</td>
+                            </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
             </div>
+
         </div>
     </div>
 </section>
+@endsection
+
+@section('script')
+<script>
+    document.querySelectorAll('.delete-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const id = this.dataset.id;
+            if(confirm('Are you sure you want to delete this category?')) {
+                document.getElementById('delete-form-' + id)?.submit();
+            }
+        });
+    });
+</script>
 @endsection

@@ -3,31 +3,35 @@
 @section('title', 'Request Withdrawal')
 
 @section('content')
-<section class="p-5 bg-gray-100 min-h-screen">
-    <div class="mx-auto max-w-7xl bg-white rounded-2xl shadow-lg overflow-hidden">
+<div class="container py-5 min-vh-100">
 
+    <div class="card shadow-lg rounded-3 mx-auto" style="max-width: 800px;">
         <!-- Header -->
-        <div class="bg-gradient-to-r from-cyan-600 to-cyan-500 px-6 py-4 flex justify-between items-center">
-            <h2 class="text-xl font-semibold text-white">Request Withdrawal</h2>
+        <div class="card-header d-flex justify-content-between align-items-center bg-gradient-purple text-white">
+            <h5 class="mb-0">Request Withdrawal</h5>
         </div>
 
-        <!-- Withdrawal Form -->
-        <div class="p-6">
+        <!-- Form -->
+        <div class="card-body">
             <form action="{{ route('affiliate.withdraw.store') }}" method="POST">
                 @csrf
 
-                <div class="mb-4">
-                    <label for="amount" class="block text-sm font-semibold text-gray-700">Current Balance({{ currency() }})</label>
-                    <input type="text" value="{{ number_format($balance,2) }}" name="balance"  class="w-full px-4 py-2 border border-gray-300 rounded-lg" readonly>
+                <!-- Current Balance -->
+                <div class="mb-3">
+                    <label for="balance" class="form-label">Current Balance ({{ currency() }})</label>
+                    <input type="text" id="balance" name="balance" value="{{ number_format($balance, 2) }}" class="form-control" readonly>
                 </div>
 
-                <div class="mb-4">
-                    <label for="amount" class="block text-sm font-semibold text-gray-700">Amount({{ currency() }})</label>
-                    <input type="number" name="amount" id="amount" class="w-full px-4 py-2 border border-gray-300 rounded-lg" placeholder="Enter amount" required>
+                <!-- Amount -->
+                <div class="mb-3">
+                    <label for="amount" class="form-label">Amount ({{ currency() }})</label>
+                    <input type="number" name="amount" id="amount" class="form-control" placeholder="Enter amount" required>
                 </div>
-                <div class="mb-4">
-                    <label for="payment_method" class="block text-sm font-semibold text-gray-700">Payment Method</label>
-                    <select name="payment_method" id="payment_method" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+
+                <!-- Payment Method -->
+                <div class="mb-3">
+                    <label for="payment_method" class="form-label">Payment Method</label>
+                    <select name="payment_method" id="payment_method" class="form-select" required>
                         <option value="bank">Bank Transfer</option>
                         <option value="paypal">PayPal</option>
                         <option value="stripe">Stripe</option>
@@ -47,20 +51,24 @@
                         <option value="prime_bank">Prime Bank</option>
                         <option value="southeast_bank">Southeast Bank</option>
                     </select>
+                </div>
 
+                <!-- Payment Information -->
+                <div class="mb-3">
+                    <label for="payment_info" class="form-label">Payment Information</label>
+                    <textarea name="payment_info" id="payment_info" rows="3" class="form-control" placeholder="Enter payment details" required></textarea>
                 </div>
-                <div class="mb-4">
-                    <label for="payment_info" class="block text-sm font-semibold text-gray-700">Payment Information</label>
-                    <textarea name="payment_info" id="payment_info" rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-lg" placeholder="Enter payment details" required></textarea>
-                </div>
-                <div class="mb-4">
-                    <button type="submit" class="bg-green-500 text-white px-6 py-2 rounded-lg hover:bg-green-600 transition duration-300">
+
+                <!-- Submit Button -->
+                <div class="text-end">
+                    <button type="submit" class="btn bg-gradient-purple text-light">
                         Request Withdrawal
                     </button>
                 </div>
+
             </form>
         </div>
-
     </div>
-</section>
+
+</div>
 @endsection

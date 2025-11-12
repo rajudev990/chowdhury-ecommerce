@@ -3,86 +3,115 @@
 @section('title', 'Update SMTP Settings')
 
 @section('content')
-<section class="p-5 bg-gray-100 min-h-screen">
-    <div class="mx-auto bg-white rounded-2xl shadow-lg overflow-hidden">
+<div class="container py-5">
+    <div class="card shadow-lg border-0 rounded-4 mx-auto" style="max-width: 1000px; overflow: hidden;">
 
-        <!-- Header -->
-        <div class="bg-gradient-to-r from-cyan-600 to-cyan-500 px-6 py-4 flex justify-between items-center">
-            <h2 class="text-xl font-semibold text-white">
-                Update SMTP Settings
-            </h2>
+        <!-- Card Header -->
+        <div class="card-header text-white bg-gradient-purple d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Update SMTP Settings</h5>
         </div>
 
-        <!-- Form Body -->
-        <div class="p-8">
-            <form method="POST" action="{{ route('admin.smtp.update', $data->id) }}" class="space-y-6">
+        <!-- Card Body -->
+        <div class="card-body">
+            <form action="{{ route('admin.smtp.update', $data->id) }}" method="POST">
                 @csrf
+    
 
-                <div class="grid md:grid-cols-2 gap-6">
-                    <div>
-                        <label class="block text-gray-700 font-medium mb-1">Mailer <span class="text-red-500">*</span></label>
-                        <input type="text" name="mail_mailer" value="{{ old('mail_mailer', $data->mail_mailer) }}"
-                            class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:border-cyan-500 focus:ring-0 outline-none"
-                            placeholder="smtp" required>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label for="mail_mailer" class="form-label">Mailer <span class="text-danger">*</span></label>
+                        <input type="text" name="mail_mailer" id="mail_mailer"
+                            value="{{ old('mail_mailer', $data->mail_mailer) }}"
+                            class="form-control @error('mail_mailer') is-invalid @enderror" placeholder="smtp" required>
+                        @error('mail_mailer')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
 
-                    <div>
-                        <label class="block text-gray-700 font-medium mb-1">SMTP Host <span class="text-red-500">*</span></label>
-                        <input type="text" name="mail_host" value="{{ old('mail_host', $data->mail_host) }}"
-                            class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:border-cyan-500 focus:ring-0 outline-none"
-                            placeholder="smtp.gmail.com" required>
+                    <div class="col-md-6">
+                        <label for="mail_host" class="form-label">SMTP Host <span class="text-danger">*</span></label>
+                        <input type="text" name="mail_host" id="mail_host"
+                            value="{{ old('mail_host', $data->mail_host) }}"
+                            class="form-control @error('mail_host') is-invalid @enderror" placeholder="smtp.gmail.com" required>
+                        @error('mail_host')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
 
-                    <div>
-                        <label class="block text-gray-700 font-medium mb-1">SMTP Port <span class="text-red-500">*</span></label>
-                        <input type="number" name="mail_port" value="{{ old('mail_port', $data->mail_port) }}"
-                            class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:border-cyan-500 focus:ring-0 outline-none"
-                            placeholder="587" required>
+                    <div class="col-md-6">
+                        <label for="mail_port" class="form-label">SMTP Port <span class="text-danger">*</span></label>
+                        <input type="number" name="mail_port" id="mail_port"
+                            value="{{ old('mail_port', $data->mail_port) }}"
+                            class="form-control @error('mail_port') is-invalid @enderror" placeholder="587" required>
+                        @error('mail_port')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
 
-                    <div>
-                        <label class="block text-gray-700 font-medium mb-1">Username <span class="text-red-500">*</span></label>
-                        <input type="text" name="mail_username" value="{{ old('mail_username', $data->mail_username) }}"
-                            class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:border-cyan-500 focus:ring-0 outline-none"
+                    <div class="col-md-6">
+                        <label for="mail_username" class="form-label">Username <span class="text-danger">*</span></label>
+                        <input type="text" name="mail_username" id="mail_username"
+                            value="{{ old('mail_username', $data->mail_username) }}"
+                            class="form-control @error('mail_username') is-invalid @enderror"
                             placeholder="your_email@gmail.com" required>
+                        @error('mail_username')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
 
-                    <div>
-                        <label class="block text-gray-700 font-medium mb-1">Password <span class="text-red-500">*</span></label>
-                        <input type="password" name="mail_password" value="{{ old('mail_password', $data->mail_password) }}"
-                            class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:border-cyan-500 focus:ring-0 outline-none"
+                    <div class="col-md-6">
+                        <label for="mail_password" class="form-label">Password <span class="text-danger">*</span></label>
+                        <input type="password" name="mail_password" id="mail_password"
+                            value="{{ old('mail_password', $data->mail_password) }}"
+                            class="form-control @error('mail_password') is-invalid @enderror"
                             placeholder="Your SMTP password" required>
+                        @error('mail_password')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
 
-                    <div>
-                        <label class="block text-gray-700 font-medium mb-1">Encryption</label>
-                        <input type="text" name="mail_encryption" value="{{ old('mail_encryption', $data->mail_encryption) }}"
-                            class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:border-cyan-500 focus:ring-0 outline-none"
+                    <div class="col-md-6">
+                        <label for="mail_encryption" class="form-label">Encryption</label>
+                        <input type="text" name="mail_encryption" id="mail_encryption"
+                            value="{{ old('mail_encryption', $data->mail_encryption) }}"
+                            class="form-control @error('mail_encryption') is-invalid @enderror"
                             placeholder="tls or ssl">
+                        @error('mail_encryption')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
 
-                    <div>
-                        <label class="block text-gray-700 font-medium mb-1">From Address <span class="text-red-500">*</span></label>
-                        <input type="email" name="mail_from_address" value="{{ old('mail_from_address', $data->mail_from_address) }}"
-                            class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:border-cyan-500 focus:ring-0 outline-none"
+                    <div class="col-md-6">
+                        <label for="mail_from_address" class="form-label">From Address <span class="text-danger">*</span></label>
+                        <input type="email" name="mail_from_address" id="mail_from_address"
+                            value="{{ old('mail_from_address', $data->mail_from_address) }}"
+                            class="form-control @error('mail_from_address') is-invalid @enderror"
                             placeholder="info@yourshop.com" required>
+                        @error('mail_from_address')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
 
-                    <div>
-                        <label class="block text-gray-700 font-medium mb-1">From Name <span class="text-red-500">*</span></label>
-                        <input type="text" name="mail_from_name" value="{{ old('mail_from_name', $data->mail_from_name) }}"
-                            class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:border-cyan-500 focus:ring-0 outline-none"
+                    <div class="col-md-6">
+                        <label for="mail_from_name" class="form-label">From Name <span class="text-danger">*</span></label>
+                        <input type="text" name="mail_from_name" id="mail_from_name"
+                            value="{{ old('mail_from_name', $data->mail_from_name) }}"
+                            class="form-control @error('mail_from_name') is-invalid @enderror"
                             placeholder="My Ecommerce Shop" required>
+                        @error('mail_from_name')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
                 </div>
 
-                <div class="flex justify-end pt-4 border-t">
-                    <button type="submit" class="bg-cyan-600 hover:bg-cyan-700 text-white px-6 py-2 rounded-lg transition">
-                        <i class="fa fa-edit"></i> Update
+                <div class="text-end mt-4">
+                    <button type="submit" class="btn text-white bg-gradient-purple">
+                        <i class="fa fa-edit me-1"></i> Update
                     </button>
                 </div>
+
             </form>
         </div>
     </div>
-</section>
+</div>
 @endsection

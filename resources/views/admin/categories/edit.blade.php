@@ -35,12 +35,12 @@
                 <!-- Category Image -->
                 <div class="mb-3">
                     <label for="image" class="form-label">Category Image</label>
-                    @if($category->image)
+                    <input type="file" name="image" id="image" class="form-control @error('image') is-invalid @enderror">
+                      @if($category->image)
                         <div class="mb-2">
-                            <img src="{{ asset('storage/' . $category->image) }}" alt="Category Image" class="img-thumbnail" style="width:120px; height:120px;">
+                            <img src="{{Storage::url( $category->image) }}" alt="Category Image" class="img-thumbnail" style="width:120px; height:120px;">
                         </div>
                     @endif
-                    <input type="file" name="image" id="image" class="form-control @error('image') is-invalid @enderror">
                     @error('image')
                     <div class="invalid-feedback">{{ $message }}</div>
                     @enderror

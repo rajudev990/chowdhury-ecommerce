@@ -3,68 +3,98 @@
 @section('title', 'Colors List')
 
 @section('content')
-<section class="py-6 px-3 bg-gray-100 min-h-screen">
-    <div class="max-w-7xl mx-auto">
-        <div class="bg-white shadow-lg rounded-2xl overflow-hidden border border-gray-100">
+<div class="container-fluid py-4">
+    {{-- Card Wrapper --}}
+    <div class="card shadow-lg rounded-3">
+        {{-- Card Header --}}
+        <div class="card-header d-flex justify-content-between align-items-center bg-gradient-purple text-white">
+            <h5 class="mb-0">Colors List</h5>
+            <a href="{{ route('admin.colors.create') }}" class="btn btn-light btn-sm">
+                <i class="fa fa-plus me-1"></i> Add Color
+            </a>
+        </div>
 
-            <!-- Header -->
-            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between bg-cyan-600 px-6 py-4 text-white">
-                <h3 class="text-xl font-semibold tracking-wide">Colors List</h3>
-                <a href="{{ route('admin.colors.create') }}" class="mt-3 sm:mt-0 inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white font-medium px-4 py-2 rounded-lg transition-all duration-200 shadow-sm">
-                    <i class="fa fa-plus"></i> Add Color
-                </a>
-            </div>
-
-            <!-- Table -->
-            <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200 text-sm">
-                    <thead class="bg-gray-50">
-                        <tr class="text-left text-gray-600 font-semibold uppercase tracking-wider text-xs">
-                            <th class="px-5 py-3">Sl</th>
-                            <th class="px-5 py-3">Name</th>
-                            <th class="px-5 py-3">Code</th>
-                            <th class="px-5 py-3">Status</th>
-                            <th class="px-5 py-3 text-center">Action</th>
+        {{-- Card Body --}}
+        <div class="card-body p-0">
+            {{-- Responsive Table --}}
+            <div class="table-responsive">
+                <table class="table table-striped table-hover align-middle mb-0">
+                    <thead class="table-light text-uppercase small">
+                        <tr>
+                            <th scope="col">Sl</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Code</th>
+                            <th scope="col">Status</th>
+                            <th scope="col" class="text-center">Action</th>
                         </tr>
                     </thead>
-                    <tbody class="bg-white divide-y divide-gray-100">
-                        @foreach($colors as $color)
-                        <tr class="hover:bg-gray-50 transition-colors duration-150">
-                            <td class="px-5 py-3">{{ $loop->iteration }}</td>
-                            <td class="px-5 py-3 font-medium">{{ $color->name }}</td>
-                            <td class="px-5 py-3 font-medium">{{ $color->code }}</td>
-                            <td class="px-5 py-3">
-                                <span class="inline-block px-2 py-1 text-xs font-semibold rounded-full {{ $color->status == 1 ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700' }}">
+                    <tbody>
+                        @forelse($colors as $color)
+                        <tr>
+                            <td>{{ $loop->iteration }}</td>
+                            <td>{{ $color->name }}</td>
+                            <td>
+                                    {{ $color->code }}
+                            </td>
+                            <td>
+                                <span class="badge {{ $color->status == 1 ? 'bg-success' : 'bg-danger' }}">
                                     {{ $color->status == 1 ? 'Active' : 'Inactive' }}
                                 </span>
                             </td>
-                            <td class="px-5 py-3 text-center flex justify-center gap-2">
-                                <a href="{{ route('admin.colors.edit', $color->id) }}" class="w-8 h-8 flex items-center justify-center bg-blue-500 hover:bg-blue-600 text-white rounded-full shadow-sm transition-all duration-200">
-                                    <i class="fa fa-edit text-xs"></i>
-                                </a>
-                                <form action="{{ route('admin.colors.destroy', $color->id) }}" method="POST" class="hidden" id="delete-form-{{ $color->id }}">
-                                    @csrf
-                                    @method('DELETE')
-                                </form>
-                                <button type="button" data-id="{{ $color->id }}" class="w-8 h-8 flex items-center justify-center bg-red-500 hover:bg-red-600 text-white rounded-full shadow-sm transition-all duration-200 delete-btn">
-                                    <i class="fa fa-trash text-xs"></i>
-                                </button>
+                            <td class="text-center">
+                                <div class="d-flex justify-content-center gap-2 flex-wrap">
+                                    <a href="{{ route('admin.colors.edit', $color->id) }}" 
+                                       class="btn btn-primary btn-sm">
+                                        <i class="fa fa-edit"></i>
+                                    </a>
+
+                                    <form id="delete-form-{{ $color->id }}" 
+                                          action="{{ route('admin.colors.destroy', $color->id) }}" 
+                                          method="POST" 
+                                          class="d-none">
+                                        @csrf
+                                        @method('DELETE')
+                                    </form>
+
+                                    <button type="button" 
+                                            data-id="{{ $color->id }}" 
+                                            class="btn btn-danger btn-sm delete-btn">
+                                        <i class="fa fa-trash"></i>
+                                    </button>
+                                </div>
                             </td>
                         </tr>
-                        @endforeach
-                        @if($colors->isEmpty())
+                        @empty
                         <tr>
-                            <td colspan="5" class="px-5 py-6 text-center text-gray-500">No colors found.</td>
+                            <td colspan="5" class="text-center text-muted py-4">
+                                No colors found.
+                            </td>
                         </tr>
-                        @endif
+                        @endforelse
                     </tbody>
                 </table>
             </div>
+        </div>
 
-            <div class="p-4">
+        {{-- Pagination --}}
+        <div class="card-footer bg-white border-0">
+            <div class="d-flex justify-content-center">
                 {{ $colors->links() }}
             </div>
         </div>
     </div>
-</section>
+</div>
+@endsection
+
+@section('script')
+<script>
+    document.querySelectorAll('.delete-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const id = this.dataset.id;
+            if (confirm('Are you sure you want to delete this color?')) {
+                document.getElementById('delete-form-' + id)?.submit();
+            }
+        });
+    });
+</script>
 @endsection

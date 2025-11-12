@@ -3,86 +3,75 @@
 @section('title', 'All Orders')
 
 @section('content')
-<section class="py-6 px-3 bg-gray-100 min-h-screen">
-    <div class="max-w-7xl mx-auto">
-        <div class="bg-white shadow-lg rounded-2xl overflow-hidden border border-gray-100">
+<section class="py-5 bg-light min-vh-100">
+    <div class="container">
+        <div class="card shadow rounded-3">
 
             <!-- Header -->
-            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between bg-cyan-600 px-6 py-4 text-white">
-                <h3 class="text-xl font-semibold tracking-wide">All  Orders</h3>
+            <div class="card-header bg-gradient-purple text-white d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">All Orders</h5>
             </div>
 
             <!-- Table (Desktop) -->
-            <div class="hidden md:block overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200 text-sm">
-                    <thead class="bg-gray-50">
-                        <tr class="text-left text-gray-600 font-semibold uppercase tracking-wider text-xs">
-                            <th class="px-5 py-3">SL</th>
-                            <th class="px-5 py-3">Order ID</th>
-                            <th class="px-5 py-3">Customer</th>
-                            <th class="px-5 py-3">Total</th>
-                            <th class="px-5 py-3">Payment Method</th>
-                            <th class="px-5 py-3">Status</th>
-                            <th class="px-5 py-3">Payment Status</th>
-                            <th class="px-5 py-3 text-center">Action</th>
+            <div class="table-responsive d-none d-md-block">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light text-uppercase small">
+                        <tr>
+                            <th scope="col">SL</th>
+                            <th scope="col">Order ID</th>
+                            <th scope="col">Customer</th>
+                            <th scope="col">Total</th>
+                            <th scope="col">Payment Method</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Payment Status</th>
+                            <th scope="col" class="text-center">Action</th>
                         </tr>
                     </thead>
-                    <tbody class="bg-white divide-y divide-gray-100">
+                    <tbody>
                         @foreach($orders as $order)
-                        <tr class="hover:bg-gray-50 transition-colors duration-150">
-                            <td class="px-5 py-3 text-gray-700 font-medium">{{ $loop->iteration }}</td>
-                            <td class="px-5 py-3 font-semibold text-gray-800 uppercase">{{ $order->order_id }}</td>
-                            <td class="px-5 py-3 text-gray-700">{{ $order->user->name ?? 'Guest' }}</td>
-                            <td class="px-5 py-3 text-gray-800 font-semibold">{{currency()}}{{ number_format($order->total, 2) }}</td>
-                            <td class="px-5 py-3 text-gray-600 capitalize">{{ $order->payment_method ?? 'N/A' }}</td>
-
-                            <!-- Order Status -->
-                            <td class="px-5 py-3">
-                                @php
-                                    $statusColors = [
-                                        'pending' => 'bg-gray-100 text-gray-700',
-                                        'processing' => 'bg-blue-100 text-blue-700',
-                                        'on the way' => 'bg-indigo-100 text-indigo-700',
-                                        'on hold' => 'bg-indigo-100 text-indigo-700',
-                                        'completed' => 'bg-green-100 text-green-700',
-                                        'cancelled' => 'bg-red-100 text-red-700',
-                                    ];
-                                @endphp
-                                <span class="inline-block px-2 py-1 text-xs font-semibold rounded-full {{ $statusColors[$order->status] ?? 'bg-gray-100 text-gray-700' }}">
+                        @php
+                            $statusColors = [
+                                'pending' => 'bg-secondary text-white',
+                                'processing' => 'bg-primary text-white',
+                                'on the way' => 'bg-info text-white',
+                                'on hold' => 'bg-warning text-dark',
+                                'completed' => 'bg-success text-white',
+                                'cancelled' => 'bg-danger text-white',
+                            ];
+                            $payColors = [
+                                'paid' => 'bg-success text-white',
+                                'unpaid' => 'bg-danger text-white',
+                                'pending' => 'bg-secondary text-white',
+                            ];
+                        @endphp
+                        <tr>
+                            <td>{{ $loop->iteration }}</td>
+                            <td class="text-uppercase">{{ $order->order_id }}</td>
+                            <td>{{ $order->user->name ?? 'Guest' }}</td>
+                            <td>{{ currency() }}{{ number_format($order->total, 2) }}</td>
+                            <td class="text-capitalize">{{ $order->payment_method ?? 'N/A' }}</td>
+                            <td>
+                                <span class="badge {{ $statusColors[$order->status] ?? 'bg-secondary text-white' }}">
                                     {{ \Illuminate\Support\Str::title($order->status) }}
                                 </span>
                             </td>
-
-                            <!-- Payment Status -->
-                            <td class="px-5 py-3">
-                                @php
-                                    $payColors = [
-                                        'paid' => 'bg-green-100 text-green-700',
-                                        'unpaid' => 'bg-red-100 text-red-700',
-                                        'pending' => 'bg-gray-100 text-gray-700',
-                                    ];
-                                @endphp
-                                <span class="inline-block px-2 py-1 text-xs font-semibold rounded-full {{ $payColors[$order->payment_status] ?? 'bg-gray-100 text-gray-700' }}">
+                            <td>
+                                <span class="badge {{ $payColors[$order->payment_status] ?? 'bg-secondary text-white' }}">
                                     {{ ucfirst($order->payment_status) }}
                                 </span>
                             </td>
-
-                            <!-- Action -->
-                            <td class="px-5 py-3 text-center">
-                                <div class="flex justify-center items-center gap-2">
-                                  <a href="{{ route('vendor.orders.show', $order->id) }}"
-                                    class="w-8 h-8 flex items-center justify-center bg-green-500 hover:bg-green-600 text-white rounded-full shadow-sm transition">
-                                        <i class="fas fa-eye text-xs"></i>
-                                  </a>
-
-                                </div>
+                            <td class="text-center">
+                                <a href="{{ route('vendor.orders.show', $order->id) }}" 
+                                   class="btn btn-success btn-sm">
+                                    <i class="fas fa-eye"></i>
+                                </a>
                             </td>
                         </tr>
                         @endforeach
 
                         @if($orders->isEmpty())
                         <tr>
-                            <td colspan="8" class="px-5 py-6 text-center text-gray-500">No orders found.</td>
+                            <td colspan="9" class="text-center text-muted py-2">No orders found.</td>
                         </tr>
                         @endif
                     </tbody>
@@ -90,33 +79,37 @@
             </div>
 
             <!-- Mobile (Card View) -->
-            <div class="md:hidden divide-y divide-gray-100">
+            <div class="d-md-none">
                 @foreach($orders as $order)
-                <div class="p-4 hover:bg-gray-50 transition">
-                    <div class="flex justify-between items-center mb-2">
-                        <h4 class="text-gray-800 font-semibold text-base">#{{ $order->order_id }}</h4>
-                        <div class="flex gap-2">
-                            <a href="{{ route('vendor.orders.show', $order->id) }}"
-                                class="w-8 h-8 flex items-center justify-center bg-green-500 hover:bg-green-600 text-white rounded-full">
-                                <i class="fas fa-eye text-xs"></i>
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <h6 class="card-title mb-0">#{{ $order->order_id }}</h6>
+                            <a href="{{ route('vendor.orders.show', $order->id) }}" class="btn btn-success btn-sm">
+                                <i class="fas fa-eye"></i>
                             </a>
                         </div>
+                        <p class="mb-1"><strong>Customer:</strong> {{ $order->user->name ?? 'Guest' }}</p>
+                        <p class="mb-1"><strong>Total:</strong> {{ currency() }}{{ number_format($order->total, 2) }}</p>
+                        <p class="mb-1"><strong>Payment:</strong> {{ ucfirst($order->payment_method ?? 'N/A') }}</p>
+                        <p class="mb-1">
+                            <strong>Status:</strong> 
+                            <span class="badge {{ $statusColors[$order->status] ?? 'bg-secondary text-white' }}">
+                                {{ ucfirst($order->status) }}
+                            </span>
+                        </p>
+                        <p class="mb-0">
+                            <strong>Payment Status:</strong> 
+                            <span class="badge {{ $payColors[$order->payment_status] ?? 'bg-secondary text-white' }}">
+                                {{ ucfirst($order->payment_status) }}
+                            </span>
+                        </p>
                     </div>
-
-                    <p class="text-gray-600 text-sm mb-1"><span class="font-medium">Customer:</span> {{ $order->user->name ?? 'Guest' }}</p>
-                    <p class="text-gray-600 text-sm mb-1"><span class="font-medium">Total:</span> {{currency()}}{{ number_format($order->total, 2) }}</p>
-                    <p class="text-gray-600 text-sm mb-1"><span class="font-medium">Payment:</span> {{ ucfirst($order->payment_method ?? 'N/A') }}</p>
-                    <p class="text-gray-600 text-sm mb-1">
-                        <span class="font-medium">Status:</span>
-                        <span class="inline-block px-2 py-1 text-xs font-semibold rounded-full {{ $statusColors[$order->status] ?? 'bg-gray-100 text-gray-700' }}">
-                            {{ ucfirst($order->status) }}
-                        </span>
-                    </p>
                 </div>
                 @endforeach
 
                 @if($orders->isEmpty())
-                <div class="p-6 text-center text-gray-500">No orders found.</div>
+                <div class="text-center text-muted py-4">No orders found.</div>
                 @endif
             </div>
 

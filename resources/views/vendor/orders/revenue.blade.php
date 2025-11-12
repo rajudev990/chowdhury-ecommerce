@@ -3,92 +3,89 @@
 @section('title', 'Revenue')
 
 @section('content')
-<section class="py-6 px-3 bg-gray-100 min-h-screen">
-    <div class="max-w-7xl mx-auto">
-        <div class="bg-white shadow-lg rounded-2xl overflow-hidden border border-gray-100">
+<section class="py-5 bg-light min-vh-100">
+    <div class="container">
+        <div class="card shadow rounded-3">
 
-           <!-- Header -->
-        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between bg-cyan-600 px-6 py-4 text-white rounded-t-xl mb-4">
-            <h3 class="text-xl font-semibold tracking-wide">Revenue</h3>
-            
-            
-            <div class="mt-2 sm:mt-0 bg-white text-gray-800 px-4 py-2 rounded-lg font-semibold shadow">
-                My Balance: {{ currency() }}{{ number_format($balance,2) }}
+            <!-- Header -->
+            <div class="card-header bg-gradient-purple text-white d-flex flex-column flex-sm-row justify-content-between align-items-center">
+                <h3 class="mb-2 mb-sm-0">Revenue</h3>
+                <div class="bg-white text-dark px-3 py-1 rounded shadow fw-semibold">
+                    My Balance: {{ currency() }}{{ number_format($balance,2) }}
+                </div>
             </div>
-        </div>
+
             <!-- Desktop Table -->
-            <div class="hidden md:block overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200 text-sm">
-                    <thead class="bg-gray-50">
-                        <tr class="text-left text-gray-600 font-semibold uppercase tracking-wider text-xs">
-                            <th class="px-5 py-3">SL</th>
-                            <th class="px-5 py-3">Order ID</th>
-                            <th class="px-5 py-3">Product</th>
-                            <th class="px-5 py-3">Quantity</th>
-                            <th class="px-5 py-3">Price({{currency()}})</th>
-                            <th class="px-5 py-3">Total({{currency()}})</th>
-                            <th class="px-5 py-3">Payment Status</th>
+            <div class="table-responsive d-none d-md-block">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light text-uppercase text-muted small">
+                        <tr class="text-center">
+                            <th>SL</th>
+                            <th>Order ID</th>
+                            <th>Product</th>
+                            <th>Quantity</th>
+                            <th>Price({{currency()}})</th>
+                            <th>Total({{currency()}})</th>
+                            <th>Payment Status</th>
                         </tr>
                     </thead>
-                    <tbody class="bg-white divide-y divide-gray-100">
+                    <tbody>
                         @php $sl = 1; @endphp
-                        @foreach($orders as $order)
+                        @forelse($orders as $order)
                             @foreach($order->orderItems as $item)
-                            <tr class="hover:bg-gray-50 transition-colors duration-150">
-                                <td class="px-5 py-3 text-gray-700 font-medium">{{ $sl++ }}</td>
-                                <td class="px-5 py-3 font-semibold text-gray-800 uppercase">{{ $order->order_id }}</td>
-                                <td class="px-5 py-3 text-gray-700">{{ $item->product->name ?? '-' }}</td>
-                                <td class="px-5 py-3 text-gray-700">{{ $item->quantity }}</td>
-                                <td class="px-5 py-3 text-gray-700">{{currency()}}{{ number_format($item->price, 2) }}</td>
-                                <td class="px-5 py-3 text-gray-800 font-semibold">{{currency()}}{{ number_format($item->price * $item->quantity, 2) }}</td>
-                                <td class="px-5 py-3">
-                                    <span class="px-3 py-1 rounded-full text-sm font-semibold
-                                        @if($order->payment_status === 'paid') bg-green-100 text-green-700
-                                        @elseif($order->payment_status === 'pending') bg-yellow-100 text-yellow-700
-                                        @else bg-red-100 text-red-700 @endif">
+                            <tr class="text-center align-middle">
+                                <td>{{ $sl++ }}</td>
+                                <td class="text-uppercase fw-semibold">{{ $order->order_id }}</td>
+                                <td>{{ $item->product->name ?? '-' }}</td>
+                                <td>{{ $item->quantity }}</td>
+                                <td>{{ currency() }}{{ number_format($item->price, 2) }}</td>
+                                <td class="fw-semibold">{{ currency() }}{{ number_format($item->price * $item->quantity, 2) }}</td>
+                                <td>
+                                    <span class="badge
+                                        @if($order->payment_status === 'paid') bg-success
+                                        @elseif($order->payment_status === 'pending') bg-warning text-dark
+                                        @else bg-danger @endif">
                                         {{ ucfirst($order->payment_status) }}
                                     </span>
                                 </td>
                             </tr>
                             @endforeach
-                        @endforeach
-
-                        @if($orders->isEmpty())
+                        @empty
                         <tr>
-                            <td colspan="7" class="px-5 py-6 text-center text-gray-500">No revenue found.</td>
+                            <td colspan="7" class="text-center text-muted py-4">No revenue found.</td>
                         </tr>
-                        @endif
+                        @endforelse
                     </tbody>
                 </table>
             </div>
 
             <!-- Mobile Card View -->
-            <div class="md:hidden divide-y divide-gray-100">
+            <div class="d-md-none">
                 @php $sl = 1; @endphp
-                @foreach($orders as $order)
+                @forelse($orders as $order)
                     @foreach($order->orderItems as $item)
-                    <div class="p-4 hover:bg-gray-50 transition">
-                        <div class="flex justify-between items-center mb-2">
-                            <h4 class="text-gray-800 font-semibold text-base">#{{ $order->order_id }}</h4>
-                            <span class="px-2 py-1 rounded-full text-xs font-semibold
-                                @if($order->payment_status === 'paid') bg-green-100 text-green-700
-                                @elseif($order->payment_status === 'pending') bg-yellow-100 text-yellow-700
-                                @else bg-red-100 text-red-700 @endif">
-                                {{ ucfirst($order->payment_status) }}
-                            </span>
+                    <div class="card mb-3 shadow-sm">
+                        <div class="card-body p-3">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <h5 class="card-title mb-0">#{{ $order->order_id }}</h5>
+                                <span class="badge
+                                    @if($order->payment_status === 'paid') bg-success
+                                    @elseif($order->payment_status === 'pending') bg-warning text-dark
+                                    @else bg-danger @endif">
+                                    {{ ucfirst($order->payment_status) }}
+                                </span>
+                            </div>
+                            <p class="mb-1"><strong>SL:</strong> {{ $sl++ }}</p>
+                            <p class="mb-1"><strong>Product:</strong> {{ $item->product->name ?? '-' }}</p>
+                            <p class="mb-1"><strong>Quantity:</strong> {{ $item->quantity }}</p>
+                            <p class="mb-1"><strong>Price:</strong> {{ currency() }}{{ number_format($item->price,2) }}</p>
+                            <p class="mb-0"><strong>Total:</strong> {{ currency() }}{{ number_format($item->price * $item->quantity,2) }}</p>
                         </div>
-                        <p class="text-gray-600 text-sm mb-1"><span class="font-medium">SL:</span> {{ $sl++ }}</p>
-                        <p class="text-gray-600 text-sm mb-1"><span class="font-medium">Product:</span> {{ $item->product->name ?? '-' }}</p>
-                        <p class="text-gray-600 text-sm mb-1"><span class="font-medium">Quantity:</span> {{ $item->quantity }}</p>
-                        <p class="text-gray-600 text-sm mb-1"><span class="font-medium">Price:</span> {{currency()}}{{ number_format($item->price,2) }}</p>
-                        <p class="text-gray-600 text-sm mb-1"><span class="font-medium">Total:</span> {{currency()}}{{ number_format($item->price * $item->quantity,2) }}</p>
                     </div>
                     @endforeach
-                @endforeach
-
-                @if($orders->isEmpty())
-                <div class="p-6 text-center text-gray-500">No revenue found.</div>
-                @endif
+                @empty
+                <div class="text-center text-muted py-2">No revenue found.</div>
+                @endforelse
             </div>
 
         </div>

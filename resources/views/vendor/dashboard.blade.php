@@ -1,83 +1,84 @@
 @extends('vendor.layouts.app')
-
 @section('title','Dashboard')
 
 @section('content')
 
-<div class="content-header px-4 py-4">
-    <div class="container mx-auto">
-        <div class="flex flex-col md:flex-row md:justify-between md:items-center mb-4">
-            <h1 class="text-2xl font-bold text-gray-800 mb-2 md:mb-0">Dashboard</h1>
-            <nav class="text-gray-500 text-sm">
-                <ol class="flex space-x-2">
-                    <li><a href="{{ route('dashboard') }}" class="hover:text-gray-700">Home</a></li>
-                    <li>/</li>
-                    <li class="text-gray-700 font-semibold">Dashboard</li>
-                </ol>
-            </nav>
+<div class="container-fluid py-4">
+    <!-- Header -->
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4">
+        <h1 class="h3 fw-bold text-dark mb-2 mb-md-0">Dashboard</h1>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="{{ route('vendor.dashboard') }}">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
+            </ol>
+        </nav>
+    </div>
+
+    <!-- Stat Cards -->
+    <div class="row g-4">
+
+        <!-- Total Orders -->
+        <div class="col-sm-6 col-lg-3">
+            <div class="card text-white bg-gradient-purple shadow-sm h-100">
+                <div class="card-body d-flex justify-content-between align-items-center">
+                    <div>
+                        <p class="mb-1 small text-uppercase">Total Orders</p>
+                        <h4 class="fw-bold">{{ $orders }}</h4>
+                    </div>
+                    <div class="bg-dark bg-opacity-25 p-3 rounded-circle">
+                        <i class="fas fa-shopping-cart fs-5"></i>
+                    </div>
+                </div>
+            </div>
         </div>
+
+        <!-- Pending Orders -->
+        <div class="col-sm-6 col-lg-3">
+            <div class="card text-white bg-warning shadow-sm h-100">
+                <div class="card-body d-flex justify-content-between align-items-center">
+                    <div>
+                        <p class="mb-1 small text-uppercase">Pending Orders</p>
+                        <h4 class="fw-bold">{{ currency() }}{{ number_format($pending_orders, 2) }}</h4>
+                    </div>
+                    <div class="bg-dark bg-opacity-25 p-3 rounded-circle">
+                        <i class="fas fa-hourglass-half fs-5"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Completed Orders -->
+        <div class="col-sm-6 col-lg-3">
+            <div class="card text-white bg-success shadow-sm h-100">
+                <div class="card-body d-flex justify-content-between align-items-center">
+                    <div>
+                        <p class="mb-1 small text-uppercase">Completed Orders</p>
+                        <h4 class="fw-bold">{{ currency() }}{{ number_format($complete_orders, 2) }}</h4>
+                    </div>
+                    <div class="bg-dark bg-opacity-25 p-3 rounded-circle">
+                        <i class="fas fa-check-circle fs-5"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Revenue -->
+        <div class="col-sm-6 col-lg-3">
+            <div class="card text-white bg-primary shadow-sm h-100">
+                <div class="card-body d-flex justify-content-between align-items-center">
+                    <div>
+                        <p class="mb-1 small text-uppercase">Revenue</p>
+                        <h4 class="fw-bold">{{ currency() }}{{ number_format($revenue, 2) }}</h4>
+                    </div>
+                    <div class="bg-dark bg-opacity-25 p-3 rounded-circle">
+                        <i class="fas fa-dollar-sign fs-5"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 </div>
 
-
-
-<section class="content px-4 py-4">
-    <div class="container mx-auto">
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-
-            <!-- Total Orders -->
-            <div class="bg-gradient-to-r from-purple-600 to-purple-500 text-white p-5 rounded-2xl shadow hover:scale-105 transform transition">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-sm font-medium uppercase">Total Orders</p>
-                        <h3 class="text-2xl font-bold mt-2">{{ $orders }}</h3>
-                    </div>
-                    <div class="bg-purple-700 p-3 rounded-full">
-                        <i class="fas fa-shopping-cart text-white text-xl"></i>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Pending Orders -->
-            <div class="bg-gradient-to-r from-yellow-500 to-yellow-400 text-white p-5 rounded-2xl shadow hover:scale-105 transform transition">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-sm font-medium uppercase">Pending Orders</p>
-                        <h3 class="text-2xl font-bold mt-2">{{ $pending_orders }}</h3>
-                    </div>
-                    <div class="bg-yellow-600 p-3 rounded-full">
-                        <i class="fas fa-hourglass-half text-white text-xl"></i>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Completed Orders -->
-            <div class="bg-gradient-to-r from-green-600 to-green-500 text-white p-5 rounded-2xl shadow hover:scale-105 transform transition">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-sm font-medium uppercase">Completed Orders</p>
-                        <h3 class="text-2xl font-bold mt-2">{{ $complete_orders }}</h3>
-                    </div>
-                    <div class="bg-green-700 p-3 rounded-full">
-                        <i class="fas fa-check-circle text-white text-xl"></i>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Revenue -->
-            <div class="bg-gradient-to-r from-blue-600 to-blue-500 text-white p-5 rounded-2xl shadow hover:scale-105 transform transition">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-sm font-medium uppercase">Revenue</p>
-                        <h3 class="text-2xl font-bold mt-2">${{ number_format($revenue, 2) }}</h3>
-                    </div>
-                    <div class="bg-blue-700 p-3 rounded-full">
-                        <i class="fas fa-dollar-sign text-white text-xl"></i>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-    </div>
-</section>
 @endsection

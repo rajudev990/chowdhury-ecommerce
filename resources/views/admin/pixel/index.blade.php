@@ -3,71 +3,63 @@
 @section('title', 'Update Pixels')
 
 @section('content')
-<section class="p-5 bg-gray-100 min-h-screen">
-    <div class="mx-auto bg-white rounded-2xl shadow-lg overflow-hidden">
+<div class="container py-5">
+    <div class="card shadow-lg border-0 rounded-4 mx-auto" style="max-width: 900px; overflow: hidden;">
 
-        <!-- Header -->
-        <div class="bg-gradient-to-r from-cyan-600 to-cyan-500 px-6 py-4 flex justify-between items-center">
-            <h2 class="text-xl font-semibold text-white">
-                Update Pixels
-            </h2>
+        <!-- Card Header -->
+        <div class="card-header text-white bg-gradient-purple d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Update Pixels</h5>
         </div>
 
-        <!-- Form Body -->
-        <div class="p-8">
-            <form method="POST" action="{{ route('admin.pixel.update', $data->id) }}" class="space-y-6">
+        <!-- Card Body -->
+        <div class="card-body">
+            <form action="{{ route('admin.pixel.update', $data->id) }}" method="POST">
                 @csrf
+                @method('PUT')
 
-                <div class="grid md:grid-cols-3 gap-6">
-                    <div>
-                        <label class="block text-gray-700 font-medium mb-1">
-                            Pixel Name <span class="text-red-500">*</span>
-                        </label>
-                        <input type="text" name="pixel_name"
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <label for="pixel_name" class="form-label">Pixel Name <span class="text-danger">*</span></label>
+                        <input type="text" name="pixel_name" id="pixel_name"
                             value="{{ old('pixel_name', $data->pixel_name) }}"
-                            class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:border-indigo-500 focus:ring-0 outline-none"
+                            class="form-control @error('pixel_name') is-invalid @enderror"
                             placeholder="Enter Pixel Name" required>
                         @error('pixel_name')
-                        <span class="text-red-500 text-sm">{{ $message }}</span>
+                        <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
 
-                    <div>
-                        <label class="block text-gray-700 font-medium mb-1">
-                            Pixel ID <span class="text-red-500">*</span>
-                        </label>
-                        <input type="text" name="pixel_id"
+                    <div class="col-md-4">
+                        <label for="pixel_id" class="form-label">Pixel ID <span class="text-danger">*</span></label>
+                        <input type="text" name="pixel_id" id="pixel_id"
                             value="{{ old('pixel_id', $data->pixel_id) }}"
-                            class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:border-indigo-500 focus:ring-0 outline-none"
+                            class="form-control @error('pixel_id') is-invalid @enderror"
                             placeholder="Enter Pixel ID" required>
                         @error('pixel_id')
-                        <span class="text-red-500 text-sm">{{ $message }}</span>
+                        <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
 
-
-                     <div>
-                        <label class="block text-gray-700 font-medium mb-1">
-                           Pixel Code <span class="text-red-500">*</span>
-                        </label>
-                        <input type="text" name="pixel_code"
+                    <div class="col-md-4">
+                        <label for="pixel_code" class="form-label">Pixel Code <span class="text-danger">*</span></label>
+                        <input type="text" name="pixel_code" id="pixel_code"
                             value="{{ old('pixel_code', $data->pixel_code) }}"
-                            class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:border-indigo-500 focus:ring-0 outline-none"
+                            class="form-control @error('pixel_code') is-invalid @enderror"
                             placeholder="Enter Pixel Code" required>
                         @error('pixel_code')
-                        <span class="text-red-500 text-sm">{{ $message }}</span>
+                        <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
                 </div>
 
-                <div class="flex justify-end pt-4 border-t">
-                    <button type="submit"
-                        class="bg-cyan-600 hover:bg-cyan-700 text-white px-6 py-2 rounded-lg transition">
-                        <i class="fa fa-edit"></i> Update
+                <div class="text-end mt-4">
+                    <button type="submit" class="btn text-white bg-gradient-purple">
+                        <i class="fa fa-edit me-1"></i> Update
                     </button>
                 </div>
+
             </form>
         </div>
     </div>
-</section>
+</div>
 @endsection

@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\AffiliateWithdrawController;
 use App\Http\Controllers\Admin\Auth\LoginController;
 use App\Http\Controllers\Admin\BannarController;
 use App\Http\Controllers\Admin\BrandController;
+use App\Http\Controllers\Admin\CampingController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ColorController;
 use App\Http\Controllers\Admin\CouponController;
@@ -87,6 +88,7 @@ Route::prefix('admin')
         Route::get('marketing/setup', [WebController::class, 'marketingSetup'])->name('marketing.setup');
         Route::post('facebook/{id}', [WebController::class, 'facebook'])->name('facebook.update');
         Route::post('google/{id}', [WebController::class, 'google'])->name('google.update');
+        Route::post('tag-manager/{id}', [WebController::class, 'TagManager'])->name('tag-manager.update');
 
         // PAYMENT SETUP PAGE
         Route::get('payment/setup', [WebController::class, 'paymentSetup'])->name('payment.setup');
@@ -119,7 +121,7 @@ Route::prefix('admin')
 
 
         Route::post('/orders/{order}/{courier}', [App\Http\Controllers\Admin\OrderController::class, 'assignCourier'])->name('orders.courier');
-    Route::post('/orders/{order}/fraud-check', [App\Http\Controllers\Admin\OrderController::class, 'fraudCheck'])->name('orders.fraudCheck');
+        Route::post('/orders/{order}/fraud-check', [App\Http\Controllers\Admin\OrderController::class, 'fraudCheck'])->name('orders.fraudCheck');
        
        Route::get('stock-report', [OrderController::class,'stock_report'])->name('stock_report');
        Route::get('order-report', [OrderController::class,'order_report'])->name('order_report');
@@ -141,6 +143,8 @@ Route::prefix('admin')
 
         Route::resource('marketer-withdraw', AffiliateWithdrawController::class);
         Route::post('marketer-withdraw/{id}/status', [AffiliateWithdrawController::class, 'updateStatus'])->name('marketer-withdraw.updateStatus');
+
+        Route::resource('campings',CampingController::class);
 
 
 

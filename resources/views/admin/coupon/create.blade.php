@@ -1,79 +1,63 @@
 @extends('admin.layouts.app')
 
-@section('title')
-Create Coupons
-@endsection
+@section('title', 'Create Coupon')
 
 @section('content')
-<section class="p-5 bg-gray-100 min-h-screen">
-    <div class="mx-auto bg-white rounded-2xl shadow-lg overflow-hidden">
+<div class="container py-5">
+    <div class="card shadow-lg border-0 rounded-4 mx-auto" style="max-width: 700px; overflow: hidden;">
 
-        <!-- Header -->
-        <div class="bg-gradient-to-r from-cyan-600 to-cyan-500 px-6 py-4 flex justify-between items-center">
-            <h2 class="text-xl font-semibold text-white">
-                Coupons Create
-            </h2>
-            <a href="{{ route('admin.coupons.index') }}"
-                class="bg-white/20 hover:bg-white/30 text-white px-4 py-1.5 rounded-lg transition flex items-center gap-1">
-                <i class="fa fa-angle-left"></i> Back
+        <!-- Card Header -->
+        <div class="card-header text-white bg-gradient-purple d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Create Coupon</h5>
+            <a href="{{ route('admin.coupons.index') }}" class="btn btn-light btn-sm">
+                <i class="fa fa-angle-left me-1"></i> Back
             </a>
         </div>
 
-        <!-- Form Body -->
-        <div class="p-8">
-            <form method="POST"
-                action="{{route('admin.coupons.store') }}"
-                class="space-y-6">
+        <!-- Card Body -->
+        <div class="card-body">
+            <form action="{{ route('admin.coupons.store') }}" method="POST">
                 @csrf
-                @method('POST')
-                <div class="grid md:grid-cols-2 gap-6">
-                    <div>
-                        <label class="block text-gray-700 font-medium mb-1">
-                            Coupon Code <span class="text-red-500">*</span>
-                        </label>
-                        <input type="text" name="coupon_code"
-                            value="{{ old('coupon_code') }}"
-                            class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:border-cyan-500 focus:ring-0 outline-none"
-                            placeholder="Enter Coupons Code" required>
-                        @error('coupon_code')
-                        <span class="text-danger">{{$message}}</span>
-                        @enderror
-                    </div>
 
-                    <div>
-                        <label class="block text-gray-700 font-medium mb-1">
-                            Coupon Amount (%)<span class="text-red-500">*</span>
-                        </label>
-                        <input type="number" name="amount"
-                            value="{{ old('amount') }}"
-                            class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:border-cyan-500 focus:ring-0 outline-none"
-                            placeholder="Enter Coupons Code" required>
-                        @error('amount')
-                        <span class="text-danger">{{$message}}</span>
-                        @enderror
-                    </div>
-
-                    <div>
-                        <label class="block text-gray-700 font-medium mb-1">
-                            Status <span class="text-red-500">*</span>
-                        </label>
-                        <select name="status" id="status" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:border-cyan-500 focus:ring-0 outline-none">
-                            <option value="1">Active</option>
-                            <option value="0">Deactive</option>
-                        </select>
-                        @error('status')
-                        <span class="text-danger">{{$message}}</span>
-                        @enderror
-                    </div>
+                <div class="mb-3">
+                    <label for="coupon_code" class="form-label">Coupon Code <span class="text-danger">*</span></label>
+                    <input type="text" name="coupon_code" id="coupon_code" value="{{ old('coupon_code') }}"
+                        class="form-control @error('coupon_code') is-invalid @enderror"
+                        placeholder="Enter Coupon Code" required>
+                    @error('coupon_code')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
                 </div>
-                <div class="flex justify-end pt-4 border-t">
-                    <button type="submit"
-                        class="bg-cyan-600 hover:bg-cyan-700 text-white px-6 py-2 rounded-lg transition">
-                        <i class="fa fa-save"></i> Save
+
+                <div class="mb-3">
+                    <label for="amount" class="form-label">Coupon Amount (%) <span class="text-danger">*</span></label>
+                    <input type="number" name="amount" id="amount" value="{{ old('amount') }}"
+                        class="form-control @error('amount') is-invalid @enderror"
+                        placeholder="Enter Coupon Amount" required>
+                    @error('amount')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="mb-4">
+                    <label for="status" class="form-label">Status <span class="text-danger">*</span></label>
+                    <select name="status" id="status" class="form-select @error('status') is-invalid @enderror">
+                        <option value="1" {{ old('status') == 1 ? 'selected' : '' }}>Active</option>
+                        <option value="0" {{ old('status') == 0 ? 'selected' : '' }}>Deactive</option>
+                    </select>
+                    @error('status')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="text-end">
+                    <button type="submit" class="btn text-white bg-gradient-purple">
+                        <i class="fa fa-save me-1"></i> Save
                     </button>
                 </div>
+
             </form>
         </div>
     </div>
-</section>
+</div>
 @endsection

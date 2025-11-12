@@ -3,96 +3,99 @@
 @section('title', isset($user) ? 'Edit User' : 'Add User')
 
 @section('content')
-<section class="p-5 bg-gray-100 min-h-screen">
-    <div class="mx-auto bg-white rounded-2xl shadow-lg overflow-hidden">
-
-        <!-- Header -->
-        <div class="bg-gradient-to-r from-cyan-600 to-cyan-500 px-6 py-4 flex justify-between items-center">
-            <h2 class="text-xl font-semibold text-white">
-                {{ isset($user) ? 'Edit User' : 'Add User' }}
-            </h2>
-
-            @can('view user')
-            <a href="{{ route('admin.users.index') }}"
-                class="bg-white/20 hover:bg-white/30 text-white px-4 py-1.5 rounded-lg transition flex items-center gap-1">
-                <i class="fa fa-angle-left"></i> Back
-            </a>
-            @endcan
+<section class="py-5 bg-light min-vh-100">
+    <div class="container">
+        <div class="card shadow-lg border-0 rounded-3">
+             <!-- Card Header -->
+        <div class="card-header text-white bg-gradient-purple">
+            <div class="d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">{{ isset($user) ? 'Edit User' : 'Add User' }}</h5>
+                  @can('view user')
+                <a href="{{ route('admin.users.index') }}" class="btn btn-light btn-sm">
+                    <i class="fa fa-angle-left me-1"></i> Back
+                </a>
+                 @endcan
+            </div>
         </div>
 
-        <!-- Form Body -->
-        <div class="p-8">
-            <form method="POST"
-                action="{{ isset($user) ? route('admin.users.update', $user->id) : route('admin.users.store') }}"
-                class="space-y-6">
-                @csrf
-                @if(isset($user)) @method('PUT') @endif
 
-                <div class="grid md:grid-cols-2 gap-6">
-                    <div>
-                        <label class="block text-gray-700 font-medium mb-1">
-                            Name <span class="text-red-500">*</span>
-                        </label>
-                        <input type="text" name="name"
-                            value="{{ old('name', $user->name ?? '') }}"
-                            class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:border-cyan-500 focus:ring-0 outline-none"
-                            placeholder="Enter name" required>
+            <!-- Form Body -->
+            <div class="card-body p-4">
+                <form method="POST"
+                    action="{{ isset($user) ? route('admin.users.update', $user->id) : route('admin.users.store') }}">
+                    @csrf
+                    @if(isset($user)) @method('PUT') @endif
+
+                    <div class="row g-4">
+                        <!-- Name -->
+                        <div class="col-md-6">
+                            <label class="form-label fw-medium">
+                                Name <span class="text-danger">*</span>
+                            </label>
+                            <input type="text" name="name" value="{{ old('name', $user->name ?? '') }}"
+                                class="form-control" placeholder="Enter name" required>
+                        </div>
+
+                        <!-- Email -->
+                        <div class="col-md-6">
+                            <label class="form-label fw-medium">
+                                Email <span class="text-danger">*</span>
+                            </label>
+                            <input type="email" name="email" value="{{ old('email', $user->email ?? '') }}"
+                                class="form-control" placeholder="Enter email" required>
+                        </div>
+
+                        <!-- Password -->
+                        <div class="col-md-6">
+                            <label class="form-label fw-medium">
+                                Password {{ isset($user) ? '(leave blank to keep current)' : '' }}
+                                <span class="text-danger">*</span>
+                            </label>
+                            <input type="password" name="password" class="form-control"
+                                placeholder="Enter password" {{ isset($user) ? '' : 'required' }}>
+                        </div>
+
+                        <!-- Confirm Password -->
+                        <div class="col-md-6">
+                            <label class="form-label fw-medium">
+                                Confirm Password <span class="text-danger">*</span>
+                            </label>
+                            <input type="password" name="password_confirmation" class="form-control"
+                                placeholder="Confirm password" {{ isset($user) ? '' : 'required' }}>
+                        </div>
                     </div>
 
-                    <div>
-                        <label class="block text-gray-700 font-medium mb-1">
-                            Email <span class="text-red-500">*</span>
+                    <!-- Roles -->
+                    <div class="mt-4">
+                        <label class="form-label fw-medium">
+                            Roles <span class="text-danger">*</span>
                         </label>
-                        <input type="email" name="email"
-                            value="{{ old('email', $user->email ?? '') }}"
-                            class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:border-cyan-500 focus:ring-0 outline-none"
-                            placeholder="Enter email" required>
+                        <div class="row g-2">
+                            @foreach($roles as $role)
+                            <div class="col-sm-6 col-md-4">
+                                <div class="form-check border rounded p-2">
+                                    <input type="checkbox" name="roles[]" value="{{ $role->name }}"
+                                        class="form-check-input"
+                                        id="role-{{ $role->id }}"
+                                        {{ isset($userRoles) && in_array($role->name, $userRoles) ? 'checked' : '' }}>
+                                    <label for="role-{{ $role->id }}" class="form-check-label text-secondary">
+                                        {{ $role->name }}
+                                    </label>
+                                </div>
+                            </div>
+                            @endforeach
+                        </div>
                     </div>
 
-                    <div>
-                        <label class="block text-gray-700 font-medium mb-1">
-                            Password {{ isset($user) ? '(leave blank to keep current)' : '' }}
-                            <span class="text-red-500">*</span>
-                        </label>
-                        <input type="password" name="password"
-                            class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:border-cyan-500 focus:ring-0 outline-none"
-                            placeholder="Enter password" {{ isset($user) ? '' : 'required' }}>
+                    <!-- Submit -->
+                    <div class="mt-4 pt-3 border-top text-end">
+                        <button type="submit" class="btn bg-gradient-purple text-white px-4">
+                            <i class="fa fa-save"></i> Save
+                        </button>
                     </div>
+                </form>
+            </div>
 
-                    <div>
-                        <label class="block text-gray-700 font-medium mb-1">
-                            Confirm Password <span class="text-red-500">*</span>
-                        </label>
-                        <input type="password" name="password_confirmation"
-                            class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:border-cyan-500 focus:ring-0 outline-none"
-                            placeholder="Confirm password" {{ isset($user) ? '' : 'required' }}>
-                    </div>
-                </div>
-
-                <div>
-                    <label class="block text-gray-700 font-medium mb-2">
-                        Roles <span class="text-red-500">*</span>
-                    </label>
-                    <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-2">
-                        @foreach($roles as $role)
-                        <label class="flex items-center space-x-2 border border-gray-200 rounded-lg px-3 py-2 hover:bg-gray-50">
-                            <input type="checkbox" name="roles[]" value="{{ $role->name }}"
-                                class="text-cyan-600 focus:ring-0"
-                                {{ isset($userRoles) && in_array($role->name, $userRoles) ? 'checked' : '' }}>
-                            <span class="text-gray-700">{{ $role->name }}</span>
-                        </label>
-                        @endforeach
-                    </div>
-                </div>
-
-
-                <div class="flex justify-end pt-4 border-t">
-                    <button type="submit"
-                        class="bg-cyan-600 hover:bg-cyan-700 text-white px-6 py-2 rounded-lg transition">
-                        <i class="fa fa-save"></i> Save
-                    </button>
-                </div>
-            </form>
         </div>
     </div>
 </section>

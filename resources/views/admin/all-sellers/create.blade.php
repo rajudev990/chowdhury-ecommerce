@@ -3,28 +3,157 @@
 @section('title', 'Add Vendor Sellers')
 
 @section('content')
-<section class="p-5 bg-gray-100 min-h-screen">
-    <div class="mx-auto bg-white rounded-2xl shadow-lg overflow-hidden max-w-4xl">
+<section class="py-5 bg-light min-vh-100">
+    <div class="container">
+        <div class="card shadow-lg border-0 rounded-4 overflow-hidden mx-auto" style="max-width: 900px;">
 
-        <!-- Header -->
-        <div class="bg-gradient-to-r from-cyan-600 to-cyan-500 px-6 py-4 flex justify-between items-center">
-            <h2 class="text-xl font-semibold text-white">
-                Add Vendor Sellers
-            </h2>
+            <!-- Header -->
+            <div class="card-header text-white bg-gradient-purple">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0 fw-semibold">Add Vendor Sellers</h4>
+                    <a href="{{ route('admin.all-sellers.index') }}" 
+                       class="btn btn-light btn-sm text-dark fw-semibold d-inline-flex align-items-center gap-1">
+                        <i class="fa fa-angle-left"></i> Back
+                    </a>
+                </div>
+            </div>
 
-            <a href="{{ route('admin.all-sellers.index') }}"
-                class="bg-white/20 hover:bg-white/30 text-white px-4 py-1.5 rounded-lg transition flex items-center gap-1">
-                <i class="fa fa-angle-left"></i> Back
-            </a>
+            <!-- Form Body -->
+            <div class="card-body p-4">
+                <form method="POST" action="{{ route('admin.all-sellers.store') }}" enctype="multipart/form-data">
+                    @csrf
+
+                    <div class="row g-3">
+
+                        <!-- Shop Name -->
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Shop Name</label>
+                            <input type="text" name="shop_name" value="{{ old('shop_name') }}" class="form-control" placeholder="Enter shop name">
+                            @error('shop_name')
+                            <small class="text-danger">{{ $message }}</small>
+                            @enderror
+                        </div>
+
+                        <!-- Email -->
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Email</label>
+                            <input type="email" name="email" value="{{ old('email') }}" class="form-control" placeholder="Enter email">
+                            @error('email')
+                            <small class="text-danger">{{ $message }}</small>
+                            @enderror
+                        </div>
+
+                        <!-- Phone -->
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Phone</label>
+                            <input type="text" name="phone" value="{{ old('phone') }}" class="form-control" placeholder="Enter phone number">
+                            @error('phone')
+                            <small class="text-danger">{{ $message }}</small>
+                            @enderror
+                        </div>
+
+                        <!-- Password -->
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Password</label>
+                            <input type="password" name="password" class="form-control" placeholder="Enter password">
+                            @error('password')
+                            <small class="text-danger">{{ $message }}</small>
+                            @enderror
+                        </div>
+
+                        <!-- Address -->
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Address</label>
+                            <input type="text" name="address" value="{{ old('address') }}" class="form-control" placeholder="Enter address">
+                            @error('address')
+                            <small class="text-danger">{{ $message }}</small>
+                            @enderror
+                        </div>
+
+                        <!-- City -->
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">City</label>
+                            <input type="text" name="city" value="{{ old('city') }}" class="form-control" placeholder="Enter city">
+                            @error('city')
+                            <small class="text-danger">{{ $message }}</small>
+                            @enderror
+                        </div>
+
+                        <!-- Country -->
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Country</label>
+                            <input type="text" name="country" value="{{ old('country') }}" class="form-control" placeholder="Enter country">
+                            @error('country')
+                            <small class="text-danger">{{ $message }}</small>
+                            @enderror
+                        </div>
+
+                        <!-- Postal Code -->
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Postal Code</label>
+                            <input type="text" name="postal_code" value="{{ old('postal_code') }}" class="form-control" placeholder="Enter postal code">
+                            @error('postal_code')
+                            <small class="text-danger">{{ $message }}</small>
+                            @enderror
+                        </div>
+
+                        <!-- Description -->
+                        <div class="col-12">
+                            <label class="form-label fw-semibold">Description</label>
+                            <textarea name="description" rows="3" class="form-control" placeholder="Enter short description">{{ old('description') }}</textarea>
+                            @error('description')
+                            <small class="text-danger">{{ $message }}</small>
+                            @enderror
+                        </div>
+
+                        <!-- Logo -->
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Logo</label>
+                            <input type="file" name="logo" class="form-control">
+                            @error('logo')
+                            <small class="text-danger">{{ $message }}</small>
+                            @enderror
+                        </div>
+
+                        <!-- Banner -->
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Banner</label>
+                            <input type="file" name="banner" class="form-control">
+                            @error('banner')
+                            <small class="text-danger">{{ $message }}</small>
+                            @enderror
+                        </div>
+
+                        <!-- Status -->
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Status</label>
+                            <select name="status" class="form-select">
+                                <option value="inactive" {{ old('status') == 'inactive' ? 'selected' : '' }}>Inactive</option>
+                                <option value="active" {{ old('status') == 'active' ? 'selected' : '' }}>Active</option>
+                                <option value="banned" {{ old('status') == 'banned' ? 'selected' : '' }}>Banned</option>
+                            </select>
+                            @error('status')
+                            <small class="text-danger">{{ $message }}</small>
+                            @enderror
+                        </div>
+
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="d-flex justify-content-end pt-4 border-top mt-4">
+                        <button type="submit" class="btn btn-sm text-white bg-gradient-purple px-4">
+                            <i class="fa fa-save me-1"></i> Save
+                        </button>
+                    </div>
+                </form>
+            </div>
+
         </div>
+    </div>
+</section>
 
-        <!-- Form Body -->
-        <div class="p-8">
-            <form method="POST" action="{{ route('admin.all-sellers.store') }}" enctype="multipart/form-data" class="space-y-6">
-                @csrf
 
-                <div class="grid md:grid-cols-2 gap-5">
-                    <!-- Name -->
+  <!-- Name -->
                     <!-- <div>
                         <label class="block text-gray-700 font-medium mb-1">Name</label>
                         <input type="text" name="name" value="{{ old('name') }}"
@@ -33,47 +162,7 @@
                         <span class="text-red-500 text-sm mt-1 block">{{ $message }}</span>
                         @enderror
                     </div> -->
-
-                    <div>
-                        <label class="block text-gray-700 font-medium mb-1">Shop Name</label>
-                        <input type="text" name="shop_name" value="{{ old('shop_name') }}"
-                            class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:border-cyan-500 focus:ring-0 outline-none">
-                        @error('shop_name')
-                        <span class="text-red-500 text-sm mt-1 block">{{ $message }}</span>
-                        @enderror
-                    </div>
-
-                    <!-- Email -->
-                    <div>
-                        <label class="block text-gray-700 font-medium mb-1">Email</label>
-                        <input type="text" name="email" value="{{ old('email') }}"
-                            class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:border-cyan-500 focus:ring-0 outline-none">
-                        @error('email')
-                        <span class="text-red-500 text-sm mt-1 block">{{ $message }}</span>
-                        @enderror
-                    </div>
-
-                     <!-- Phone -->
-                    <div>
-                        <label class="block text-gray-700 font-medium mb-1">Phone</label>
-                        <input type="text" name="phone" value="{{ old('phone') }}"
-                            class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:border-cyan-500 focus:ring-0 outline-none">
-                        @error('phone')
-                        <span class="text-red-500 text-sm mt-1 block">{{ $message }}</span>
-                        @enderror
-                    </div>
-                    
-                    <!-- Password -->
-                    <div>
-                        <label class="block text-gray-700 font-medium mb-1">Password</label>
-                        <input type="password" name="password"
-                            class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:border-cyan-500 focus:ring-0 outline-none">
-                        @error('password')
-                        <span class="text-red-500 text-sm mt-1 block">{{ $message }}</span>
-                        @enderror
-                    </div>
-
-                    <!-- Shop Name -->
+  <!-- Shop Name -->
                     
 
                     <!-- Shop Slug -->
@@ -85,105 +174,4 @@
                         <span class="text-red-500 text-sm mt-1 block">{{ $message }}</span>
                         @enderror
                     </div> -->
-
-                   
-
-                    <!-- Address -->
-                    <div>
-                        <label class="block text-gray-700 font-medium mb-1">Address</label>
-                        <input type="text" name="address" value="{{ old('address') }}"
-                            class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:border-cyan-500 focus:ring-0 outline-none">
-                        @error('address')
-                        <span class="text-red-500 text-sm mt-1 block">{{ $message }}</span>
-                        @enderror
-                    </div>
-
-                    <!-- City -->
-                    <div>
-                        <label class="block text-gray-700 font-medium mb-1">City</label>
-                        <input type="text" name="city" value="{{ old('city') }}"
-                            class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:border-cyan-500 focus:ring-0 outline-none">
-                        @error('city')
-                        <span class="text-red-500 text-sm mt-1 block">{{ $message }}</span>
-                        @enderror
-                    </div>
-
-                    <!-- Country -->
-                    <div>
-                        <label class="block text-gray-700 font-medium mb-1">Country</label>
-                        <input type="text" name="country" value="{{ old('country') }}"
-                            class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:border-cyan-500 focus:ring-0 outline-none">
-                        @error('country')
-                        <span class="text-red-500 text-sm mt-1 block">{{ $message }}</span>
-                        @enderror
-                    </div>
-
-                    <!-- Postal Code -->
-                    <div>
-                        <label class="block text-gray-700 font-medium mb-1">Postal Code</label>
-                        <input type="text" name="postal_code" value="{{ old('postal_code') }}"
-                            class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:border-cyan-500 focus:ring-0 outline-none">
-                        @error('postal_code')
-                        <span class="text-red-500 text-sm mt-1 block">{{ $message }}</span>
-                        @enderror
-                    </div>
-
-                    <!-- Description -->
-                    <div class="md:col-span-2">
-                        <label class="block text-gray-700 font-medium mb-1">Description</label>
-                        <textarea name="description" rows="3"
-                            class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:border-cyan-500 focus:ring-0 outline-none">{{ old('description') }}</textarea>
-                        @error('description')
-                        <span class="text-red-500 text-sm mt-1 block">{{ $message }}</span>
-                        @enderror
-                    </div>
-
-                    <!-- Logo -->
-                    <div>
-                        <label class="block text-gray-700 font-medium mb-1">Logo</label>
-                        <input type="file" name="logo" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:border-cyan-500 focus:ring-0 outline-none">
-                        @error('logo')
-                        <span class="text-red-500 text-sm mt-1 block">{{ $message }}</span>
-                        @enderror
-                    </div>
-
-                    <!-- Banner -->
-                    <div>
-                        <label class="block text-gray-700 font-medium mb-1">Banner</label>
-                        <input type="file" name="banner" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:border-cyan-500 focus:ring-0 outline-none">
-                        @error('banner')
-                        <span class="text-red-500 text-sm mt-1 block">{{ $message }}</span>
-                        @enderror
-                    </div>
-
-
-                    
-
-
-                    <!-- Status -->
-                    <div>
-                        <label class="block text-gray-700 font-medium mb-1">Status</label>
-                        <select name="status"
-                            class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:border-cyan-500 focus:ring-0 outline-none">
-                            <option value="inactive" {{ old('status') == 'inactive' ? 'selected' : '' }}>Inactive</option>
-                            <option value="active" {{ old('status') == 'active' ? 'selected' : '' }}>Active</option>
-                            <option value="banned" {{ old('status') == 'banned' ? 'selected' : '' }}>Banned</option>
-                        </select>
-                        @error('status')
-                        <span class="text-red-500 text-sm mt-1 block">{{ $message }}</span>
-                        @enderror
-                    </div>
-                </div>
-
-                <!-- Submit Button -->
-                <div class="flex justify-end pt-4 border-t">
-                    <button type="submit"
-                        class="bg-cyan-600 hover:bg-cyan-700 text-white px-6 py-2 rounded-lg transition">
-                        <i class="fa fa-save"></i> Save
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-</section>
 @endsection

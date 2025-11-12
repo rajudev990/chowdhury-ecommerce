@@ -1,46 +1,58 @@
 @extends('admin.layouts.app')
 
-@section('title','Edit Size')
+@section('title', 'Edit Size')
 
 @section('content')
-<section class="p-5 bg-gray-100 min-h-screen">
-    <div class="mx-auto max-w-2xl bg-white rounded-2xl shadow-lg overflow-hidden">
+<div class="container py-5">
+    <div class="card shadow-lg border-0 rounded-4 mx-auto" style="max-width: 700px; overflow: hidden;">
 
-        <!-- Header -->
-        <div class="bg-gradient-to-r from-cyan-600 to-cyan-500 px-6 py-4 flex justify-between items-center">
-            <h2 class="text-xl font-semibold text-white">Edit Size</h2>
-            <a href="{{ route('admin.sizes.index') }}" class="bg-white/20 hover:bg-white/30 text-white px-4 py-1.5 rounded-lg transition flex items-center gap-1">
-                <i class="fa fa-angle-left"></i> Back
-            </a>
+        <!-- Card Header -->
+        <div class="card-header text-white bg-gradient-purple">
+            <div class="d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Edit Size</h5>
+                <a href="{{ route('admin.sizes.index') }}" class="btn btn-light btn-sm">
+                    <i class="fa fa-angle-left me-1"></i> Back
+                </a>
+            </div>
         </div>
 
-        <div class="p-8">
-            <form action="{{ route('admin.sizes.update', $size->id) }}" method="POST" class="space-y-6">
+        <!-- Card Body -->
+        <div class="card-body">
+            <form action="{{ route('admin.sizes.update', $size->id) }}" method="POST">
                 @csrf
-                @method('PUT')
+                @method('PUT') <!-- Important for update -->
 
-                <div>
-                    <label class="block text-gray-700 font-medium mb-1">Size Name <span class="text-red-500">*</span></label>
-                    <input type="text" name="name" value="{{ old('name', $size->name) }}" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:border-cyan-500 focus:ring-0 outline-none" placeholder="Enter size name" required>
-                    @error('name') <span class="text-red-500 text-sm mt-1 block">{{ $message }}</span> @enderror
+                <!-- Size Name -->
+                <div class="mb-3">
+                    <label for="name" class="form-label">Size Name <span class="text-danger">*</span></label>
+                    <input type="text" name="name" id="name" value="{{ old('name', $size->name) }}"
+                        class="form-control @error('name') is-invalid @enderror" placeholder="Enter size name" required>
+                    @error('name')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
                 </div>
 
-                <div>
-                    <label class="block text-gray-700 font-medium mb-1">Status</label>
-                    <select name="status" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:border-cyan-500 focus:ring-0 outline-none">
+                <!-- Status -->
+                <div class="mb-4">
+                    <label for="status" class="form-label">Status</label>
+                    <select name="status" id="status" class="form-select @error('status') is-invalid @enderror">
                         <option value="1" {{ old('status', $size->status) == 1 ? 'selected' : '' }}>Active</option>
                         <option value="0" {{ old('status', $size->status) == 0 ? 'selected' : '' }}>Inactive</option>
                     </select>
+                    @error('status')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
                 </div>
 
-                <div class="flex justify-end pt-4 border-t">
-                    <button type="submit" class="bg-cyan-600 hover:bg-cyan-700 text-white px-6 py-2 rounded-lg transition flex items-center gap-2">
-                        <i class="fa fa-save"></i> Update
+                <!-- Submit Button -->
+                <div class="text-end">
+                    <button type="submit" class="btn text-white bg-gradient-purple">
+                        <i class="fa fa-save me-1"></i> Update
                     </button>
                 </div>
 
             </form>
         </div>
     </div>
-</section>
+</div>
 @endsection

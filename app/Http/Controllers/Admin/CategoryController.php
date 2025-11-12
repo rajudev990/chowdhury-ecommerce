@@ -45,7 +45,6 @@ class CategoryController extends Controller
     {
         $request->validate([
             'name' => 'required|unique:categories,name|string|max:255',
-            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
         $image = $request->hasFile('image') ? ImageHelper::uploadImage($request->file('image')) : null;
@@ -75,7 +74,6 @@ class CategoryController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255|unique:categories,name,' . $category->id,
-            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
             'status' => 'required|in:0,1',
         ]);
 

@@ -15,6 +15,7 @@ use App\Models\Redx;
 use App\Models\Smtp;
 use App\Models\SslCommerc;
 use App\Models\StredFast;
+use App\Models\TagManager;
 use Illuminate\Http\Request;
 
 class WebController extends Controller
@@ -90,8 +91,9 @@ class WebController extends Controller
     {
         $facebook = Facebook::first();  
         $google = Google::first();   
+        $tagManager = TagManager::first();   
 
-        return view('admin.marketing.setup', compact('facebook', 'google'));
+        return view('admin.marketing.setup', compact('facebook', 'google','tagManager'));
     }
 
     public function facebook(Request $request, $id)
@@ -106,6 +108,13 @@ class WebController extends Controller
         $google = Google::findOrFail($id);
         $google->update($request->all());
         return redirect()->back()->with('success', 'Google updated successfully');
+    }
+
+    public function TagManager(Request $request, $id)
+    {
+        $tagManager = TagManager::findOrFail($id);
+        $tagManager->update($request->all());
+        return redirect()->back()->with('success', 'Google Tag Manager updated successfully');
     }
 
     //Payment Setup---------->>>

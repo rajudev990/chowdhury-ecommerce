@@ -1,6 +1,10 @@
 <nav id="sidebar">
     <div class="p-3 text-center border-bottom fw-bold">{{ $setting->app_name ?? 'Admin Panel' }}</div>
 
+    @php
+        $settings = \App\Models\Setting::first(); 
+    @endphp
+
     <ul class="nav flex-column mt-3">
 
         {{-- Dashboard --}}
@@ -180,6 +184,8 @@
         @endcanany
 
 
+
+        @if($settings->affilate_status =='yes')
         {{-- Affiliate Menu --}}
         @canany([
         'create configuration','edit configuration','view configuration','delete configuration',
@@ -212,8 +218,10 @@
             </div>
         </li>
         @endcanany
+        @endif
 
 
+        @if($settings && $settings->seller_status === 'yes')
         {{-- Sellers Menu --}}
         @canany(['create sellers','edit sellers','view sellers','delete sellers'])
         @php
@@ -236,7 +244,41 @@
         </li>
         @endcanany
 
-        {{-- Reports Menu --}}
+        @endif
+
+
+        @if($settings && $settings->landing_status === 'yes')
+        @php
+        $landingActive = request()->is('admin/camping*') || request()->is('admin/create-camping*');
+        @endphp
+
+            <li class="nav-item">
+                <a class="nav-link d-flex justify-content-between align-items-center {{ $landingActive ? '' : 'collapsed' }}"
+                    data-bs-toggle="collapse" href="#landingPageMenu" role="button"
+                    aria-expanded="{{ $landingActive ? 'true' : 'false' }}">
+                    <div><i class="fas fa-globe me-2"></i> Landing Page</div>
+                    <i class="fas fa-chevron-right rotate"></i>
+                </a>
+
+                <div class="collapse {{ $landingActive ? 'show' : '' }}" id="landingPageMenu">
+                    <ul class="nav flex-column ms-3">
+                            <li>
+                                <a class="nav-link {{ request()->is('admin/camping*') ? 'active' : '' }}" href="{{ route('admin.campings.index') }}">
+                                    <i class="fas fa-campground me-2"></i> Camping
+                                </a>
+                            </li>
+                            <li>
+                                <a class="nav-link {{ request()->is('admin/create-camping*') ? 'active' : '' }}" href="#">
+                                    <i class="fas fa-plus-circle me-2"></i> Create Camping
+                                </a>
+                            </li>
+                    </ul>
+                </div>
+            </li>
+            @endif
+
+
+            {{-- Reports Menu --}}
         @canany(['create report','edit report','view report','delete report'])
         @php
         $reportsActive = request()->is('admin/stock-report*') || request()->is('admin/order-report*');
@@ -298,9 +340,6 @@
             </div>
         </li>
         @endcanany
-
-
-
 
     </ul>
 </nav>

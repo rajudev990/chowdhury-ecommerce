@@ -1,91 +1,72 @@
-<aside id="sidebar"
-    class="bg-gray-900 text-white flex flex-col fixed h-full w-64 sidebar-transition z-40 
-           -translate-x-full md:translate-x-0">
+<nav id="sidebar">
+    <div class="p-3 text-center border-bottom fw-bold">{{ Auth::guard('vendor')->user()->name ?? 'vendor' }}</div>
 
-    <!-- Logo / Title -->
-    <div class="p-4 flex items-center justify-between border-b border-gray-700">
-        <span class="text-xl font-bold">{{ Auth::guard('vendor')->user()->name ?? 'Admin' }}</span>
-        <button id="closeSidebar" class="md:hidden text-gray-300">
-            <i class="fas fa-times"></i>
-        </button>
-    </div>
+    <ul class="nav flex-column mt-3">
 
-    <!-- Navigation -->
-    <nav class="flex-1 p-2 space-y-2 overflow-y-auto">
+        {{-- Dashboard --}}
+
+        <li class="nav-item">
+            <a class="nav-link {{ request()->routeIs('vendor.dashboard') ? 'active' : '' }}" href="{{ route('vendor.dashboard') }}">
+                <i class="fas fa-home me-2"></i> Dashboard
+            </a>
+        </li>
 
 
-        <a href="{{ route('vendor.dashboard') }}"
-            class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 {{ request()->is('vendor.dashboard') ? 'bg-gray-700 font-semibold' : '' }}">
-            <i class="fas fa-home w-4"></i>
-            <span>Dashboard</span>
-        </a>
+        <li class="nav-item">
+            <a class="nav-link {{ request()->routeIs('vendor.products.index') ? 'active' : '' }}" href="{{ route('vendor.products.index') }}">
+                <i class="fas fa-percent w-3"></i> Product
+            </a>
+        </li>
 
-        <a href="{{ route('vendor.products.index') }}"
-            class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 text-sm {{ request()->is('vendor/products*') ? 'bg-gray-700 font-semibold' : '' }}">
-            <i class="fas fa-cogs w-3"></i> Product
-        </a>
 
-        <a href="{{ route('vendor.products.commissions') }}"
-            class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 text-sm {{ request()->is('vendor/product/commissions') ? 'bg-gray-700 font-semibold' : '' }}">
-            <i class="fas fa-percent w-3"></i> Product Commissions
-        </a>
+         <li class="nav-item">
+            <a class="nav-link {{ request()->routeIs('vendor.products.commissions') ? 'active' : '' }}" href="{{ route('vendor.products.commissions') }}">
+               <i class="fas fa-cogs w-3"></i> Commissions
+            </a>
+        </li>
 
-        {{-- Orders Dropdown --}}
+         <li class="nav-item">
+            <a class="nav-link {{ request()->routeIs('vendor.revenue') ? 'active' : '' }}" href="{{ route('vendor.revenue') }}">
+                <i class="fas fa-dollar-sign w-3"></i> Revenue
+            </a>
+        </li>
+
+         <li class="nav-item">
+            <a class="nav-link {{ request()->routeIs('vendor.withdrawal') ? 'active' : '' }}" href="{{ route('vendor.withdrawal') }}">
+              <i class="fas fa-money-check w-4 h-4"></i> Withdrawal
+            </a>
+        </li>
+
         @php
-        $orderActive = request()->is('vendor/all-orders*') || request()->is('vendor/pending-orders*') || request()->is('vendor/processing-orders*') || request()->is('vendor/on-the-way*') || request()->is('vendor/hold-orders*') || request()->is('vendor/courier-orders*') || request()->is('vendor/complete-orders*') || request()->is('vendor/cancelled-orders*') || request()->is('vendor/orders*');
+        $orderActive = request()->is('vendor/all-orders*') || request()->is('vendor/pending-orders*') || request()->is('vendor/processing-orders*') || request()->is('vendor/on-the-way*') || request()->is('vendor/hold-orders') || request()->is('vendor/courier-orders*') || request()->is('vendor/complete-orders*') || request()->is('vendor/cancelled-orders*');
         @endphp
-        <div class="dropdown">
-            <button
-                class="dropdown-btn flex justify-between items-center w-full p-2 rounded hover:bg-gray-700 focus:outline-none {{ $orderActive ? 'bg-gray-700 font-semibold' : '' }}">
-                <span class="flex items-center gap-2"><i class="fas fa-shopping-cart w-4"></i> Orders</span>
-                <i class="fas fa-chevron-down transition-transform {{ $orderActive ? 'rotate-180' : '' }}"></i>
-            </button>
-
-            <div class="dropdown-menu {{ $orderActive ? 'block' : 'hidden' }} ml-4 mt-1 space-y-1">
-                <a href="{{ route('vendor.all-orders') }}" class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 text-sm {{ request()->is('vendor/all-orders*') ? 'bg-gray-700 font-semibold' : '' }}">
-                    <i class="fas fa-list w-3"></i> All Orders
-                </a>
-
-                <a href="{{ route('vendor.pending-orders') }}" class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 text-sm">
-                    <i class="fas fa-hourglass-start w-3 text-orange-400"></i> Pending
-                </a>
-
-                <a href="{{ route('vendor.processing-orders') }}" class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 text-sm">
-                    <i class="fas fa-spinner w-3 text-blue-400"></i> Processing
-                </a>
-
-                <a href="{{ route('vendor.on-the-way-orders') }}" class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 text-sm">
-                    <i class="fas fa-truck w-3 text-indigo-400"></i> On The Way
-                </a>
-
-                <a href="{{ route('vendor.hold-orders') }}" class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 text-sm">
-                    <i class="fas fa-pause-circle w-3 text-yellow-500"></i> On Hold
-                </a>
-
-                <a href="{{ route('vendor.courier-orders') }}" class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 text-sm">
-                    <i class="fas fa-shipping-fast w-3 text-teal-400"></i> Courier
-                </a>
-
-                <a href="{{ route('vendor.complete-orders') }}" class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 text-sm">
-                    <i class="fas fa-check-circle w-3 text-green-500"></i> Completed
-                </a>
-
-                <a href="{{ route('vendor.cancelled-orders') }}" class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 text-sm">
-                    <i class="fas fa-times-circle w-3 text-red-500"></i> Cancelled
-                </a>
+        <li class="nav-item">
+            <a class="nav-link d-flex justify-content-between align-items-center {{ $orderActive ? '' : 'collapsed' }}"
+                data-bs-toggle="collapse" href="#orderMenu" role="button" aria-expanded="{{ $orderActive ? 'true' : 'false' }}">
+                <div><i class="fas fa-shopping-cart me-2"></i> Orders</div>
+                <i class="fas fa-chevron-right rotate"></i>
+            </a>
+            <div class="collapse {{ $orderActive ? 'show' : '' }}" id="orderMenu">
+                <ul class="nav flex-column ms-3">
+                    <li><a class="nav-link {{ request()->is('vendor/all-orders*') ? 'active' : '' }}" href="{{ route('vendor.all-orders') }}">All Orders</a></li>
+        
+                    <li><a class="nav-link {{ request()->is('vendor/pending-orders*') ? 'active' : '' }}" href="{{ route('vendor.pending-orders') }}">Pending</a></li>
+        
+                    <li><a class="nav-link {{ request()->is('vendor/processing-orders*') ? 'active' : '' }}" href="{{ route('vendor.processing-orders') }}">Processing</a></li>
+        
+                    <li><a class="nav-link {{ request()->is('vendor/on-the-way*') ? 'active' : '' }}" href="{{ route('vendor.on-the-way-orders') }}">On The Way</a></li>
+        
+                    {{--<li><a class="nav-link {{ request()->is('vendor/hold-orders') ? 'active' : '' }}" href="{{ route('vendor/hold-orders') }}">On Hold</a></li>--}}
+        
+                    <li><a class="nav-link {{ request()->is('vendor/courier-orders*') ? 'active' : '' }}" href="{{ route('vendor.courier-orders') }}">Courier</a></li>
+        
+                    <li><a class="nav-link {{ request()->is('vendor/complete-orders*') ? 'active' : '' }}" href="{{ route('vendor.complete-orders') }}">Completed</a></li>
+        
+                    <li><a class="nav-link {{ request()->is('vendor/cancelled-orders*') ? 'active' : '' }}" href="{{ route('vendor.cancelled-orders') }}">Cancelled</a></li>
+        
+                </ul>
             </div>
-        </div>
+        </li>
 
-        <a href="{{ route('vendor.revenue') }}"
-            class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 text-sm {{ request()->is('vendor/product/revenue') ? 'bg-gray-700 font-semibold' : '' }}">
-            <i class="fas fa-dollar-sign w-3"></i> Revenue
-        </a>
-
-         <a href="{{ route('vendor.withdrawal') }}"
-            class="flex items-center gap-2 p-2 rounded hover:bg-gray-700 text-sm {{ request()->is('vendor/withdrawal') ? 'bg-gray-700 font-semibold' : '' }}">
-            <i class="fas fa-money-check w-4 h-4"></i> Withdrawal
-        </a>
-
-
-    </nav>
-</aside>
+    </ul>
+</nav>

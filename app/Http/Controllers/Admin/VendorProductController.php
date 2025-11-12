@@ -47,9 +47,7 @@ class VendorProductController extends Controller
             'status' => 'required|in:0,1',
             'regular_price' => 'required|numeric',
             'sale_price' => 'nullable|numeric',
-            'images.*' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
-            'featured_image_1' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
-            'featured_image_2' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+
         ]);
 
         $product = Product::create([
@@ -157,9 +155,6 @@ class VendorProductController extends Controller
             'status' => 'required|in:0,1',
             'regular_price' => 'required|numeric',
             'sale_price' => 'nullable|numeric',
-            'images.*' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
-            'featured_image_1' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
-            'featured_image_2' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
         $product->update([

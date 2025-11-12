@@ -1,76 +1,92 @@
 @extends('admin.layouts.app')
 
-@section('title','Products')
+@section('title', 'Products')
 
 @section('content')
-<section class="p-5 bg-gray-100 min-h-screen">
-    <div class="mx-auto max-w-7xl bg-white rounded-2xl shadow-lg overflow-hidden">
-
-        <!-- Header -->
-        <div class="bg-gradient-to-r from-cyan-600 to-cyan-500 px-6 py-4 flex justify-between items-center">
-            <h2 class="text-xl font-semibold text-white">Products</h2>
-            <a href="{{ route('admin.products.create') }}" class="bg-white/20 hover:bg-white/30 text-white px-4 py-1.5 rounded-lg transition flex items-center gap-1">
-                <i class="fa fa-plus"></i> Add Product
+<div class="container-fluid py-4">
+    {{-- Card Wrapper --}}
+    <div class="card shadow-lg rounded-3">
+        {{-- Card Header --}}
+        <div class="card-header d-flex justify-content-between align-items-center bg-gradient-purple text-white">
+            <h5 class="mb-0">Products List</h5>
+            <a href="{{ route('admin.products.create') }}" class="btn btn-light btn-sm">
+                <i class="fa fa-plus me-1"></i> Add Product
             </a>
         </div>
 
-        <!-- Table -->
-        <div class="p-6 overflow-x-auto">
-            <table class="min-w-full border border-gray-200 table-auto">
-                <thead class="bg-gray-100">
-                    <tr>
-                        <th class="px-4 py-2 border">#</th>
-                        <th class="px-4 py-2 border">Name</th>
-                        <th class="px-4 py-2 border">Category</th>
-                        <th class="px-4 py-2 border">SubCategory</th>
-                        <th class="px-4 py-2 border">Brand</th>
-                        <th class="px-4 py-2 border">Price</th>
-                        <th class="px-4 py-2 border">Status</th>
-                        <th class="px-4 py-2 border">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse($products as $product)
-                    <tr class="hover:bg-gray-50">
-                        <td class="px-4 py-2 border">{{ $loop->iteration + ($products->currentPage()-1) * $products->perPage() }}</td>
-                        <td class="px-4 py-2 border font-medium">{{ $product->name }}</td>
-                        <td class="px-4 py-2 border">{{ $product->category->name ?? 'N/A' }}</td>
-                        <td class="px-4 py-2 border">{{ $product->subCategory->name ?? 'N/A' }}</td>
-                        <td class="px-4 py-2 border">{{ $product->brand->name ?? 'N/A' }}</td>
-                        <td class="px-4 py-2 border">{{currency()}}{{ number_format($product->regular_price,2) }}</td>
-                        <td class="px-4 py-2 border text-center">
-                            @if($product->status)
-                            <span class="text-green-600 font-semibold">Active</span>
-                            @else
-                            <span class="text-red-600 font-semibold">Inactive</span>
-                            @endif
+        {{-- Card Body --}}
+        <div class="card-body p-0">
+            {{-- Responsive Table --}}
+            <div class="table-responsive">
+                <table class="table  table-hover align-middle mb-0">
+                    <thead class="table-light text-uppercase small">
+                        <tr>
+                           <th class="px-4 py-2 border">#</th>
+                            <th class="px-4 py-2 border">Name</th>
+                            <th class="px-4 py-2 border">Category</th>
+                            <th class="px-4 py-2 border">SubCategory</th>
+                            <th class="px-4 py-2 border">Brand</th>
+                            <th class="px-4 py-2 border">Price</th>
+                            <th class="px-4 py-2 border">Status</th>
+                            <th class="px-4 py-2 border">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                       @forelse($products as $product)
+                        <tr>
+                            <td>{{ $loop->iteration + ($products->currentPage()-1) * $products->perPage() }}</td>
+                        <td>{{ $product->name }}</td>
+                        <td>{{ $product->category->name ?? 'N/A' }}</td>
+                        <td>{{ $product->subCategory->name ?? 'N/A' }}</td>
+                        <td>{{ $product->brand->name ?? 'N/A' }}</td>
+                        <td>{{currency()}}{{ number_format($product->regular_price,2) }}</td>
+                        <td>
+                            <span class="badge {{ $product->status == 1 ? 'bg-success' : 'bg-danger' }}">
+                                {{ $product->status == 1 ? 'Active' : 'Inactive' }}
+                            </span>
                         </td>
-                        <td class="px-4 py-2 border flex gap-2 justify-center">
-                            <a href="{{ route('admin.products.edit',$product->id) }}" class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">
-                                <i class="fa fa-edit"></i>
-                            </a>
-                            <form action="{{ route('admin.products.destroy',$product->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this product?')">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">
-                                    <i class="fa fa-trash"></i>
-                                </button>
-                            </form>
-                        </td>
-                    </tr>
-                    @empty
-                    <tr>
-                        <td colspan="10" class="text-center py-4 text-gray-500">No Products Found</td>
-                    </tr>
-                    @endforelse
-                </tbody>
-            </table>
+                            <td class="text-center">
+                                <div class="d-flex justify-content-center gap-2 flex-wrap">
+                                    <a href="{{ route('admin.products.edit', $product->id) }}" class="btn btn-primary btn-sm">
+                                        <i class="fa fa-edit"></i>
+                                    </a>
 
-            <!-- Pagination -->
+                                    <form id="delete-form-{{ $product->id }}" action="{{ route('admin.products.destroy', $product->id) }}" method="POST" class="d-none">
+                                        @csrf
+                                        @method('DELETE')
+                                    </form>
+                                    <button type="button" data-id="{{ $product->id }}" class="btn btn-danger btn-sm delete-btn">
+                                        <i class="fa fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        @empty
+                        <tr>
+                            <td colspan="9" class="text-center text-muted">No subcategories found.</td>
+                        </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+                 <!-- Pagination -->
             <div class="mt-4">
                 {{ $products->links() }}
             </div>
+            </div>
         </div>
     </div>
-</section>
+</div>
+@endsection
+
+@section('script')
+<script>
+    document.querySelectorAll('.delete-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const id = this.dataset.id;
+            if(confirm('Are you sure you want to delete this subcategory?')) {
+                document.getElementById('delete-form-' + id)?.submit();
+            }
+        });
+    });
+</script>
 @endsection

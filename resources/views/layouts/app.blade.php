@@ -1,6 +1,9 @@
 @php
 $setting = \App\Models\Setting::first();
 $categories = \App\Models\Category::all();
+$facebook = \App\Models\Facebook::all();
+$google = \App\Models\Google::all();
+$tagmanager = \App\Models\TagManager::all();
 @endphp
 <!DOCTYPE html>
 <html lang="en">
@@ -21,9 +24,67 @@ $categories = \App\Models\Category::all();
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('/') }}assets/css/style.css">
+
+
+     {{-- ✅ Google Tag Manager (Head) --}}
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', '{{$google->google_id}}'); // <-- Replace with your Google Analytics ID
+    </script>
+
+    {{-- ✅ Google Analytics --}}
+    <script async src="https://www.googletagmanager.com/gtag/js?id={{$google->google_id}}"></script>
+
+    {{-- ✅ Facebook Pixel --}}
+    <script>
+        !function (f, b, e, v, n, t, s) {
+            if (f.fbq) return; n = f.fbq = function () {
+                n.callMethod ?
+                    n.callMethod.apply(n, arguments) : n.queue.push(arguments)
+            };
+            if (!f._fbq) f._fbq = n;
+            n.push = n; n.loaded = !0; n.version = '2.0';
+            n.queue = []; t = b.createElement(e); t.async = !0;
+            t.src = v; s = b.getElementsByTagName(e)[0];
+            s.parentNode.insertBefore(t, s)
+        }(window, document, 'script',
+            'https://connect.facebook.net/en_US/fbevents.js');
+        fbq('init', '{{$facebook->facebook_id}}'); // <-- Replace with your Facebook Pixel ID
+        fbq('track', 'PageView');
+    </script>
+    <noscript>
+        <img height="1" width="1"
+            src="https://www.facebook.com/tr?id={{$facebook->facebook_id}}&ev=PageView&noscript=1" />
+    </noscript>
+
+    {{-- ✅ Google Tag Manager (for Data Layer events) --}}
+    <script>
+        (function (w, d, s, l, i) {
+            w[l] = w[l] || []; w[l].push({
+                'gtm.start': new Date().getTime(), event: 'gtm.js'
+            });
+            var f = d.getElementsByTagName(s)[0],
+                j = d.createElement(s),
+                dl = l != 'dataLayer' ? '&l=' + l : '';
+            j.async = true; j.src =
+                'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+            f.parentNode.insertBefore(j, f);
+        })(window, document, 'script', 'dataLayer', '{{$tagmanager->tag_id}}'); // <-- Replace with your GTM ID
+    </script>
+
+
+
 </head>
 
 <body>
+
+ {{-- ✅ Google Tag Manager (Body) --}}
+    <noscript>
+        <iframe src="https://www.googletagmanager.com/ns.html?id={{$tagmanager->tag_id}}"
+            height="0" width="0" style="display:none;visibility:hidden"></iframe>
+    </noscript>
 
     @include('layouts.header')
 
@@ -303,6 +364,23 @@ $categories = \App\Models\Category::all();
 
                 localStorage.setItem('cart', JSON.stringify(cart));
 
+
+                 // ✅ Add to cart event push to DataLayer
+                window.dataLayer = window.dataLayer || [];
+                dataLayer.push({
+                    event: "add_to_cart",
+                    ecommerce: {
+                        items: [{
+                            item_id: productId,
+                            item_name: name,
+                            price: price,
+                            quantity: 1
+                        }]
+                    }
+                });
+                console.log("✅ add_to_cart event pushed:", name, price);
+
+
                 // Toastr success message দেখাও
                 toastr.success(name + " added to cart successfully!");
 
@@ -508,6 +586,24 @@ $categories = \App\Models\Category::all();
         };
         toastr.info("{{ Session::get('info') }}");
         @endif
+    </script>
+
+
+ {{-- Example: Custom event push to DataLayer --}}
+    <script>
+        // Example: When a product is viewed
+        function trackProductView(productName, productId, price) {
+            dataLayer.push({
+                'event': 'view_item',
+                'ecommerce': {
+                    'items': [{
+                        'item_name': productName,
+                        'item_id': productId,
+                        'price': price
+                    }]
+                }
+            });
+        }
     </script>
 
 

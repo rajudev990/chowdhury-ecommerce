@@ -2,23 +2,23 @@
 @section('title', 'Password Update')
 
 @section('content')
-<div class="min-h-screen bg-gray-100 py-10">
-    <div class="max-w-xl mx-auto bg-white rounded-2xl shadow-lg overflow-hidden">
+<div class="container py-5 min-vh-100">
 
+    <div class="card shadow-lg rounded-3">
         <!-- Header -->
-        <div class="bg-gradient-to-r from-cyan-600 to-cyan-500 px-6 py-4">
-            <h2 class="text-xl font-semibold text-white">Update Password</h2>
+        <div class="card-header d-flex justify-content-between align-items-center bg-gradient-purple text-white">
+            <h5 class="mb-0">Update Password</h5>
         </div>
 
         <!-- Form -->
-        <form action="{{ route('affiliate.password.update') }}" method="POST" class="p-6 space-y-6">
+        <form action="{{ route('affiliate.password.update') }}" method="POST" class="card-body">
             @csrf
             @method('POST')
 
             {{-- Error Messages --}}
             @if ($errors->any())
-            <div class="bg-red-50 border border-red-400 text-red-700 px-4 py-3 rounded-lg">
-                <ul class="list-disc list-inside">
+            <div class="alert alert-danger">
+                <ul class="mb-0">
                     @foreach ($errors->all() as $error)
                     <li>{{ $error }}</li>
                     @endforeach
@@ -26,53 +26,63 @@
             </div>
             @endif
 
-            <!-- Current Password -->
-            <div class="relative">
-                <label for="current_password" class="block text-sm font-medium text-gray-700 mb-1">Current Password</label>
-                <input type="password" name="current_password" id="current_password" required
-                    class="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-cyan-500 focus:ring-0 focus:outline-none transition duration-200 @error('current_password') border-red-500 @enderror">
-                <span onclick="togglePassword('current_password', this)"
-                    class="absolute right-3 top-1/2 cursor-pointer text-gray-400">👁️</span>
-                @error('current_password')
-                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                @enderror
-            </div>
+            <!-- Grid layout -->
+            <div class="row g-3">
 
-            <!-- New Password -->
-            <div class="relative">
-                <label for="new_password" class="block text-sm font-medium text-gray-700 mb-1">New Password</label>
-                <input type="password" name="new_password" id="new_password" required
-                    class="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-cyan-500 focus:ring-0 focus:outline-none transition duration-200 @error('new_password') border-red-500 @enderror">
-                <span onclick="togglePassword('new_password', this)"
-                    class="absolute right-3 top-1/2 cursor-pointer text-gray-400">👁️</span>
-                @error('new_password')
-                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                @enderror
-            </div>
+                <!-- Username -->
+                <div class="col-md-12">
+                    <label for="current_password" class="form-label">Current Password</label>
+                    <div class="input-group">
+                        <input type="password" name="current_password" id="current_password" required
+                            class="form-control @error('current_password') is-invalid @enderror">
+                        <span class="input-group-text bg-white" style="cursor:pointer;" onclick="togglePassword('current_password', this)">👁️</span>
+                        @error('current_password')
+                        <div class="invalid-feedback d-block">{{ $message }}</div>
+                        @enderror
+                    </div>
+                </div>
 
-            <!-- Confirm New Password -->
-            <div class="relative">
-                <label for="new_password_confirmation" class="block text-sm font-medium text-gray-700 mb-1">Confirm New Password</label>
-                <input type="password" name="new_password_confirmation" id="new_password_confirmation" required
-                    class="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-cyan-500 focus:ring-0 focus:outline-none transition duration-200 @error('new_password_confirmation') border-red-500 @enderror">
-                <span onclick="togglePassword('new_password_confirmation', this)"
-                    class="absolute right-3 top-1/2 cursor-pointer text-gray-400">👁️</span>
-                @error('new_password_confirmation')
-                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                @enderror
+                <!-- First Name -->
+                <div class="col-md-12">
+                    <label for="new_password" class="form-label">New Password</label>
+                    <div class="input-group">
+                        <input type="password" name="new_password" id="new_password" required
+                            class="form-control @error('new_password') is-invalid @enderror">
+                        <span class="input-group-text bg-white" style="cursor:pointer;" onclick="togglePassword('new_password', this)">👁️</span>
+                        @error('new_password')
+                        <div class="invalid-feedback d-block">{{ $message }}</div>
+                        @enderror
+                    </div>
+                </div>
+
+                <!-- Last Name -->
+                <div class="col-md-12">
+                    <label for="new_password_confirmation" class="form-label">Confirm New Password</label>
+                    <div class="input-group">
+                        <input type="password" name="new_password_confirmation" id="new_password_confirmation" required
+                            class="form-control @error('new_password_confirmation') is-invalid @enderror">
+                        <span class="input-group-text bg-white" style="cursor:pointer;" onclick="togglePassword('new_password_confirmation', this)">👁️</span>
+                        @error('new_password_confirmation')
+                        <div class="invalid-feedback d-block">{{ $message }}</div>
+                        @enderror
+                    </div>
+                </div>
+
+
             </div>
 
             <!-- Submit Button -->
-            <div class="flex justify-end pt-4 border-t">
-                <button type="submit"
-                    class="bg-cyan-600 hover:bg-cyan-700 text-white px-6 py-2 rounded-lg transition duration-200 flex items-center gap-2">
-                    <i class="fa fa-edit"></i>
-                    <span>Update</span>
+            <div class="mt-4 text-end">
+                <button type="submit" class="btn text-white bg-gradient-purple">
+                    <i class="fa fa-edit"></i> Update Profile
                 </button>
             </div>
         </form>
     </div>
 </div>
+@endsection
+
+@section('script')
 <script>
     function togglePassword(fieldId, el) {
         const input = document.getElementById(fieldId);
@@ -85,5 +95,4 @@
         }
     }
 </script>
-
 @endsection

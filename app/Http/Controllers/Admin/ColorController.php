@@ -29,7 +29,7 @@ class ColorController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|unique:colors,name|max:255',
             'code' => 'nullable|string|max:10',
             'status' => 'required|in:0,1',
         ]);
@@ -51,7 +51,7 @@ class ColorController extends Controller
     public function update(Request $request, Color $color)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|unique:colors,name,' . $color->id . '|max:255',
             'code' => 'nullable|string|max:10',
             'status' => 'required|in:0,1',
         ]);

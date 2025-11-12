@@ -98,7 +98,6 @@ class AffiliateController extends Controller
 
     public function passwordEdit()
     {
-
         return view('affiliate.auth.change-password');
     }
 

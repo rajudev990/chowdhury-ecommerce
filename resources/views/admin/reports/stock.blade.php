@@ -4,24 +4,23 @@
 
 @section('content')
 
-<div class="p-6 bg-gray-100 min-h-screen">
-    <div class="flex items-center justify-between mb-6">
-        <h2 class="text-2xl font-bold text-gray-700 flex items-center gap-2">
+<div class="container-fluid py-5 bg-light min-vh-100">
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <h2 class="fw-bold text-secondary d-flex align-items-center gap-2">
             <i class="fas fa-boxes"></i> Stock Report
         </h2>
     </div>
-
     <!-- Filter Form -->
-    <form method="GET" class="grid grid-cols-1 md:grid-cols-4 gap-4 bg-white p-4 rounded-lg shadow no-print">
-        <div>
-            <label for="keyword" class="block text-sm font-medium text-gray-600">Keyword</label>
+    <form method="GET" class="row g-3 bg-white p-4 rounded-3 shadow-sm no-print">
+        <div class="col-md-3">
+            <label for="keyword" class="form-label">Keyword</label>
             <input type="text" name="keyword" value="{{ request()->get('keyword') }}"
-                   class="w-full mt-1 border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                   class="form-control" placeholder="Search...">
         </div>
 
-        <div>
-            <label for="category_id" class="block text-sm font-medium text-gray-600">Category</label>
-            <select name="category_id" class="w-full mt-1 border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+        <div class="col-md-3">
+            <label for="category_id" class="form-label">Category</label>
+            <select name="category_id" class="form-select">
                 <option value="">Select...</option>
                 @foreach($categories as $category)
                     <option value="{{ $category->id }}" @if(request()->get('category_id') == $category->id) selected @endif>
@@ -31,50 +30,50 @@
             </select>
         </div>
 
-        <div>
-            <label for="start_date" class="block text-sm font-medium text-gray-600">Start Date</label>
+        <div class="col-md-3">
+            <label for="start_date" class="form-label">Start Date</label>
             <input type="date" name="start_date" value="{{ request()->get('start_date') }}"
-                   class="w-full mt-1 border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                   class="form-control">
         </div>
 
-        <div>
-            <label for="end_date" class="block text-sm font-medium text-gray-600">End Date</label>
+        <div class="col-md-3">
+            <label for="end_date" class="form-label">End Date</label>
             <input type="date" name="end_date" value="{{ request()->get('end_date') }}"
-                   class="w-full mt-1 border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                   class="form-control">
         </div>
 
-        <div class="md:col-span-4 text-right">
-            <button type="submit" class="px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">Submit</button>
-            <a href="{{ route('admin.stock_report') }}" class="px-5 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition">Reset</a>
+        <div class="col-12 text-end mt-2">
+            <button type="submit" class="btn btn-primary px-4 me-2">Submit</button>
+            <a href="{{ route('admin.stock_report') }}" class="btn btn-danger px-4">Reset</a>
         </div>
     </form>
 
     <!-- Action Buttons -->
-    <div class="flex items-center justify-between mt-6 mb-3">
-       <div class="no-print mt-6 flex justify-center">
-            {{ $products->onEachSide(1)->links('vendor.pagination.custom-tailwind') }}
+    <div class="d-flex align-items-center justify-content-between mt-5 mb-3">
+        <div class="no-print mt-4">
+           {{ $products->onEachSide(1)->links('vendor.pagination.custom-tailwind') }}
         </div>
 
-        <div class="flex gap-3 no-print">
-            <button onclick="printFunction()" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 flex items-center gap-2">
+        <div class="d-flex gap-2 no-print">
+            <button onclick="printFunction()" class="btn btn-success d-flex align-items-center gap-2">
                 <i class="fas fa-print"></i> Print
             </button>
-            <button id="export-excel-button" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 flex items-center gap-2">
+            <button id="export-excel-button" class="btn btn-primary d-flex align-items-center gap-2">
                 <i class="fas fa-file-export"></i> Export
             </button>
         </div>
     </div>
 
     <!-- Report Table -->
-    <div id="content-to-export" class="bg-white p-4 rounded-lg shadow overflow-x-auto">
-        <table class="min-w-full text-sm text-left border border-gray-200">
-            <thead class="bg-gray-200 text-gray-700">
+    <div id="content-to-export" class="bg-white p-4 rounded-3 shadow-sm table-responsive">
+        <table class="table table-bordered align-middle">
+            <thead class="table-light">
                 <tr>
-                    <th class="px-4 py-2 border">SL</th>
-                    <th class="px-4 py-2 border">Product Name</th>
-                    <th class="px-4 py-2 border">Price</th>
-                    <th class="px-4 py-2 border">Stock</th>
-                    <th class="px-4 py-2 border">Total</th>
+                    <th scope="col">SL</th>
+                    <th scope="col">Product Name</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Stock</th>
+                    <th scope="col">Total</th>
                 </tr>
             </thead>
             <tbody>
@@ -83,12 +82,12 @@
                     $total = 0;
                 @endphp
                 @foreach($products as $key => $value)
-                <tr class="hover:bg-gray-50">
-                    <td class="px-4 py-2 border">{{ $loop->iteration }}</td>
-                    <td class="px-4 py-2 border">{{ $value->name }}</td>
-                    <td class="px-4 py-2 border">{{ $value->sale_price }}</td>
-                    <td class="px-4 py-2 border">{{ $value->stock }}</td>
-                    <td class="px-4 py-2 border">{{ $value->stock * $value->sale_price }}</td>
+                <tr>
+                    <td>{{ $loop->iteration }}</td>
+                    <td>{{ $value->name }}</td>
+                    <td>{{ $value->sale_price }}</td>
+                    <td>{{ $value->stock }}</td>
+                    <td>{{ $value->stock * $value->sale_price }}</td>
                 </tr>
                 @php
                     $stock += $value->stock;
@@ -96,17 +95,17 @@
                 @endphp
                 @endforeach
             </tbody>
-            <tfoot class="bg-gray-100 font-semibold">
+            <tfoot class="table-light fw-semibold">
                 <tr>
-                    <td colspan="3" class="px-4 py-2 border text-right">Total:</td>
-                    <td class="px-4 py-2 border">{{ $stock }} Pcs</td>
-                    <td class="px-4 py-2 border">{{ $total }} Tk</td>
+                    <td colspan="3" class="text-end">Total:</td>
+                    <td>{{ $stock }} Pcs</td>
+                    <td>{{ $total }} Tk</td>
                 </tr>
                 <tr>
                     <td colspan="5" class="text-center py-4">
-                        <h5 class="font-bold text-gray-700">Total Purchase = {{ $total_purchase ?? 0 }}</h5>
-                        <h5 class="font-bold text-gray-700">Total Stock = {{ $total_stock ?? $stock }} Pcs</h5>
-                        <h5 class="font-bold text-gray-700">Total Price = {{ $total_price ?? $total }} Tk</h5>
+                        <h5 class="fw-bold text-secondary mb-1">Total Purchase = {{ $total_purchase ?? 0 }}</h5>
+                        <h5 class="fw-bold text-secondary mb-1">Total Stock = {{ $total_stock ?? $stock }} Pcs</h5>
+                        <h5 class="fw-bold text-secondary mb-0">Total Price = {{ $total_price ?? $total }} Tk</h5>
                     </td>
                 </tr>
             </tfoot>

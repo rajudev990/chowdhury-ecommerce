@@ -34,7 +34,7 @@
                             <td>{{ $loop->iteration }}</td>
                             <td>
                                 @if($category->image)
-                                <img src="{{ asset('storage/' . $category->image) }}" class="rounded-circle" style="width:50px;height:50px;object-fit:cover;">
+                                <img src="{{Storage:url($category->image) }}" class="rounded-circle" style="width:50px;height:50px;object-fit:cover;">
                                 @else
                                 <span class="text-muted fst-italic small">No Image</span>
                                 @endif

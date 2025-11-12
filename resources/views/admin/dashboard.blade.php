@@ -3,6 +3,7 @@
 @section('title','Dashboard')
 
 @section('content')
+
 <div class="container-fluid py-4">
     <!-- Header -->
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4">

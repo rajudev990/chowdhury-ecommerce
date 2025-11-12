@@ -2,67 +2,60 @@
 @section('title', 'My Offers')
 
 @section('content')
+<div class="container py-5 min-vh-100">
 
-
-<section class="p-5 bg-gray-100 min-h-screen">
-    <div class="mx-auto max-w-7xl bg-white rounded-2xl shadow-lg overflow-hidden">
-
+    <div class="card shadow-lg rounded-3">
         <!-- Header -->
-        <div class="bg-gradient-to-r from-cyan-600 to-cyan-500 px-6 py-4 flex justify-between items-center">
-            <h2 class="text-xl font-semibold text-white">My Offers</h2>
+        <div class="card-header d-flex justify-content-between align-items-center bg-gradient-purple text-white">
+            <h5 class="mb-0">My Offers</h5>
         </div>
 
-        <div class="p-6 overflow-x-auto">
-            <table class="min-w-full border border-gray-200 table-auto">
-                <thead class="bg-gray-100">
+        <div class="card-body table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
                     <tr>
-                        <th class="px-4 py-2 border">#</th>
-                        <th class="px-4 py-2 border">Name</th>
-                        <th class="px-4 py-2 border">Image</th>
-                        <th class="px-4 py-2 border">Price({{ currency() }})</th>
-                        <th class="px-4 py-2 border">Commission (%)</th>
-                        <th class="px-4 py-2 border">Action</th>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Image</th>
+                        <th>Price ({{ currency() }})</th>
+                        <th>Commission (%)</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse($data as $product)
-                    <tr class="hover:bg-gray-50">
-                        <td class="px-4 py-2 border">{{ $loop->iteration }}</td>
-                        <td class="px-4 py-2 border font-medium">{{ $product->name }}</td>
-                        <td class="px-4 py-2 border font-medium">
-                            <img src="{{ Storage::url($product->featured_image_1) }}" alt="Product Image" style="width: 50px; height: 50px; object-fit: cover;">
+                    <tr>
+                        <td>{{ $loop->iteration }}</td>
+                        <td class="fw-medium">{{ $product->name }}</td>
+                        <td>
+                            <img src="{{ Storage::url($product->featured_image_1) }}" alt="Product Image" class="rounded" style="width: 50px; height: 50px; object-fit: cover;">
                         </td>
-                        <td class="px-4 py-2 border">
+                        <td>
                             <del>{{ currency() }}{{ number_format($product->regular_price, 2) }}</del>
-                            <span>{{ currency() }}{{ number_format($product->sale_price, 2) }}</span>
+                            <span class="ms-2">{{ currency() }}{{ number_format($product->sale_price, 2) }}</span>
                         </td>
-                        <td class="px-4 py-2 border text-center">
-                            
-                                @php
+                        <td class="text-center">
+                            @php
                                 $commission = $product->commission ? $product->commission->amount : null;
-                                @endphp
-
-                                {{ currency() }}{{ $commission }}%
-
-
+                            @endphp
+                            {{ $commission }}%
                         </td>
-                         <td class="px-4 py-2 border">
-                            <!-- Copy button for product link -->
-                            <button onclick="copyToClipboard('{{ route('product.show', ['slug' => $product->slug, 'affiliate_id' => auth()->guard('affiliate')->user()->id]) }}')" class="bg-green-500 text-white px-3 py-1 rounded">Copy Link</button>
+                        <td>
+                            <button onclick="copyToClipboard('{{ route('product.show', ['slug' => $product->slug, 'affiliate_id' => auth()->guard('affiliate')->user()->id]) }}')" class="btn btn-success btn-sm">
+                                Copy Link
+                            </button>
                         </td>
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="6" class="text-center py-4 text-gray-500">No Products Found</td>
+                        <td colspan="9" class="text-center text-muted py-2">No Products Found</td>
                     </tr>
                     @endforelse
                 </tbody>
             </table>
         </div>
-
-
     </div>
-</section>
+</div>
 @endsection
 
 @section('scripts')

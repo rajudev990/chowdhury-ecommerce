@@ -1,124 +1,124 @@
 @extends('admin.layouts.app')
 
-@section('title', '  Update Marketing Information')
+@section('title', 'Update Marketing Information')
 
 @section('content')
-<section class="p-5 bg-gray-100 min-h-screen">
-    <div class="max-w-6xl mx-auto space-y-10">
+<div class="container py-5">
 
-        <!-- Bkash Setup -->
-        <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
-            <!-- Header -->
-            <div class="bg-gradient-to-r from-cyan-600 to-cyan-500 px-6 py-4 flex justify-between items-center">
-                <h2 class="text-xl font-semibold text-white">
-                     Update FaceBook Pixel Setting
-                </h2>
-            </div>
-
-            <!-- Form -->
-            <div class="p-8">
-                 <form method="POST" action="{{ route('admin.facebook.update', $facebook->id) }}" class="space-y-6">
-                    @csrf
-
-                    <div class="grid md:grid-cols-2 gap-6">
-                        <div>
-                            <label class="block text-gray-700 font-medium mb-1">
-                                Facebook Pixel ID <span class="text-red-500">*</span>
-                            </label>
-                            <input type="text" name="facebook_id"
-                                value="{{ old('facebook_id', $facebook->facebook_id) }}"
-                                class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:border-cyan-500 focus:ring-0 outline-none"
-                                placeholder="Enter Bkash App Key" required>
-                            @error('facebook_id')
-                            <span class="text-red-500 text-sm">{{ $message }}</span>
-                            @enderror
-                        </div>
-
-
-                        <div>
-                            <label class="block text-gray-700 font-medium mb-1">
-                                Facebook Pixel <span class="text-red-500">*</span>
-                            </label>
-                            <select name="facebook_status"
-                                class="w-full border border-gray-300 rounded-lg px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-cyan-500 transition">
-                                <option value="1" {{ old('facebook_status', $facebook->facebook_status ?? '') == 1 ? 'selected' : '' }}>Active</option>
-                                <option value="0" {{ old('facebook_status', $facebook->facebook_status ?? '') == 0 ? 'selected' : '' }}>Deactive</option>
-                            </select>
-                            @error('facebook_status')
-                            <span class="text-red-500 text-sm">{{ $message }}</span>
-                            @enderror
-                        </div>
-                    </div>
-
-                    <div class="flex justify-end pt-4 border-t">
-                        <button type="submit"
-                            class="bg-cyan-600 hover:bg-cyan-700 text-white px-6 py-2 rounded-lg transition">
-                            <i class="fa fa-edit"></i> Update
-                        </button>
-                    </div>
-                </form>
-            </div>
+    <!-- Facebook Pixel Setup -->
+    <div class="card shadow-lg border-0 rounded-4 mb-5">
+        <div class="card-header bg-gradient-purple text-white d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Update Facebook Pixel Setting</h5>
         </div>
+        <div class="card-body">
+            <form method="POST" action="{{ route('admin.facebook.update', $facebook->id) }}">
+                @csrf
 
-      
-
-
-        <!-- Google Setup -->
-        <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
-            <!-- Header -->
-            <div class="bg-gradient-to-r from-cyan-600 to-cyan-500 px-6 py-4 flex justify-between items-center">
-                <h2 class="text-xl font-semibold text-white">
-                 Google Analytics Setting
-                </h2>
-            </div>
-
-            <!-- Form -->
-            <div class="p-8">
-                <form method="POST" action="{{ route('admin.google.update', $google->id) }}" class="space-y-6">
-                    @csrf
-
-                    <div class="grid md:grid-cols-2 gap-6">
-
-                        <div>
-                            <label class="block text-gray-700 font-medium mb-1">
-                                Tracking ID <span class="text-red-500">*</span>
-                            </label>
-                            <input type="text" name="google_id"
-                                value="{{ old('google_id', $google->google_id) }}"
-                                class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:border-cyan-500 focus:ring-0 outline-none"
-                                placeholder="Enter Nagad Secret Key" required>
-                            @error('google_id')
-                            <span class="text-red-500 text-sm">{{ $message }}</span>
-                            @enderror
-                        </div>
-
-                       
-
-                        <div>
-                            <label class="block text-gray-700 font-medium mb-1">
-                                Google Analytics <span class="text-red-500">*</span>
-                            </label>
-                            <select name="google_status"
-                                class="w-full border border-gray-300 rounded-lg px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-cyan-500 transition">
-                                <option value="1" {{ old('google_status', $google->google_status ?? '') == 1 ? 'selected' : '' }}>Active</option>
-                                <option value="0" {{ old('google_status', $google->google_status ?? '') == 0 ? 'selected' : '' }}>Deactive</option>
-                            </select>
-                            @error('google_status')
-                            <span class="text-red-500 text-sm">{{ $message }}</span>
-                            @enderror
-                        </div>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Facebook Pixel ID <span class="text-danger">*</span></label>
+                        <input type="text" name="facebook_id" value="{{ old('facebook_id', $facebook->facebook_id) }}"
+                            class="form-control @error('facebook_id') is-invalid @enderror" placeholder="Enter Facebook Pixel ID" required>
+                        @error('facebook_id')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
 
-                    <div class="flex justify-end pt-4 border-t">
-                        <button type="submit"
-                            class="bg-cyan-600 hover:bg-cyan-700 text-white px-6 py-2 rounded-lg transition">
-                            <i class="fa fa-edit"></i> Update 
-                        </button>
+                    <div class="col-md-6">
+                        <label class="form-label">Facebook Pixel Status <span class="text-danger">*</span></label>
+                        <select name="facebook_status" class="form-select @error('facebook_status') is-invalid @enderror">
+                            <option value="1" {{ old('facebook_status', $facebook->facebook_status ?? '') == 1 ? 'selected' : '' }}>Active</option>
+                            <option value="0" {{ old('facebook_status', $facebook->facebook_status ?? '') == 0 ? 'selected' : '' }}>Deactive</option>
+                        </select>
+                        @error('facebook_status')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
-                </form>
-            </div>
+                </div>
+
+                <div class="text-end mt-4">
+                    <button type="submit" class="btn text-white bg-gradient-purple"><i class="fa fa-edit me-1"></i> Update</button>
+                </div>
+            </form>
         </div>
-
     </div>
-</section>
+
+    <!-- Google Analytics Setup -->
+    <div class="card shadow-lg border-0 rounded-4 mb-5">
+        <div class="card-header bg-gradient-purple text-white d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Google Analytics Setting</h5>
+        </div>
+        <div class="card-body">
+            <form method="POST" action="{{ route('admin.google.update', $google->id) }}">
+                @csrf
+
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Tracking ID <span class="text-danger">*</span></label>
+                        <input type="text" name="google_id" value="{{ old('google_id', $google->google_id) }}"
+                            class="form-control @error('google_id') is-invalid @enderror" placeholder="Enter Tracking ID" required>
+                        @error('google_id')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Google Analytics Status <span class="text-danger">*</span></label>
+                        <select name="google_status" class="form-select @error('google_status') is-invalid @enderror">
+                            <option value="1" {{ old('google_status', $google->google_status ?? '') == 1 ? 'selected' : '' }}>Active</option>
+                            <option value="0" {{ old('google_status', $google->google_status ?? '') == 0 ? 'selected' : '' }}>Deactive</option>
+                        </select>
+                        @error('google_status')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                </div>
+
+                <div class="text-end mt-4">
+                    <button type="submit" class="btn text-white bg-gradient-purple"><i class="fa fa-edit me-1"></i> Update</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <!-- Google Tag Manager Setup -->
+    <div class="card shadow-lg border-0 rounded-4 mb-5">
+        <div class="card-header bg-gradient-purple text-white d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Google Tag Manager Setting</h5>
+        </div>
+        <div class="card-body">
+            <form method="POST" action="{{ route('admin.tag-manager.update', $tagManager->id) }}">
+                @csrf
+
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Tag Manager ID <span class="text-danger">*</span></label>
+                        <input type="text" name="tag_id" value="{{ old('tag_id', $tagManager->tag_id) }}"
+                            class="form-control @error('tag_id') is-invalid @enderror" placeholder="Enter Tag Manager ID" required>
+                        @error('tag_id')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Tag Manager Status <span class="text-danger">*</span></label>
+                        <select name="status" class="form-select @error('status') is-invalid @enderror">
+                            <option value="active" {{ old('status', $tagManager->status ?? '') == 1 ? 'selected' : '' }}>Active</option>
+                            <option value="deactive" {{ old('status', $tagManager->status ?? '') == 0 ? 'selected' : '' }}>Deactive</option>
+                        </select>
+                        @error('status')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                </div>
+
+                <div class="text-end mt-4">
+                    <button type="submit" class="btn text-white bg-gradient-purple"><i class="fa fa-edit me-1"></i> Update</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>
 @endsection

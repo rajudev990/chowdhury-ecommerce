@@ -193,3 +193,48 @@
 
 
 @endsection
+
+
+@section('script')
+<script>
+    // ✅ Product View Tracking (fires on page load)
+    window.dataLayer = window.dataLayer || [];
+    dataLayer.push({
+        event: "view_item",
+        ecommerce: {
+            items: [{
+                item_name: "{{ $item->name }}",
+                item_id: "{{ $item->id }}",
+                price: "{{ $item->sale_price ?? $item->regular_price }}",
+                item_brand: "{{ $item->brand->name ?? '' }}",
+                item_category: "{{ $item->category->name ?? '' }}",
+                item_variant: "{{ $item->variants->count() > 0 ? 'Has Variant' : 'Single' }}",
+                currency: "BDT"
+            }]
+        }
+    });
+
+    // ✅ Add to Cart / Order Now button tracking
+    document.getElementById('add-to-cart').addEventListener('click', function() {
+        const productName = this.dataset.name;
+        const productId = this.dataset.productId;
+        const productPrice = this.dataset.price;
+        const productImage = this.dataset.image;
+
+        dataLayer.push({
+            event: "add_to_cart",
+            ecommerce: {
+                items: [{
+                    item_name: productName,
+                    item_id: productId,
+                    price: productPrice,
+                    item_image: productImage,
+                    quantity: document.getElementById('qty').value,
+                    currency: "BDT"
+                }]
+            }
+        });
+        console.log("✅ DataLayer event pushed: add_to_cart");
+    });
+</script>
+@endsection
